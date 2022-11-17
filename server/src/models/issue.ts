@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import Comment from "./comment";
 
 const issueSchema = new Schema({
   title: { type: String, required: true },
@@ -10,6 +11,16 @@ const issueSchema = new Schema({
       ref: "Comment",
     },
   ],
+});
+
+issueSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Comment.deleteMany({
+      _id: {
+        $in: doc.comments,
+      },
+    });
+  }
 });
 
 export default model("Issue", issueSchema);
