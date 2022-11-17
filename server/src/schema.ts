@@ -11,4 +11,8 @@ export const issueSchema = Joi.object({
     importance: Joi.string().required()
 });
 
+export const commentSchema = Joi.object({
+    comment: Joi.string().required()
+});
+
 

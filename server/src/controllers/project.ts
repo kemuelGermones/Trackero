@@ -21,16 +21,16 @@ export const showProjects = async (req: Request, res: Response) => {
 // Show individual project
 
 export const showIndividualProject = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const project = await Project.findById(id);
+  const { projectId } = req.params;
+  const project = await Project.findById(projectId);
   res.status(200).send(project);
 };
 
 // Edit project
 
 export const editProject = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  await Project.findByIdAndUpdate(id, req.body);
+  const { projectId } = req.params;
+  await Project.findByIdAndUpdate(projectId, req.body);
   res
     .status(200)
     .json({ status: 200, message: "Successfully edited a project" });
@@ -39,8 +39,8 @@ export const editProject = async (req: Request, res: Response) => {
 // Delete project
 
 export const deleteProject = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  await Project.findByIdAndDelete(id);
+  const { projectId } = req.params;
+  await Project.findByIdAndDelete(projectId);
   res
     .status(200)
     .json({ status: 200, message: "Successfully deleted a project" });

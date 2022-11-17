@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import Issue from "./issue";
+import Comment from "./comment";
 
 const projectSchema = new Schema({
   title: { type: String, required: true },
@@ -10,6 +11,12 @@ const projectSchema = new Schema({
       ref: "Issue",
     },
   ],
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 
 projectSchema.post("findOneAndDelete", async function (doc) {
@@ -17,6 +24,11 @@ projectSchema.post("findOneAndDelete", async function (doc) {
     await Issue.deleteMany({
       _id: {
         $in: doc.issues,
+      },
+    });
+    await Comment.deleteMany({
+      _id: {
+        $in: doc.comments,
       },
     });
   }

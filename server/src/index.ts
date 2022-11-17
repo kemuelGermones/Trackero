@@ -2,6 +2,8 @@ import express, { Request, Response, urlencoded, NextFunction } from "express";
 import { connect, connection } from "mongoose";
 import projectRoute from "./routes/project";
 import issueRoute from "./routes/issue";
+import projectCommentRoute from "./routes/projectComment";
+import issueCommentRoute from "./routes/issueComment";
 import AppError from "./utils/AppError";
 
 const app = express();
@@ -16,7 +18,9 @@ connection.once("open", () => {
 app.use(urlencoded({ extended: true }));
 
 app.use("/projects", projectRoute);
-app.use("/projects/:id/issues", issueRoute);
+app.use("/projects/:projectId/issues", issueRoute);
+app.use("/projects/:projectId/comments", projectCommentRoute);
+app.use("/issues/:issueId/comments", issueCommentRoute);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError("Page Not Found", 404));

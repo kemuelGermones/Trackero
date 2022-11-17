@@ -21,14 +21,14 @@ router.get("/", wrapAsync(showProjects));
 
 // Show individual project
 
-router.get("/:id", wrapAsync(showIndividualProject));
+router.get("/:projectId", wrapAsync(showIndividualProject));
 
 // Edit project
 
-router.put("/:id", validateProject, wrapAsync(editProject));
+router.put("/:projectId", validateProject, wrapAsync(editProject));
 
 // Delete project
 
-router.delete("/:id", wrapAsync(deleteProject));
+router.delete("/:projectId", wrapAsync(deleteProject));
 
 export default router;
