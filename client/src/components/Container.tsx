@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Container = styled.section`
-  width: 100vw;
+  margin: 0 0 0 10rem;
   height: 100vh;
   display: flex;
   box-sizing: border-box;

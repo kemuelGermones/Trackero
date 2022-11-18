@@ -10,24 +10,25 @@ import Container from "./components/Container";
 function App() {
   return (
     <Fragment>
+      <SideNav>
+        <h1>agendafix</h1>
+        <ul>
+          <li>
+            <MdOutlineDashboardCustomize /> Dashboard
+          </li>
+          <li>
+            <AiOutlineWarning /> Tickets
+          </li>
+          <li>
+            <FiUsers /> Users
+          </li>
+          <li>
+            <IoIosLogOut /> Logout
+          </li>
+        </ul>
+      </SideNav>
       <Container>
-        <SideNav>
-          <h1>agendafix</h1>
-          <ul>
-            <li>
-              <MdOutlineDashboardCustomize /> Dashboard
-            </li>
-            <li>
-              <AiOutlineWarning /> Tickets
-            </li>
-            <li>
-              <FiUsers /> Users
-            </li>
-            <li>
-              <IoIosLogOut /> Logout
-            </li>
-          </ul>
-        </SideNav>
+        
       </Container>
     </Fragment>
   );
