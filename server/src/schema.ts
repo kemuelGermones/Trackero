@@ -14,5 +14,3 @@ export const issueSchema = Joi.object({
 export const commentSchema = Joi.object({
     comment: Joi.string().required()
 });
-
-

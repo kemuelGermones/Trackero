@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Issue from "../models/issue";
 import Project from "../models/project";
 
-//  Create issue
+// Create issue
 
 export const createIssue = async (req: Request, res: Response) => {
   const { projectId } = req.params;
@@ -18,6 +18,7 @@ export const createIssue = async (req: Request, res: Response) => {
 };
 
 // Show Indiviual Issue
+
 export const showIndividualIssue = async (req: Request, res: Response) => {
   const { issueId } = req.params;
   const issue = await Issue.findById(issueId);
@@ -34,7 +35,7 @@ export const editIssue = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully edited an issue" });
 };
 
-//  Delete issue
+// Delete issue
 
 export const deleteIssue = async (req: Request, res: Response) => {
   const { projectId, issueId } = req.params;

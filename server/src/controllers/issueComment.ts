@@ -16,7 +16,6 @@ export const createComment = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created a comment" });
 };
 
-
 // Delete comment
 
 export const deleteComment = async (req: Request, res: Response) => {
