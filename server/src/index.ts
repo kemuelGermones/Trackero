@@ -5,17 +5,22 @@ import issueRoute from "./routes/issue";
 import projectCommentRoute from "./routes/projectComment";
 import issueCommentRoute from "./routes/issueComment";
 import AppError from "./utils/AppError";
+import cors from "cors";
 
 const app = express();
 
-const dbUrl = "mongodb://localhost:27017/bug";
+const dbUrl = "mongodb://127.0.0.1:27017/bug";
 connect(dbUrl);
 connection.on("error", console.error.bind(console, "connection error:"));
 connection.once("open", () => {
   console.log("database connected");
 });
 
+app.use(cors());
+
 app.use(urlencoded({ extended: true }));
+
+app.use(express.json());
 
 app.use("/projects", projectRoute);
 app.use("/projects/:projectId/issues", issueRoute);

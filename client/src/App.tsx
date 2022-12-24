@@ -1,63 +1,61 @@
-import { Fragment } from "react";
+import { useEffect } from "react";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { AiOutlineWarning } from "react-icons/ai";
 import { FiUsers } from "react-icons/fi";
-import { IoIosLogOut } from "react-icons/io";
-import { BsPlusLg } from "react-icons/bs";
-
-import SideNav from "./components/SideNav";
-import Container from "./components/Container";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useAppDispatch } from "./store";
+import GlobalStyle from "./components/styles/base/GlobalStyle";
+import { Nav, NavBrand, NavMenu, NavItem } from "./components/styles/UI/Nav";
+import Projects from "./pages/Projects";
+import Tickets from "./pages/Tickets";
+import Users from "./pages/Users";
+import Error from "./pages/Error";
+import ShowProject from "./pages/ShowProject";
+import Container from "./components/styles/layout/Container";
+import { getProjects } from "./store/project-action";
+import Notification from "./components/notification/Notification";
+import Loading from "./components/loading/Loading";
 
 function App() {
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getProjects());
+  }, []);
+
   return (
-    <Fragment>
-      <SideNav>
-        <h1>agendafix</h1>
-        <ul>
-          <li>
-            <MdOutlineDashboardCustomize /> Dashboard
-          </li>
-          <li>
-            <AiOutlineWarning /> Tickets
-          </li>
-          <li>
+    <>
+      <GlobalStyle />
+      <Loading />
+      <Notification />
+      <Nav>
+        <NavBrand>Trackero</NavBrand>
+        <NavMenu>
+          <NavItem to="/projects" $isActive={location.pathname === "/projects"}>
+            <MdOutlineDashboardCustomize /> Projects
+          </NavItem>
+          <NavItem to="/issues" $isActive={location.pathname === "/issues"}>
+            <AiOutlineWarning /> Issues
+          </NavItem>
+          <NavItem to="/users" $isActive={location.pathname === "/users"}>
             <FiUsers /> Users
-          </li>
-          <li>
-            <IoIosLogOut /> Logout
-          </li>
-        </ul>
-      </SideNav>
+          </NavItem>
+        </NavMenu>
+      </Nav>
       <Container>
-        <div>
-          <BsPlusLg size="1.5em" />
-          <h1>Add project</h1>
-        </div>
-        <div>
-          <h1>Project Two</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
-            nostrum voluptas, et quod rem ipsam reiciendis.
-          </p>
-        </div>
-        <div>
-          <h1>Project One</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
-            nostrum voluptas, et quod rem ipsam reiciendis facere quaerat quae
-            voluptatum autem molestiae numquam animi, veritatis nemo earum
-            reprehenderit doloribus voluptatem!
-          </p>
-        </div>
-        <div>
-          <h1>Project Two</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
-            nostrum voluptas, et quod rem ipsam reiciendis.
-          </p>
-        </div>
+        <Routes>
+          <Route path="/" element={<Navigate to="/projects" />} />
+          <Route path="/projects">
+            <Route index element={<Projects />} />
+            <Route path=":id" element={<ShowProject />} />
+          </Route>
+          <Route path="/issues" element={<Tickets />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
       </Container>
-    </Fragment>
+    </>
   );
 }
 

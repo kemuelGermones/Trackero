@@ -6,7 +6,6 @@ import Project from "../models/project";
 
 export const createIssue = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  console.log(req.params);
   const project = await Project.findById(projectId);
   const issue = new Issue(req.body);
   project?.issues.push(issue._id);

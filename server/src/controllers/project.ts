@@ -14,7 +14,9 @@ export const createProject = async (req: Request, res: Response) => {
 // Show all projects
 
 export const showProjects = async (req: Request, res: Response) => {
-  const projects = await Project.find();
+  const projects = await Project.find()
+    .populate({ path: "issues", populate: { path: "comments" } })
+    .populate("comments");
   res.status(200).send(projects);
 };
 
@@ -22,7 +24,9 @@ export const showProjects = async (req: Request, res: Response) => {
 
 export const showIndividualProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const project = await Project.findById(projectId);
+  const project = await Project.findById(projectId)
+    .populate({ path: "issues", populate: { path: "comments" } })
+    .populate("comments");
   res.status(200).send(project);
 };
 
