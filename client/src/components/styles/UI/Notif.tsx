@@ -2,15 +2,15 @@ import styled from "styled-components";
 
 import { ShowToRight, HideToLeft } from "../utils/Animation";
 
-type TNotifCustomProps = {
+interface INotifCustomProps {
   $show: boolean;
 };
 
-type TNotifHeaderCustomProps = {
+interface INotifHeaderCustomProps {
   $isError: boolean;
 };
 
-export const Notif = styled.div<TNotifCustomProps>`
+export const Notif = styled.div<INotifCustomProps>`
   min-height: 5rem;
   width: 15rem;
   box-sizing: border-box;
@@ -24,7 +24,7 @@ export const Notif = styled.div<TNotifCustomProps>`
     ease-out forwards;
 `;
 
-export const NotifHeader = styled.div<TNotifHeaderCustomProps>`
+export const NotifHeader = styled.div<INotifHeaderCustomProps>`
   width: 1rem;
   box-sizing: border-box;
   background-color: ${(props) =>

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import { ShowToBottom, HideToTop } from "../utils/Animation";
 
 interface ILoadingSpinnerContainerCustomProps {

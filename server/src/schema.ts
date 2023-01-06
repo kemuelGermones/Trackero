@@ -8,16 +8,16 @@ export const projectSchema = Joi.object({
 export const newIssueSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  importance: Joi.string().valid("high", "mid", "low").required(),
-  status: Joi.string().valid("pending", "done").required(),
+  importance: Joi.string().valid("High", "Mid", "Low").required(),
+  status: Joi.string().valid("Pending", "Done", "In Progress").required(),
   dueDate: Joi.date().greater("now").required(),
 });
 
 export const editIssueSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  importance: Joi.string().valid("high", "mid", "low").required(),
-  status: Joi.string().valid("pending", "done").required(),
+  importance: Joi.string().valid("High", "Mid", "Low").required(),
+  status: Joi.string().valid("Pending", "Done", "In Progress").required(),
   dueDate: Joi.date().required(),
 });
 

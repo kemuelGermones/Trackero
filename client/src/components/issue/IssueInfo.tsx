@@ -15,10 +15,9 @@ import { IIssue } from "../../types/interface";
 interface IIssueInfo {
   projectId: string;
   issue: IIssue;
-  setCurrentIssueId: () => void;
 }
 
-function IssueInfo({ projectId, issue, setCurrentIssueId }: IIssueInfo) {
+function IssueInfo({ projectId, issue }: IIssueInfo) {
   const [showEditIssueForm, setShowEditIssueForm] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -34,7 +33,6 @@ function IssueInfo({ projectId, issue, setCurrentIssueId }: IIssueInfo) {
 
   const deleteIssueHandler = (projId: string, issueId: string) => {
     dispatch(deleteIssue(projId, issueId));
-    setCurrentIssueId();
   };
 
   return (
@@ -60,7 +58,7 @@ function IssueInfo({ projectId, issue, setCurrentIssueId }: IIssueInfo) {
         </CardDescription>
         <CardDescription>
           <TextLight>Due Date: </TextLight>
-          {issue.dueDate.split("T")[0]}
+          {new Date(issue.dueDate).toDateString()}
         </CardDescription>
         <CardButtons>
           <Button onClick={showEditIssueFormHandler}>Edit</Button>

@@ -1,12 +1,16 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+interface ICustomNavItemProp {
+  $isActive: boolean;
+}
+
 export const Nav = styled.nav`
   height: 100vh;
   width: 10rem;
   box-sizing: border-box;
   padding: 1rem;
-  background-color: var(--white);
+  background-color: var(--secondary);
   text-transform: uppercase;
   position: fixed;
   top: 0;
@@ -19,7 +23,7 @@ export const NavBrand = styled.div`
   border-bottom: 1px solid black;
   padding: 0 0 0.5rem 0;
   text-align: center;
-  color: var(--primary);
+  color: var(--quaternary);
 `;
 
 export const NavMenu = styled.div`
@@ -27,16 +31,12 @@ export const NavMenu = styled.div`
   flex-direction: column;
 `;
 
-type TCustomNavItemProp = {
-  $isActive: boolean;
-}
-
-export const NavItem = styled(NavLink)<TCustomNavItemProp>`
+export const NavItem = styled(NavLink)<ICustomNavItemProp>`
   text-decoration: none;
-  color: ${props => props.$isActive ? "var(--primary)" : "black"};
+  color: ${props => props.$isActive ? "var(--quaternary)" : "black"};
   padding: 1rem 0;
 
   &:hover {
-    color: var(--primary);
+    color: var(--quaternary);
   }
 `;

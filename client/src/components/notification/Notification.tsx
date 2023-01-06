@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { Transition } from "react-transition-group";
 import { useAppSelector, useAppDispatch } from "../../store";
@@ -10,13 +11,27 @@ import {
 } from "../styles/UI/Notif";
 import { hideNotif } from "../../store/notification-slice";
 
+let timer: number;
+
 function Notification() {
   const { message, title, show } = useAppSelector(
     (state) => state.notification
   );
-  const dispatch = useAppDispatch()
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    timer = setTimeout(() => {
+      dispatch(hideNotif());
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [show]);
 
   const closeNotifHandler = () => {
+    clearTimeout(timer);
     dispatch(hideNotif());
   }
 

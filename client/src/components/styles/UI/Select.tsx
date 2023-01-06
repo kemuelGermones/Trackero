@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-type TSelectCustomProps = {
+interface ISelectCustomProps {
     $isInvalid?: boolean;
 }
 
-const Select = styled.select<TSelectCustomProps>`
+const Select = styled.select<ISelectCustomProps>`
   width: 100%;
   box-sizing: border-box;
   margin: 0 0 0.5rem 0;

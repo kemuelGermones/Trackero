@@ -4,8 +4,8 @@ import Comment from "./comment";
 const issueSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  importance: { type: String, required: true, enum: ["high", "mid", "low"] },
-  status: { type: String, required: true, enum: ["pending", "done"] },
+  importance: { type: String, required: true, enum: ["High", "Mid", "Low"] },
+  status: { type: String, required: true, enum: ["Pending", "Done", "In Progress"] },
   dueDate: { type: Date, required: true },
   comments: [
     {

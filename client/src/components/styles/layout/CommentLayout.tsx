@@ -1,4 +1,4 @@
-import { AiOutlineDelete } from "react-icons/ai";
+import { BsTrash } from "react-icons/bs"
 import styled from "styled-components";
 
 export const CommentFooter = styled.div`
@@ -12,9 +12,9 @@ export const CommentAuthor = styled.div`
   color: gray;
 `;
 
-export const CommentDeleteButton = styled(AiOutlineDelete)`
+export const CommentDeleteButton = styled(BsTrash)`
   &:hover {
-    color: var(--secondary);
+    color: var(--quaternary);
   }
 `;
 

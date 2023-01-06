@@ -45,12 +45,12 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
   const { value: importance, onChangeValueHandler: importanceChange } =
     useValidation(
       null,
-      type === "edit" && !!initialValue ? initialValue.importance : "high"
+      type === "edit" && !!initialValue ? initialValue.importance : "High"
     );
 
   const { value: status, onChangeValueHandler: statusChange } = useValidation(
     null,
-    type === "edit" && !!initialValue ? initialValue.status : "pending"
+    type === "edit" && !!initialValue ? initialValue.status : "Pending"
   );
 
   const {
@@ -165,9 +165,9 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
               onChange={onChangeImportanceHandler}
               value={importance}
             >
-              <option value="high">High</option>
-              <option value="mid">Mid</option>
-              <option value="low">Low</option>
+              <option value="High">High</option>
+              <option value="Mid">Mid</option>
+              <option value="Low">Low</option>
             </Select>
             {type === "edit" && (
               <>
@@ -177,8 +177,9 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
                   onChange={onChangeStatusHandler}
                   value={status}
                 >
-                  <option value="pending">Pending</option>
-                  <option value="done">Done</option>
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Done">Done</option>
                 </Select>
               </>
             )}

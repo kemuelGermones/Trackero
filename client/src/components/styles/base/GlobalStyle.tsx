@@ -2,18 +2,18 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     :root {
-        --primary: #2745F2;
-        --secondary: #415CF2;
+        --primary: #BDC5F2; 
+        --secondary: #F2F2F2;
         --tertiary: #6B7FF2;
-        --light: #BDC5F2;
-        --white: #F2F2F2;
+        --quaternary: #415CF2; 
+        --quinary: #2745F2;
         --success: #7BD67D;
         --danger: #FB706C;
-        --warning: #FAB96B;
+        --warning: #FADF98;
     }
 
     body {
-        background-color: var(--light);
+        background-color: var(--primary);
         font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
