@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-type TCustomCardProp = {
+interface ICustomCardProp {
   $center?: boolean;
 };
 
-export const Card = styled.div<TCustomCardProp>`
-  background: #f2f2f2;
+export const Card = styled.div<ICustomCardProp>`
+  background: var(--secondary);
   border-radius: 0.5rem;
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
@@ -24,12 +24,12 @@ export const CardLogo = styled.div`
   align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--primary);
+  color: var(--quaternary);
 `;
 
 export const CardTitle = styled.h1`
   margin: 0 0 0.5rem 0;
-  color: var(--primary);
+  color: var(--quaternary);
   font-size: 1.5rem;
 `;
 
@@ -43,7 +43,7 @@ export const CardDescription = styled.p`
 
 export const CardDivider = styled.hr`
   height: 1px;
-  background-color: var(--tertiary);
+  background-color: var(--quaternary);
   margin: 0 0 0.5rem 0;
   border: none;
 `;

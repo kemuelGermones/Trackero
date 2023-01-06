@@ -13,9 +13,9 @@ import ProjectComment from "../components/project/ProjectComment";
 import { instanceOfIProject, isArrayOfIProject } from "../types/type-guard";
 import { IIssue, IProject } from "../types/interface";
 import IssueComment from "../components/issue/IssueComment";
+import IssueGraph from "../components/issue/IssueGraph";
 
 type TProjectState = IProject | null;
-type TIssueIdState = string | null;
 type TIssueState = IIssue | null;
 
 function ShowProject() {
@@ -23,7 +23,6 @@ function ShowProject() {
   const navigate = useNavigate();
   const projects = useAppSelector((state) => state.project.data);
   const [project, setProject] = useState<TProjectState>(null);
-  const [currentIssueId, setCurrentIssueId] = useState<TIssueIdState>(null);
   const [currentIssue, setCurrentIssue] = useState<TIssueState>(null);
 
   useEffect(() => {
@@ -38,21 +37,16 @@ function ShowProject() {
   }, [projects]);
 
   useEffect(() => {
-    if (!!project && !!currentIssueId) {
-      const foundIssue = project.issues.find(
-        (issue) => issue._id === currentIssueId
-      );
-      if (!!foundIssue) setCurrentIssue(foundIssue);
+    if (!!currentIssue && !!project) {
+      setCurrentIssue(state => {
+        if (!!state) {
+          const foundIssue = project.issues.find((issue) => issue._id === state._id);
+          return !!foundIssue ? foundIssue : null;
+        }
+        return state;
+      });
     }
-  }, [currentIssueId, project]);
-
-  const setCurrentIssueIdHandler = (id: string) => {
-    setCurrentIssueId(id);
-  };
-
-  const setCurrentIssueIdToNullHandler = () => {
-    setCurrentIssueId(null);
-  };
+  }, [project]);
 
   return (
     <>
@@ -71,17 +65,17 @@ function ShowProject() {
         <IssueSection>
           {instanceOfIProject(project) ? (
             <>
+              <IssueGraph issues={project.issues}/>
               <IssueTable
                 projectId={project._id}
                 issues={project.issues}
-                setCurrentIssueId={setCurrentIssueIdHandler}
+                setCurrentIssue={setCurrentIssue}
               />
-              {!!currentIssue && !!currentIssueId ? (
+              {!!currentIssue ? (
                 <>
                   <IssueInfo
                     projectId={project._id}
                     issue={currentIssue}
-                    setCurrentIssueId={setCurrentIssueIdToNullHandler}
                   />
                   <IssueComment
                     projectId={project._id}

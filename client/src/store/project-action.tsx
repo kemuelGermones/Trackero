@@ -6,7 +6,7 @@ import {
   deleteProjectData,
   deleteProjectCommentData,
 } from "./project-slice";
-import { showNotif } from "./notification-slice";
+import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { RootState, ThunkAction } from "./index";
 import { IProject, IProjectData } from "../types/interface";
@@ -31,12 +31,7 @@ export const getProjects = (): ThunkAction<
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -59,21 +54,11 @@ export const addProject = (
       );
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: postResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -93,21 +78,11 @@ export const editProject = (
       );
       dispatch(editProjectData(data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: putResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", putResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -126,21 +101,11 @@ export const deleteProject = (
       );
       dispatch(deleteProjectData(id));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: deleteResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", deleteResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -164,21 +129,11 @@ export const addProjectComment = (
       );
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: postResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -198,21 +153,11 @@ export const deleteProjectComment = (
       );
       dispatch(deleteProjectCommentData({ projectId, commentId }));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: deleteResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", deleteResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };

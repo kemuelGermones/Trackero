@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { MdOutlineDashboardCustomize } from "react-icons/md";
-import { AiOutlineWarning } from "react-icons/ai";
-import { FiUsers } from "react-icons/fi";
+import { BsFolder, BsPeople, BsExclamationTriangle } from "react-icons/bs";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "./store";
 import GlobalStyle from "./components/styles/base/GlobalStyle";
@@ -33,13 +31,13 @@ function App() {
         <NavBrand>Trackero</NavBrand>
         <NavMenu>
           <NavItem to="/projects" $isActive={location.pathname === "/projects"}>
-            <MdOutlineDashboardCustomize /> Projects
+            <BsFolder /> Projects
           </NavItem>
           <NavItem to="/issues" $isActive={location.pathname === "/issues"}>
-            <AiOutlineWarning /> Issues
+            <BsExclamationTriangle /> Issues
           </NavItem>
           <NavItem to="/users" $isActive={location.pathname === "/users"}>
-            <FiUsers /> Users
+            <BsPeople /> Users
           </NavItem>
         </NavMenu>
       </Nav>

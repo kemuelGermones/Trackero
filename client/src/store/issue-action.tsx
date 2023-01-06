@@ -6,11 +6,13 @@ import {
   deleteProjectIssue,
   deleteProjectIssueComment,
 } from "./project-slice";
-import { showNotif } from "./notification-slice";
+import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { IIssueData, IProject } from "../types/interface";
 import { IEditProjectIssueAction } from "./project-slice";
 import { RootState, ThunkAction } from ".";
+
+// Add issue
 
 export const addIssue = (
   projectId: string,
@@ -28,25 +30,17 @@ export const addIssue = (
       );
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: postResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
 };
+
+// Edit issue
 
 export const editIssue = (
   data: IEditProjectIssueAction
@@ -66,21 +60,11 @@ export const editIssue = (
       );
       dispatch(editProjectIssue(data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: putResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", putResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -98,21 +82,11 @@ export const deleteIssue = (
       );
       dispatch(deleteProjectIssue({ projectId, issueId }));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: deleteResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", deleteResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -134,21 +108,11 @@ export const addIssueComment = (
       );
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: postResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
@@ -167,21 +131,11 @@ export const deleteIssueComment = (
       );
       dispatch(deleteProjectIssueComment({ projectId, issueId, commentId }));
       dispatch(hideLoading());
-      dispatch(
-        showNotif({
-          title: "success",
-          message: deleteResponse.data.message,
-        })
-      );
+      dispatch(showNotification("success", deleteResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(
-          showNotif({
-            title: "error",
-            message: error.response?.data.message,
-          })
-        );
+        dispatch(showNotification("error", error.response?.data.message));
       }
     }
   };
