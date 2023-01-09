@@ -1,20 +1,24 @@
 import styled from "styled-components";
 
-export const Dashboard = styled.section`
+interface IDashboardCustomProps {
+  $templateColumns: string;
+}
+
+export const Dashboard = styled.section<IDashboardCustomProps>`
   padding: 1rem;
   display: grid;
   grid-template-areas:
-    "project issue";
-  grid-template-columns: 1fr 1.5fr;
+    "first second";
+  grid-template-columns: ${props => props.$templateColumns};
   gap: 1rem;
 `;
 
-export const ProjectSection = styled.div`
-  grid-area: project;
+export const FirstSection = styled.div`
+  grid-area: first;
 `;
 
-export const IssueSection = styled.div`
-  grid-area: issue;
+export const SecondSection = styled.div`
+  grid-area: second;
 `;
 
 

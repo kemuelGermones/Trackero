@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/index";
 import {
   Dashboard,
-  ProjectSection,
-  IssueSection,
+  FirstSection,
+  SecondSection,
 } from "../components/styles/layout/Dashboard";
 import IssueInfo from "../components/issue/IssueInfo";
 import IssueTable from "../components/issue/IssueTable";
@@ -38,9 +38,11 @@ function ShowProject() {
 
   useEffect(() => {
     if (!!currentIssue && !!project) {
-      setCurrentIssue(state => {
+      setCurrentIssue((state) => {
         if (!!state) {
-          const foundIssue = project.issues.find((issue) => issue._id === state._id);
+          const foundIssue = project.issues.find(
+            (issue) => issue._id === state._id
+          );
           return !!foundIssue ? foundIssue : null;
         }
         return state;
@@ -50,8 +52,8 @@ function ShowProject() {
 
   return (
     <>
-      <Dashboard>
-        <ProjectSection>
+      <Dashboard $templateColumns="1fr 1.5fr">
+        <FirstSection>
           {instanceOfIProject(project) ? (
             <>
               <ProjectInfo data={project} />
@@ -61,22 +63,20 @@ function ShowProject() {
               />
             </>
           ) : null}
-        </ProjectSection>
-        <IssueSection>
+        </FirstSection>
+        <SecondSection>
           {instanceOfIProject(project) ? (
             <>
-              <IssueGraph issues={project.issues}/>
+              <IssueGraph issues={project.issues} />
               <IssueTable
                 projectId={project._id}
-                issues={project.issues}
+                issuesData={project.issues}
                 setCurrentIssue={setCurrentIssue}
+                issuesPerTable={5}
               />
               {!!currentIssue ? (
                 <>
-                  <IssueInfo
-                    projectId={project._id}
-                    issue={currentIssue}
-                  />
+                  <IssueInfo projectId={project._id} issue={currentIssue} />
                   <IssueComment
                     projectId={project._id}
                     issueId={currentIssue._id}
@@ -86,7 +86,7 @@ function ShowProject() {
               ) : null}
             </>
           ) : null}
-        </IssueSection>
+        </SecondSection>
       </Dashboard>
     </>
   );

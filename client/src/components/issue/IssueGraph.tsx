@@ -3,10 +3,10 @@ import { GraphLayout, GraphBox } from "../styles/layout/GraphLayout";
 import { Card, CardDivider, CardTitle } from "../styles/UI/Card";
 import "chart.js/auto";
 import { Chart } from "react-chartjs-2";
-import { IIssue } from "../../types/interface";
+import { IIssue, IModifiedIssue } from "../../types/interface";
 
 interface IIssueGraph {
-  issues: IIssue[];
+  issues: IIssue[] | IModifiedIssue[];
 }
 
 const STATUS_OPTIONS = {

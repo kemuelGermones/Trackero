@@ -8,6 +8,7 @@ import {
   NotifBody,
   NotifTitle,
   NotifDescription,
+  NotifCloseButton
 } from "../styles/UI/Notif";
 import { hideNotif } from "../../store/notification-slice";
 
@@ -42,7 +43,7 @@ function Notification() {
         <NotifBody>
           <NotifTitle>
             <h1>{title}</h1>
-            <IoClose onClick={closeNotifHandler}/>
+            <NotifCloseButton onClick={closeNotifHandler}/>
           </NotifTitle>
           <NotifDescription>
             {message}
