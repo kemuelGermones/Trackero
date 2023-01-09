@@ -20,16 +20,6 @@ export const showProjects = async (req: Request, res: Response) => {
   res.status(200).send(projects);
 };
 
-// Show individual project
-
-export const showIndividualProject = async (req: Request, res: Response) => {
-  const { projectId } = req.params;
-  const project = await Project.findById(projectId)
-    .populate({ path: "issues", populate: { path: "comments" } })
-    .populate("comments");
-  res.status(200).send(project);
-};
-
 // Edit project
 
 export const editProject = async (req: Request, res: Response) => {

@@ -4,7 +4,6 @@ import wrapAsync from "../utils/wrapAsync";
 import {
   showProjects,
   createProject,
-  showIndividualProject,
   editProject,
   deleteProject,
 } from "../controllers/project";
@@ -18,10 +17,6 @@ router.post("/", validateProject, wrapAsync(createProject));
 // Show projects
 
 router.get("/", wrapAsync(showProjects));
-
-// Show individual project
-
-router.get("/:projectId", wrapAsync(showIndividualProject));
 
 // Edit project
 
