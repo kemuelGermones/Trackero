@@ -2,12 +2,14 @@ import styled from "styled-components";
 
 interface ICustomCardProp {
   $center?: boolean;
-};
+  $width?: string;
+}
 
 export const Card = styled.div<ICustomCardProp>`
   background: var(--secondary);
   border-radius: 0.5rem;
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
+  width: ${(props) => (!!props.$width ? props.$width : "")};
   box-sizing: border-box;
   padding: 1rem;
   display: flex;
@@ -58,4 +60,14 @@ export const CardFooter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const CardFooterText = styled.p`
+  color: var(--tertiary);
+  margin: 0 auto;
+  cursor: pointer;
+  
+  &:hover {
+    color: var(--quaternary);
+  }
 `;

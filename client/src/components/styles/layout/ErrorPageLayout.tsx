@@ -11,7 +11,7 @@ export const ErrorLayout = styled.div`
 `;
 
 export const ErrorLogo = styled.img`
-  width: 20rem;
+  width: 35rem;
 `;
 
 export const ErrorTitle = styled.h1`

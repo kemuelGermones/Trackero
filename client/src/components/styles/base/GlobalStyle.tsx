@@ -6,7 +6,6 @@ const GlobalStyle = createGlobalStyle`
         --secondary: #F2F2F2;
         --tertiary: #6B7FF2;
         --quaternary: #415CF2; 
-        --quinary: #2745F2;
         --success: #7BD67D;
         --danger: #FB706C;
         --warning: #FADF98;
