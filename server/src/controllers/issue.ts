@@ -16,14 +16,6 @@ export const createIssue = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created an issue" });
 };
 
-// Show Indiviual Issue
-
-export const showIndividualIssue = async (req: Request, res: Response) => {
-  const { issueId } = req.params;
-  const issue = await Issue.findById(issueId);
-  res.status(200).send(issue);
-}
-
 // Edit issue
 
 export const editIssue = async (req: Request, res: Response) => {

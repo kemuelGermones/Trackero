@@ -1,6 +1,6 @@
 import styled from "styled-components";
-
 import { ShowToRight, HideToLeft } from "../utils/Animation";
+import { BsXLg } from "react-icons/bs";
 
 interface INotifCustomProps {
   $show: boolean;
@@ -52,4 +52,13 @@ export const NotifDescription = styled.p`
   margin: 0;
   padding: 0;
   font-size: 0.75rem;
+`;
+
+export const NotifCloseButton = styled(BsXLg)`
+  width: 0.75rem;
+  color: gray;
+
+  &:hover {
+    color: black;
+  }
 `;

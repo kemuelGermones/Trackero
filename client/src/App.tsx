@@ -5,7 +5,7 @@ import { useAppDispatch } from "./store";
 import GlobalStyle from "./components/styles/base/GlobalStyle";
 import { Nav, NavBrand, NavMenu, NavItem } from "./components/styles/UI/Nav";
 import Projects from "./pages/Projects";
-import Tickets from "./pages/Tickets";
+import Issues from "./pages/Issues";
 import Users from "./pages/Users";
 import Error from "./pages/Error";
 import ShowProject from "./pages/ShowProject";
@@ -48,7 +48,7 @@ function App() {
             <Route index element={<Projects />} />
             <Route path=":id" element={<ShowProject />} />
           </Route>
-          <Route path="/issues" element={<Tickets />} />
+          <Route path="/issues" element={<Issues />} />
           <Route path="/users" element={<Users />} />
           <Route path="*" element={<Error />} />
         </Routes>

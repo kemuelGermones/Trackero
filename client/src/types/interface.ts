@@ -39,6 +39,11 @@ export interface IIssue extends IIssueData {
   comments: IComment[];
 }
 
+export interface IModifiedIssue extends IIssue {
+  projectId: string;
+  projectName: string;
+}
+
 // Response Status Interface
 
 export interface IStatus {

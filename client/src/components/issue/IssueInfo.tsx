@@ -10,11 +10,12 @@ import Button from "../styles/UI/Button";
 import IssueForm from "./IssueForm";
 import TextLight from "../styles/utils/TextLight";
 import { deleteIssue } from "../../store/issue-action";
-import { IIssue } from "../../types/interface";
+import { IIssue, IModifiedIssue } from "../../types/interface";
+import { instanceOfIModifiedIssue } from "../../types/type-guard";
 
 interface IIssueInfo {
   projectId: string;
-  issue: IIssue;
+  issue: IIssue | IModifiedIssue;
 }
 
 function IssueInfo({ projectId, issue }: IIssueInfo) {
@@ -48,6 +49,12 @@ function IssueInfo({ projectId, issue }: IIssueInfo) {
       <Card style={{ marginBottom: "1rem" }}>
         <CardTitle>{issue.title}</CardTitle>
         <CardDescription>{issue.description}</CardDescription>
+        {instanceOfIModifiedIssue(issue) && !!issue.projectName ? (
+          <CardDescription>
+            <TextLight>Project: </TextLight>
+            {issue.projectName}
+          </CardDescription>
+         ) : null}
         <CardDescription>
           <TextLight>Status: </TextLight>
           {issue.status}
@@ -62,9 +69,7 @@ function IssueInfo({ projectId, issue }: IIssueInfo) {
         </CardDescription>
         <CardButtons>
           <Button onClick={showEditIssueFormHandler}>Edit</Button>
-          <Button
-            onClick={deleteIssueHandler.bind(null, projectId, issue._id)}
-          >
+          <Button onClick={deleteIssueHandler.bind(null, projectId, issue._id)}>
             Delete
           </Button>
         </CardButtons>

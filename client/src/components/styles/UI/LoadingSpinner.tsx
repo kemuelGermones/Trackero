@@ -20,7 +20,7 @@ export const LoadingSpinner = styled.div`
     height: 100%;
     border-radius: 100%;
     border: 10px solid transparent;
-    border-top-color: var(--primary);
+    border-top-color: var(--tertiary);
   }
 
   &:before {

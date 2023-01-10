@@ -1,6 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { SmallButton, PaginationButton } from "../styles/UI/Button";
 import {
+  DropdownContainer,
+  Dropdown,
+  DropdownLabel,
+} from "../styles/UI/Dropdown";
+import {
   Table,
   TableHeader,
   TableBody,
@@ -9,36 +14,56 @@ import {
   TablePagination,
 } from "../styles/UI/Table";
 import IssueForm from "./IssueForm";
-import { IIssue } from "../../types/interface";
+import sortIssues from "../../lib/sortIssues";
+import { IIssue, IModifiedIssue } from "../../types/interface";
+import {
+  instanceOfIIssue,
+  instanceOfIModifiedIssue,
+} from "../../types/type-guard";
 
-interface IIssueTable {
-  projectId: string;
-  issues: IIssue[];
-  setCurrentIssue: (issue: IIssue) => void;
+type TCurrentIssuesState = IIssue[] | IModifiedIssue[];
+
+interface IProjectIssueTable {
+  projectId?: string;
+  issuesData: TCurrentIssuesState;
+  setCurrentIssue?: (issue: IIssue) => void;
+  setCurrentModifiedIssue?: (issue: IModifiedIssue) => void;
+  issuesPerTable: number;
 }
 
-function IssueTable({ projectId, issues, setCurrentIssue }: IIssueTable) {
+function ProjectIssueTable({
+  projectId,
+  issuesData,
+  setCurrentIssue,
+  setCurrentModifiedIssue,
+  issuesPerTable,
+}: IProjectIssueTable) {
+  const [issues, setIssues] = useState(issuesData);
+  const [sortCategory, setSortCategory] = useState("importance");
   const [showNewIssueForm, setShowNewIssueForm] = useState(false);
   const [currentTablePage, setCurrentTablePage] = useState(1);
-  const [issuesPerTablePage, setIssuesPerTablePage] = useState(5);
 
-  const currentIssues = useMemo(() => {
-    const lastIssuetIndex = currentTablePage * issuesPerTablePage;
-    const firstIssueIndex = lastIssuetIndex - issuesPerTablePage;
+  const currentIssues = useMemo<TCurrentIssuesState>(() => {
+    const lastIssuetIndex = currentTablePage * issuesPerTable;
+    const firstIssueIndex = lastIssuetIndex - issuesPerTable;
     return issues.slice(firstIssueIndex, lastIssuetIndex);
-  }, [currentTablePage, issuesPerTablePage, issues]);
+  }, [currentTablePage, issues]);
 
   const pages = useMemo(() => {
     const pages: number[] = [];
-    for (let i = 1; i <= Math.ceil(issues.length / issuesPerTablePage); i++) {
+    for (let i = 1; i <= Math.ceil(issues.length / issuesPerTable); i++) {
       pages.push(i);
     }
     return pages;
-  }, [issues.length, issuesPerTablePage]);
+  }, [issues, issuesPerTable]);
 
   useEffect(() => {
-    if (currentIssues.length === 0 && currentTablePage > 0) {
-      setCurrentTablePage(state => state - 1);
+    setIssues(sortIssues(issuesData, sortCategory));
+  }, [issuesData, sortCategory]);
+
+  useEffect(() => {
+    if (currentIssues.length === 0 && currentTablePage > 1) {
+      setCurrentTablePage((state) => state - 1);
     }
   }, [currentIssues]);
 
@@ -52,26 +77,48 @@ function IssueTable({ projectId, issues, setCurrentIssue }: IIssueTable) {
     document.body.style.overflow = "unset";
   };
 
-  const setCurrentIssueIdHandler = (data: IIssue) => {
-    setCurrentIssue(data);
-  };
-
   const changeTablePageHandler = (page: number) => {
     setCurrentTablePage(page);
   };
 
+  const setCurrentIssueHandler = (issue: IIssue | IModifiedIssue) => {
+    if (!!setCurrentIssue && instanceOfIIssue(issue)) {
+      setCurrentIssue(issue);
+    } else if (!!setCurrentModifiedIssue && instanceOfIModifiedIssue(issue)) {
+      setCurrentModifiedIssue(issue);
+    }
+  };
+
+  const changeSortCategoryHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSortCategory(event.target.value);
+  };
+
   return (
     <>
-      {showNewIssueForm && (
+      {showNewIssueForm && !!projectId ? (
         <IssueForm
           type="new"
           hideForm={hideNewIssueForm}
           projectId={projectId}
         />
-      )}
+      ) : null}
       <TableContainer>
         <TableSubHead>
-          <SmallButton onClick={showNewIssueFormHandler}>Add issue</SmallButton>
+          <DropdownContainer>
+            <DropdownLabel>Sort by:</DropdownLabel>
+            <Dropdown onChange={changeSortCategoryHandler}>
+              <option value="importance">Importance</option>
+              <option value="status">Status</option>
+              <option value="dueDate">Due Date</option>
+            </Dropdown>
+          </DropdownContainer>
+          {!!projectId ? (
+            <SmallButton onClick={showNewIssueFormHandler}>
+              Add issue
+            </SmallButton>
+          ) : null}
         </TableSubHead>
         <Table>
           <TableHeader>
@@ -88,10 +135,11 @@ function IssueTable({ projectId, issues, setCurrentIssue }: IIssueTable) {
                 <td colSpan={4}>No Data</td>
               </tr>
             ) : null}
+
             {currentIssues.map((issue) => (
               <tr
                 key={issue._id}
-                onClick={setCurrentIssueIdHandler.bind(null, issue)}
+                onClick={setCurrentIssueHandler.bind(null, issue)}
               >
                 <td>{issue.title}</td>
                 <td>{issue.importance}</td>
@@ -117,4 +165,4 @@ function IssueTable({ projectId, issues, setCurrentIssue }: IIssueTable) {
   );
 }
 
-export default IssueTable;
+export default ProjectIssueTable;
