@@ -4,8 +4,11 @@ import projectRoute from "./routes/project";
 import issueRoute from "./routes/issue";
 import projectCommentRoute from "./routes/projectComment";
 import issueCommentRoute from "./routes/issueComment";
+import userRoute from "./routes/user";
 import AppError from "./utils/AppError";
 import cors from "cors";
+import passport from "passport";
+import passportConfig from "./config/passport";
 
 const app = express();
 
@@ -22,6 +25,10 @@ app.use(urlencoded({ extended: true }));
 
 app.use(express.json());
 
+app.use(passport.initialize());
+passportConfig(passport);
+
+app.use("/", userRoute);
 app.use("/projects", projectRoute);
 app.use("/projects/:projectId/issues", issueRoute);
 app.use("/projects/:projectId/comments", projectCommentRoute);
