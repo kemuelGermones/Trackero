@@ -1,4 +1,4 @@
-import { PassportStatic} from "passport";
+import { PassportStatic } from "passport";
 import User from "../models/user";
 import passportJwt from "passport-jwt";
 
