@@ -31,9 +31,12 @@ function ProjectInfo({ data }: IProjectInfo) {
     document.body.style.overflow = "unset";
   };
 
-  const deleteProjectRequest = () => {
-    dispatch(deleteProject(data._id));
-    navigate("/projects");
+  const deleteProjectRequest = async () => {
+    const deleteStatus = await dispatch(deleteProject(data._id));
+    console.log(deleteStatus);
+    if (deleteStatus === 200) {
+      navigate("/projects");
+    };
   };
 
   return (

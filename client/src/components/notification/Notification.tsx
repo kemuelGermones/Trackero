@@ -8,7 +8,7 @@ import {
   NotifBody,
   NotifTitle,
   NotifDescription,
-  NotifCloseButton
+  NotifCloseButton,
 } from "../styles/UI/Notif";
 import { hideNotif } from "../../store/notification-slice";
 
@@ -22,32 +22,29 @@ function Notification() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    timer = setTimeout(() => {
-      dispatch(hideNotif());
-    }, 3000);
-
-    return () => {
+    if (show) {
+      timer = setTimeout(() => {
+        dispatch(hideNotif());
+      }, 3000);
+    } else {
       clearTimeout(timer);
     }
   }, [show]);
 
   const closeNotifHandler = () => {
-    clearTimeout(timer);
     dispatch(hideNotif());
-  }
+  };
 
   return (
     <Transition mountOnEnter unmountOnExit in={show} timeout={400}>
       <Notif $show={show}>
-        <NotifHeader $isError={title === "error"}/>
+        <NotifHeader $isError={title === "error"} />
         <NotifBody>
           <NotifTitle>
             <h1>{title}</h1>
-            <NotifCloseButton onClick={closeNotifHandler}/>
+            <NotifCloseButton onClick={closeNotifHandler} />
           </NotifTitle>
-          <NotifDescription>
-            {message}
-          </NotifDescription>
+          <NotifDescription>{message}</NotifDescription>
         </NotifBody>
       </Notif>
     </Transition>

@@ -24,3 +24,15 @@ export const editIssueSchema = Joi.object({
 export const commentSchema = Joi.object({
   comment: Joi.string().required(),
 });
+
+export const registerUserSchema = Joi.object({
+  email: Joi.string().required(),
+  username: Joi.string().required(),
+  password: Joi.string().required(),
+  role: Joi.string().valid("Administrator", "Developer").required(),
+});
+
+export const loginUserSchema = Joi.object({
+  email: Joi.string().required(),
+  password: Joi.string().required()
+});

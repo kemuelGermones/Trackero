@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import AppError from "./utils/AppError";
-import { projectSchema, newIssueSchema, editIssueSchema, commentSchema } from "./schema";
+import {
+  projectSchema,
+  newIssueSchema,
+  editIssueSchema,
+  commentSchema,
+  registerUserSchema,
+  loginUserSchema
+} from "./schema";
 
 export const validateProject = (
   req: Request,
@@ -50,6 +57,34 @@ export const validateComment = (
   next: NextFunction
 ) => {
   const { error } = commentSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+export const validateNewUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = registerUserSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+export const validateOldUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = loginUserSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);

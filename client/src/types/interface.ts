@@ -44,6 +44,20 @@ export interface IModifiedIssue extends IIssue {
   projectName: string;
 }
 
+// User interface
+
+export interface IUserData {
+  email: string;
+  username: string;
+  password: string;
+  role: string;
+}
+
+export interface IUser extends IUserData {
+  _id: string;
+  __v: number;
+}
+
 // Response Status Interface
 
 export interface IStatus {
