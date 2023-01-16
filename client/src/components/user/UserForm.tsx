@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAppDispatch } from "../../store";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardTitle,
@@ -11,9 +13,12 @@ import Input from "../styles/UI/Input";
 import Select from "../styles/UI/Select";
 import Form from "../styles/UI/Form";
 import useValidation from "../../hooks/useValidation";
+import { registerUser, loginUser } from "../../store/user-action";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const {
     value: email,
@@ -65,23 +70,17 @@ function UserForm() {
     roleChange(event.target.value);
   };
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
     const isUsernameValid = validateUsername();
     if (!isLogin && isEmailValid && isPasswordValid && isUsernameValid) {
-      console.log({ email, password, username, role });
-      // DO SOMETHINGGG!!!!!
-      resetEmail();
-      resetPassword();
-      resetUsername();
-      resetRole();
+      const registerStatus = await dispatch(registerUser({ email, username, password, role }));
+      if (registerStatus === 200) navigate("/projects");
     } else if (isLogin && isEmailValid && isPasswordValid) {
-      console.log({ email, password });
-      // DO SOMETHINGGG!!!!!
-      resetEmail();
-      resetPassword();
+      const loginStatus = await dispatch(loginUser(email, password));
+      if (loginStatus === 200) navigate("/projects");
     }
   };
 

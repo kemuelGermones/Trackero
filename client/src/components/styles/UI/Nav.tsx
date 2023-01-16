@@ -33,7 +33,16 @@ export const NavMenu = styled.div`
 
 export const NavItem = styled(NavLink)<ICustomNavItemProp>`
   text-decoration: none;
-  color: ${props => props.$isActive ? "var(--quaternary)" : "black"};
+  color: ${(props) => (props.$isActive ? "var(--quaternary)" : "black")};
+  padding: 1rem 0;
+
+  &:hover {
+    color: var(--quaternary);
+  }
+`;
+
+export const NavUnit = styled.div`
+  cursor: pointer;
   padding: 1rem 0;
 
   &:hover {

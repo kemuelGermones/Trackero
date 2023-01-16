@@ -11,16 +11,28 @@ export const registerUser = async (req: Request, res: Response) => {
   const { email, username, password, role } = req.body;
   const findUser = await User.findOne({ email });
   if (findUser) {
-    res.status(400).json({ status: "400", message: "User exists already" });
+    res.status(400).json({ status: 400, message: "User exists already" });
   } else {
     const newUser = new User({ email, username, role });
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     newUser.password = hash;
     await newUser.save();
-    res
-      .status(200)
-      .json({ status: "200", message: "Successfully created an account" });
+
+    const findUser = await User.findOne({ email });
+    if (!!findUser) {
+      const payload = { id: findUser._id, username: findUser.username };
+      jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
+        res.status(200).json({
+          status: 200,
+          message: "Successfully created an account",
+          id: payload.id,
+          username: payload.username,
+          expiresIn: 3600,
+          token: "Bearer " + token,
+        });
+      });
+    }
   }
 };
 
@@ -37,13 +49,37 @@ export const loginUser = async (req: Request, res: Response) => {
       res.status(400).json({ status: "400", message: "Incorrect password" });
     } else {
       const payload = { id: findUser._id, username: findUser.username };
-      jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
-        res.json({
-          success: true,
+      jwt.sign(payload, secret, { expiresIn: 3660 }, (err, token) => {
+        res.status(200).json({
+          status: 200,
+          message: "Successfully logged in",
+          id: payload.id,
+          username: payload.username,
           expiresIn: 3600,
           token: "Bearer " + token,
         });
       });
     }
+  }
+};
+
+// New token
+
+export const refreshUser = async (req: Request, res: Response) => {
+  const { id, username } = req.body;
+  const findUser = await User.findById(id);
+  if (!findUser) {
+    res.status(400).json({ status: "400", message: "User doesn't exists" });
+  } else {
+    jwt.sign({ id, username }, secret, { expiresIn: 3600 }, (err, token) => {
+      res.status(200).json({
+        status: 200,
+        message: "Successfully generated new token",
+        id,
+        username,
+        expiresIn: 3600,
+        token: "Bearer " + token,
+      });
+    });
   }
 };

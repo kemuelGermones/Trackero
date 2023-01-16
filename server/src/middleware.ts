@@ -5,7 +5,8 @@ import {
   newIssueSchema,
   editIssueSchema,
   commentSchema,
-  userSchema,
+  registerUserSchema,
+  loginUserSchema
 } from "./schema";
 
 export const validateProject = (
@@ -64,12 +65,26 @@ export const validateComment = (
   }
 };
 
-export const validateUser = (
+export const validateNewUser = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = userSchema.validate(req.body);
+  const { error } = registerUserSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+export const validateOldUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = loginUserSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);

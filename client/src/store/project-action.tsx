@@ -92,7 +92,7 @@ export const editProject = (
 
 export const deleteProject = (
   id: string
-): ThunkAction<void, RootState, unknown, AnyAction> => {
+): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
@@ -102,11 +102,13 @@ export const deleteProject = (
       dispatch(deleteProjectData(id));
       dispatch(hideLoading());
       dispatch(showNotification("success", deleteResponse.data.message));
+      return deleteResponse.data.status;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
       }
+      return 400;
     }
   };
 };
@@ -158,6 +160,7 @@ export const deleteProjectComment = (
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
+        return error.response?.data.status;
       }
     }
   };
