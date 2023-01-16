@@ -9,6 +9,7 @@ import { PositionCenter } from "../styles/utils/PositionCenter";
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
 import { addProject, editProject } from "../../store/project-action";
+import { useAppSelector } from "../../store";
 
 interface IProjecForm {
   type: "new" | "edit";
@@ -26,6 +27,7 @@ function ProjectForm({
   projectId,
 }: IProjecForm) {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   const {
     value: title,
@@ -61,12 +63,18 @@ function ProjectForm({
     event.preventDefault();
     const titleIsValid = validateTitle();
     const descriptionIsValid = validateDescription();
-    if (titleIsValid && descriptionIsValid && type === "new") {
-      dispatch(addProject({ title, description }));
+    if (titleIsValid && descriptionIsValid && type === "new" && !!accessToken) {
+      dispatch(addProject({ title, description }, accessToken));
       hideForm();
     }
-    if (titleIsValid && descriptionIsValid && type === "edit" && !!projectId) {
-      dispatch(editProject({ title, description, id: projectId }));
+    if (
+      titleIsValid &&
+      descriptionIsValid &&
+      type === "edit" &&
+      !!projectId &&
+      !!accessToken
+    ) {
+      dispatch(editProject({ title, description, id: projectId }, accessToken));
       hideForm();
     }
   };

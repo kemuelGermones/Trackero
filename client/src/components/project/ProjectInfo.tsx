@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   Card,
   CardTitle,
@@ -18,6 +18,7 @@ interface IProjectInfo {
 
 function ProjectInfo({ data }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const accessToken = useAppSelector((state) => state.user.accessToken);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -32,11 +33,12 @@ function ProjectInfo({ data }: IProjectInfo) {
   };
 
   const deleteProjectRequest = async () => {
-    const deleteStatus = await dispatch(deleteProject(data._id));
-    console.log(deleteStatus);
-    if (deleteStatus === 200) {
-      navigate("/projects");
-    };
+    if (!!accessToken) {
+      const deleteStatus = await dispatch(deleteProject(data._id, accessToken));
+      if (deleteStatus === 200) {
+        navigate("/projects");
+      }
+    }
   };
 
   return (

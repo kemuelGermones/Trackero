@@ -10,8 +10,8 @@ function sortIssues(issues: IModifiedIssue[] | IIssue[], category: string) {
   //SORT BY STATUS
   if (category === "status") {
     return [...issues].sort((a, b) => {
-      let A;
-      let B;
+      let A: number;
+      let B: number;
 
       if (a.status === "Pending") {
         A = 1;
@@ -35,8 +35,8 @@ function sortIssues(issues: IModifiedIssue[] | IIssue[], category: string) {
   //SORT BY IMPORTANCE
   if (category === "importance") {
     return [...issues].sort((a, b) => {
-      let A;
-      let B;
+      let A: number;
+      let B: number;
 
       if (a.importance === "High") {
         A = 1;

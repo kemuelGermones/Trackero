@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
   CommentAuthor,
@@ -12,7 +12,10 @@ import TextArea from "../styles/UI/TextArea";
 import Label from "../styles/UI/Label";
 import { IComment } from "../../types/interface";
 import useValidation from "../../hooks/useValidation";
-import { deleteProjectComment, addProjectComment } from "../../store/project-action";
+import {
+  deleteProjectComment,
+  addProjectComment,
+} from "../../store/project-action";
 
 interface IProjectComment {
   projectId: string;
@@ -21,6 +24,7 @@ interface IProjectComment {
 
 function ProjectComment({ projectId, comments }: IProjectComment) {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
   const {
     value: comment,
     valueError: commentError,
@@ -33,7 +37,9 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
     projectId: string,
     commentId: string
   ) => {
-    dispatch(deleteProjectComment(projectId, commentId));
+    if (!!accessToken) {
+      dispatch(deleteProjectComment(projectId, commentId, accessToken));
+    }
   };
 
   const onChangeCommentHandler = (
@@ -45,8 +51,8 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid) {
-      dispatch(addProjectComment(projectId, comment));
+    if (commentIsValid && !!accessToken) {
+      dispatch(addProjectComment(projectId, comment, accessToken));
       commentReset();
     }
   };

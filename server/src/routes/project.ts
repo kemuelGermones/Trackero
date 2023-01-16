@@ -7,23 +7,42 @@ import {
   editProject,
   deleteProject,
 } from "../controllers/project";
+import passport from "passport";
 
 const router = Router();
 
 // Create project
 
-router.post("/", validateProject, wrapAsync(createProject));
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  validateProject,
+  wrapAsync(createProject)
+);
 
 // Show projects
 
-router.get("/", wrapAsync(showProjects));
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  wrapAsync(showProjects)
+);
 
 // Edit project
 
-router.put("/:projectId", validateProject, wrapAsync(editProject));
+router.put(
+  "/:projectId",
+  passport.authenticate("jwt", { session: false }),
+  validateProject,
+  wrapAsync(editProject)
+);
 
 // Delete project
 
-router.delete("/:projectId", wrapAsync(deleteProject));
+router.delete(
+  "/:projectId",
+  passport.authenticate("jwt", { session: false }),
+  wrapAsync(deleteProject)
+);
 
 export default router;

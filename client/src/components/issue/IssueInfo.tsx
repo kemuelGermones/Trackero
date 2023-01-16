@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   Card,
   CardTitle,
@@ -21,6 +21,7 @@ interface IIssueInfo {
 function IssueInfo({ projectId, issue }: IIssueInfo) {
   const [showEditIssueForm, setShowEditIssueForm] = useState(false);
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   const showEditIssueFormHandler = () => {
     setShowEditIssueForm(true);
@@ -33,7 +34,9 @@ function IssueInfo({ projectId, issue }: IIssueInfo) {
   };
 
   const deleteIssueHandler = (projId: string, issueId: string) => {
-    dispatch(deleteIssue(projId, issueId));
+    if (!!accessToken) {
+      dispatch(deleteIssue(projId, issueId, accessToken));
+    }
   };
 
   return (
@@ -54,7 +57,7 @@ function IssueInfo({ projectId, issue }: IIssueInfo) {
             <TextLight>Project: </TextLight>
             {issue.projectName}
           </CardDescription>
-         ) : null}
+        ) : null}
         <CardDescription>
           <TextLight>Status: </TextLight>
           {issue.status}

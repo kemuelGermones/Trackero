@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
   CommentAuthor,
@@ -12,7 +12,7 @@ import TextArea from "../styles/UI/TextArea";
 import Button from "../styles/UI/Button";
 import { IComment } from "../../types/interface";
 import useValidation from "../../hooks/useValidation";
-import { addIssueComment, deleteIssueComment} from "../../store/issue-action";
+import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
 
 interface IIssueComment {
   projectId: string;
@@ -22,6 +22,7 @@ interface IIssueComment {
 
 function IssueComment({ projectId, issueId, comments }: IIssueComment) {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   const {
     value: comment,
@@ -40,14 +41,16 @@ function IssueComment({ projectId, issueId, comments }: IIssueComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid) {
-      dispatch(addIssueComment(issueId, comment));
+    if (commentIsValid && !!accessToken) {
+      dispatch(addIssueComment(issueId, comment, accessToken));
       commentReset();
     }
   };
 
   const deleteIssueCommentHandler = (issueId: string, commentId: string) => {
-    dispatch(deleteIssueComment(projectId, issueId, commentId));
+    if (!!accessToken) {
+      dispatch(deleteIssueComment(projectId, issueId, commentId, accessToken));
+    }
   };
 
   return (

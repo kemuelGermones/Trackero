@@ -21,11 +21,14 @@ let logoutTimer: number;
 function App() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((state) => state.user.login);
+  const accessToken = useAppSelector((state) => state.user.accessToken);
   const expirationTime = useAppSelector((state) => state.user.expiration);
 
   useEffect(() => {
-    dispatch(getProjects());
-  }, []);
+    if (!!accessToken) {
+      dispatch(getProjects(accessToken));
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     if (isLoggedIn) {

@@ -16,6 +16,10 @@ router.post("/login", validateOldUser, wrapAsync(loginUser));
 
 // Refresh the user
 
-router.post("/refresh", passport.authenticate("jwt", { session: false }), wrapAsync(refreshUser));
+router.post(
+  "/refresh",
+  passport.authenticate("jwt", { session: false }),
+  wrapAsync(refreshUser)
+);
 
 export default router;

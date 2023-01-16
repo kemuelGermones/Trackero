@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import Backdrop from "../styles/UI/Backdrop";
 import { PositionCenter } from "../styles/utils/PositionCenter";
 import { Card, CardDivider, CardTitle } from "../styles/UI/Card";
@@ -21,6 +21,7 @@ interface IIssueForm {
 
 function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   const {
     value: title,
@@ -102,10 +103,15 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       titleIsValid &&
       descriptionIsValid &&
       dueDateIsValid &&
-      type === "new"
+      type === "new" &&
+      !!accessToken
     ) {
       dispatch(
-        addIssue(projectId, { title, description, importance, status, dueDate })
+        addIssue(
+          projectId,
+          { title, description, importance, status, dueDate },
+          accessToken
+        )
       );
       hideForm();
     }
@@ -114,18 +120,22 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       descriptionIsValid &&
       dueDateIsValid &&
       type === "edit" &&
-      !!initialValue
+      !!initialValue &&
+      !!accessToken
     ) {
       dispatch(
-        editIssue({
-          projectId,
-          issueId: initialValue._id,
-          title,
-          description,
-          importance,
-          status,
-          dueDate,
-        })
+        editIssue(
+          {
+            projectId,
+            issueId: initialValue._id,
+            title,
+            description,
+            importance,
+            status,
+            dueDate,
+          },
+          accessToken
+        )
       );
       hideForm();
     }
