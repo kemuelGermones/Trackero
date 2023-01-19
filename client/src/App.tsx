@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./store";
+import { getProjects } from "./store/project-action";
+import { logout } from "./store/user-slice";
+
 import GlobalStyle from "./components/styles/base/GlobalStyle";
 import Projects from "./pages/Projects";
 import Issues from "./pages/Issues";
@@ -8,13 +11,12 @@ import Users from "./pages/Users";
 import Error from "./pages/Error";
 import Login from "./pages/Login";
 import ShowProject from "./pages/ShowProject";
-import { getProjects } from "./store/project-action";
 import Notification from "./components/notification/Notification";
 import Loading from "./components/loading/Loading";
 import WithoutNav from "./components/outlet/WithoutNav";
 import WithNav from "./components/outlet/WithNav";
 import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
-import { logout } from "./store/user-slice";
+import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
 
 let logoutTimer: number;
 
@@ -25,7 +27,8 @@ function App() {
   const expirationTime = useAppSelector((state) => state.user.expiration);
 
   useEffect(() => {
-    if (!!accessToken) {
+    const currentTime = new Date().getTime();
+    if (!!accessToken && !!expirationTime && expirationTime > currentTime) {
       dispatch(getProjects(accessToken));
     }
   }, [accessToken]);
@@ -51,8 +54,10 @@ function App() {
       <Loading />
       <Notification />
       <Routes>
-        <Route element={<WithoutNav />}>
-          <Route path="/" element={<Login />} />
+        <Route element={<NotProtectedRoutes />}>
+          <Route element={<WithoutNav />}>
+            <Route path="/" element={<Login />} />
+          </Route>
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<WithNav />}>

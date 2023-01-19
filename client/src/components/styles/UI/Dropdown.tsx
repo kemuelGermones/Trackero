@@ -18,7 +18,7 @@ export const Dropdown = styled.select`
     appearance: none;
     background: url("/white-arrow-down.png");
     background-repeat: no-repeat;
-    background-size: 0.75rem;
+    background-size: 0.6rem;
     background-position: 93% center;
     background-color: var(--tertiary);
     color: white;

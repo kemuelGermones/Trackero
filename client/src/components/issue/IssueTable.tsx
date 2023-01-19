@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
+import sortIssues from "../../lib/sortIssues";
+
 import { SmallButton, PaginationButton } from "../styles/UI/Button";
 import {
   DropdownContainer,
@@ -14,12 +16,13 @@ import {
   TablePagination,
 } from "../styles/UI/Table";
 import IssueForm from "./IssueForm";
-import sortIssues from "../../lib/sortIssues";
+
 import { IIssue, IModifiedIssue } from "../../types/interface";
 import {
   instanceOfIIssue,
   instanceOfIModifiedIssue,
 } from "../../types/type-guard";
+
 
 type TCurrentIssuesState = IIssue[] | IModifiedIssue[];
 

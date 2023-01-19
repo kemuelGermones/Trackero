@@ -31,6 +31,8 @@ export const SmallButton = styled.button`
   font-size: 0.75rem
   font-family: "Poppins";
   margin-left: 1rem;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background-color: var(--quaternary);

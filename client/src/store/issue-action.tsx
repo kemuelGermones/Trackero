@@ -8,15 +8,19 @@ import {
 } from "./project-slice";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
-import { IIssueData, IProject } from "../types/interface";
-import { IEditProjectIssueAction } from "./project-slice";
+import {
+  IProject,
+  IIssueData,
+  IEditIssueData,
+  ICommentData,
+} from "../types/interface";
 import { RootState, ThunkAction } from ".";
 
 // Add issue
 
 export const addIssue = (
-  projectId: string,
   data: IIssueData,
+  projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -52,7 +56,7 @@ export const addIssue = (
 // Edit issue
 
 export const editIssue = (
-  data: IEditProjectIssueAction,
+  data: IEditIssueData,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -112,8 +116,8 @@ export const deleteIssue = (
 };
 
 export const addIssueComment = (
+  data: ICommentData,
   issueId: string,
-  comment: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -122,7 +126,7 @@ export const addIssueComment = (
       const postResponse = await axios({
         method: "post",
         url: `http://localhost:5000/issues/${issueId}/comments`,
-        data: { comment },
+        data,
         headers: {
           Authorization: token,
         },
@@ -150,6 +154,7 @@ export const deleteIssueComment = (
   projectId: string,
   issueId: string,
   commentId: string,
+  userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -157,7 +162,7 @@ export const deleteIssueComment = (
     try {
       const deleteResponse = await axios({
         method: "delete",
-        url: `http://localhost:5000/issues/${issueId}/comments/${commentId}`,
+        url: `http://localhost:5000/issues/${issueId}/comments/${commentId}/users/${userId}`,
         headers: {
           Authorization: token,
         },

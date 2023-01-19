@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../store";
-import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardTitle,
   CardDivider,
   CardFooterText,
+  CardHeader,
 } from "../styles/UI/Card";
 import Label from "../styles/UI/Label";
 import Button from "../styles/UI/Button";
@@ -18,7 +18,6 @@ import { registerUser, loginUser } from "../../store/user-action";
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const {
     value: email,
@@ -70,17 +69,15 @@ function UserForm() {
     roleChange(event.target.value);
   };
 
-  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
     const isUsernameValid = validateUsername();
     if (!isLogin && isEmailValid && isPasswordValid && isUsernameValid) {
-      const registerStatus = await dispatch(registerUser({ email, username, password, role }));
-      if (registerStatus === 200) navigate("/projects");
+      dispatch(registerUser({ email, username, password, role }));
     } else if (isLogin && isEmailValid && isPasswordValid) {
-      const loginStatus = await dispatch(loginUser(email, password));
-      if (loginStatus === 200) navigate("/projects");
+      dispatch(loginUser(email, password));
     }
   };
 
@@ -93,7 +90,9 @@ function UserForm() {
 
   return (
     <Card $width="30rem">
-      <CardTitle>{!!isLogin ? "Login" : "Sign Up"}</CardTitle>
+      <CardHeader>
+        <CardTitle>{!!isLogin ? "Login" : "Sign Up"}</CardTitle>
+      </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
         <Label htmlFor="email">Your email</Label>

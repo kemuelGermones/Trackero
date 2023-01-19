@@ -1,5 +1,8 @@
 import { Fragment } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
+import useValidation from "../../hooks/useValidation";
+
 import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
   CommentAuthor,
@@ -10,9 +13,8 @@ import Label from "../styles/UI/Label";
 import Form from "../styles/UI/Form";
 import TextArea from "../styles/UI/TextArea";
 import Button from "../styles/UI/Button";
+
 import { IComment } from "../../types/interface";
-import useValidation from "../../hooks/useValidation";
-import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
 
 interface IIssueComment {
   projectId: string;
@@ -22,7 +24,7 @@ interface IIssueComment {
 
 function IssueComment({ projectId, issueId, comments }: IIssueComment) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
+  const { accessToken, userId } = useAppSelector((state) => state.user);
 
   const {
     value: comment,
@@ -41,15 +43,19 @@ function IssueComment({ projectId, issueId, comments }: IIssueComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && !!accessToken) {
-      dispatch(addIssueComment(issueId, comment, accessToken));
+    if (commentIsValid && !!accessToken && !!userId) {
+      dispatch(
+        addIssueComment({ comment, author: userId }, issueId, accessToken)
+      );
       commentReset();
     }
   };
 
   const deleteIssueCommentHandler = (issueId: string, commentId: string) => {
-    if (!!accessToken) {
-      dispatch(deleteIssueComment(projectId, issueId, commentId, accessToken));
+    if (!!accessToken && !!userId) {
+      dispatch(
+        deleteIssueComment(projectId, issueId, commentId, userId, accessToken)
+      );
     }
   };
 
@@ -70,14 +76,16 @@ function IssueComment({ projectId, issueId, comments }: IIssueComment) {
         <Fragment key={comment._id}>
           <CardDescription>{comment.comment}</CardDescription>
           <CommentFooter>
-            <CommentAuthor>Posted by: Ironman</CommentAuthor>
-            <CommentDeleteButton
-              onClick={deleteIssueCommentHandler.bind(
-                null,
-                issueId,
-                comment._id
-              )}
-            />
+            <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
+            {comment.author._id === userId ? (
+              <CommentDeleteButton
+                onClick={deleteIssueCommentHandler.bind(
+                  null,
+                  issueId,
+                  comment._id
+                )}
+              />
+            ) : null}
           </CommentFooter>
           <CardDivider />
         </Fragment>

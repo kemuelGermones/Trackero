@@ -5,7 +5,7 @@ export const projectSchema = Joi.object({
   description: Joi.string().required(),
 });
 
-export const newIssueSchema = Joi.object({
+export const issueSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   importance: Joi.string().valid("High", "Mid", "Low").required(),
@@ -13,16 +13,9 @@ export const newIssueSchema = Joi.object({
   dueDate: Joi.date().greater("now").required(),
 });
 
-export const editIssueSchema = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
-  importance: Joi.string().valid("High", "Mid", "Low").required(),
-  status: Joi.string().valid("Pending", "Done", "In Progress").required(),
-  dueDate: Joi.date().required(),
-});
-
 export const commentSchema = Joi.object({
   comment: Joi.string().required(),
+  author: Joi.string().required(),
 });
 
 export const registerUserSchema = Joi.object({
@@ -34,5 +27,5 @@ export const registerUserSchema = Joi.object({
 
 export const loginUserSchema = Joi.object({
   email: Joi.string().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
 });

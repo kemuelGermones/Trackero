@@ -12,15 +12,22 @@ export interface IProject extends IProjectData {
   issues: IIssue[];
 }
 
+export interface IEditProjectData extends IProjectData {
+  id: string;
+}
+
 // Comment Interface
 
 export interface ICommentData {
   comment: string;
+  author: string;
 }
 
-export interface IComment extends ICommentData {
+export interface IComment {
   _id: string;
   __v: number;
+  comment: string;
+  author: IUser;
 }
 
 // Issue Interface
@@ -44,6 +51,11 @@ export interface IModifiedIssue extends IIssue {
   projectName: string;
 }
 
+export interface IEditIssueData extends IIssueData {
+  projectId: string;
+  issueId: string;
+}
+
 // User interface
 
 export interface IUserData {
@@ -53,9 +65,16 @@ export interface IUserData {
   role: string;
 }
 
-export interface IUser extends IUserData {
+export interface IUser {
   _id: string;
-  __v: number;
+  username: string;
+  role: string;
+}
+
+export interface IRecievedUserData {
+  id: string;
+  token: string;
+  expiresIn: number;
 }
 
 // Response Status Interface

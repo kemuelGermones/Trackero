@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createIssue, editIssue, deleteIssue } from "../controllers/issue";
-import { validateNewIssue, validateEditIssue } from "../middleware";
+import { validateIssue } from "../middleware";
 import wrapAsync from "../utils/wrapAsync";
 import passport from "passport";
 
@@ -11,7 +11,7 @@ const router = Router({ mergeParams: true });
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
-  validateNewIssue,
+  validateIssue,
   wrapAsync(createIssue)
 );
 
@@ -20,7 +20,7 @@ router.post(
 router.put(
   "/:issueId",
   passport.authenticate("jwt", { session: false }),
-  validateEditIssue,
+  validateIssue,
   wrapAsync(editIssue)
 );
 

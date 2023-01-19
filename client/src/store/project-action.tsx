@@ -9,8 +9,12 @@ import {
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { RootState, ThunkAction } from "./index";
-import { IProject, IProjectData } from "../types/interface";
-import { IEditProjectAction } from "./project-slice";
+import {
+  ICommentData,
+  IProject,
+  IProjectData,
+  IEditProjectData,
+} from "../types/interface";
 
 // Get all projects
 
@@ -77,7 +81,7 @@ export const addProject = (
 // Edit project
 
 export const editProject = (
-  data: IEditProjectAction,
+  data: IEditProjectData,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -136,8 +140,8 @@ export const deleteProject = (
 // Add comment to the project
 
 export const addProjectComment = (
+  data: ICommentData,
   id: string,
-  comment: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -146,7 +150,7 @@ export const addProjectComment = (
       const postResponse = await axios({
         method: "post",
         url: `http://localhost:5000/projects/${id}/comments`,
-        data: { comment },
+        data,
         headers: {
           Authorization: token,
         },
@@ -175,6 +179,7 @@ export const addProjectComment = (
 export const deleteProjectComment = (
   projectId: string,
   commentId: string,
+  userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -182,7 +187,7 @@ export const deleteProjectComment = (
     try {
       const deleteResponse = await axios({
         method: "delete",
-        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}`,
+        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}/users/${userId}`,
         headers: {
           Authorization: token,
         },

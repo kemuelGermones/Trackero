@@ -1,17 +1,18 @@
-import Backdrop from "../styles/UI/Backdrop";
-import Form from "../styles/UI/Form";
-import Label from "../styles/UI/Label";
-import Input from "../styles/UI/Input";
-import TextArea from "../styles/UI/TextArea";
-import { Card, CardTitle, CardDivider } from "../styles/UI/Card";
-import Button from "../styles/UI/Button";
-import { PositionCenter } from "../styles/utils/PositionCenter";
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
 import { addProject, editProject } from "../../store/project-action";
 import { useAppSelector } from "../../store";
 
-interface IProjecForm {
+import Backdrop from "../styles/UI/Backdrop";
+import Form from "../styles/UI/Form";
+import Label from "../styles/UI/Label";
+import Input from "../styles/UI/Input";
+import TextArea from "../styles/UI/TextArea";
+import { Card, CardTitle, CardDivider, CardHeader } from "../styles/UI/Card";
+import Button from "../styles/UI/Button";
+import { PositionCenter } from "../styles/utils/PositionCenter";
+
+interface IProjectForm {
   type: "new" | "edit";
   hideForm: () => void;
   initialTitle?: string;
@@ -25,7 +26,7 @@ function ProjectForm({
   initialTitle,
   initialDescription,
   projectId,
-}: IProjecForm) {
+}: IProjectForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
 
@@ -84,11 +85,13 @@ function ProjectForm({
       <Backdrop onClick={hideForm} />
       <PositionCenter>
         <Card>
-          {type === "edit" ? (
-            <CardTitle>Edit Project</CardTitle>
-          ) : (
-            <CardTitle>Add Project</CardTitle>
-          )}
+          <CardHeader>
+            {type === "edit" ? (
+              <CardTitle>Edit Project</CardTitle>
+            ) : (
+              <CardTitle>Add Project</CardTitle>
+            )}
+          </CardHeader>
           <CardDivider />
           <Form onSubmit={onSubmitHandler}>
             <Label htmlFor="title">Title</Label>

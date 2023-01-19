@@ -1,17 +1,22 @@
 import { useState } from "react";
+import { BsPlusLg } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { deleteIssue } from "../../store/issue-action";
+
 import {
   Card,
   CardTitle,
   CardDescription,
   CardButtons,
+  CardHeader,
 } from "../styles/UI/Card";
-import Button from "../styles/UI/Button";
+import Button, { SmallButton} from "../styles/UI/Button";
 import IssueForm from "./IssueForm";
 import TextLight from "../styles/utils/TextLight";
-import { deleteIssue } from "../../store/issue-action";
+
 import { IIssue, IModifiedIssue } from "../../types/interface";
 import { instanceOfIModifiedIssue } from "../../types/type-guard";
+
 
 interface IIssueInfo {
   projectId: string;
@@ -50,7 +55,10 @@ function IssueInfo({ projectId, issue }: IIssueInfo) {
         />
       ) : null}
       <Card style={{ marginBottom: "1rem" }}>
-        <CardTitle>{issue.title}</CardTitle>
+        <CardHeader>
+          <CardTitle>{issue.title}</CardTitle>
+          <SmallButton><BsPlusLg /></SmallButton>
+        </CardHeader>
         <CardDescription>{issue.description}</CardDescription>
         {instanceOfIModifiedIssue(issue) && !!issue.projectName ? (
           <CardDescription>

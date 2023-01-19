@@ -30,9 +30,16 @@ export const CardLogo = styled.div`
 `;
 
 export const CardTitle = styled.h1`
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: var(--quaternary);
   font-size: 1.5rem;
+`;
+
+export const CardHeader = styled.div`
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const CardDescription = styled.p`
@@ -66,7 +73,7 @@ export const CardFooterText = styled.p`
   color: var(--tertiary);
   margin: 0 auto;
   cursor: pointer;
-  
+
   &:hover {
     color: var(--quaternary);
   }

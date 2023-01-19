@@ -1,15 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../../store";
-import Backdrop from "../styles/UI/Backdrop";
+import { addIssue, editIssue } from "../../store/issue-action";
+import useValidation from "../../hooks/useValidation";
+
 import { PositionCenter } from "../styles/utils/PositionCenter";
-import { Card, CardDivider, CardTitle } from "../styles/UI/Card";
+import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
+import Backdrop from "../styles/UI/Backdrop";
 import Label from "../styles/UI/Label";
 import Input from "../styles/UI/Input";
 import Form from "../styles/UI/Form";
 import TextArea from "../styles/UI/TextArea";
 import Button from "../styles/UI/Button";
 import Select from "../styles/UI/Select";
-import useValidation from "../../hooks/useValidation";
-import { addIssue, editIssue } from "../../store/issue-action";
+
 import { IIssue } from "../../types/interface";
 
 interface IIssueForm {
@@ -60,9 +62,7 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     onChangeValueHandler: dueDateChange,
     validateValue: validateDueDate,
   } = useValidation(
-    type === "new"
-      ? (str) => new Date(str).getTime() > new Date().getTime()
-      : (str) => str.trim().length > 0,
+    (str) => new Date(str).getTime() > new Date().getTime(),
     type === "edit" && !!initialValue ? initialValue.dueDate.split("T")[0] : ""
   );
 
@@ -108,8 +108,8 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     ) {
       dispatch(
         addIssue(
-          projectId,
           { title, description, importance, status, dueDate },
+          projectId,
           accessToken
         )
       );
@@ -146,11 +146,13 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       <Backdrop onClick={hideForm} />
       <PositionCenter>
         <Card>
-          {type === "new" ? (
-            <CardTitle>New Issue</CardTitle>
-          ) : (
-            <CardTitle>Edit Issue</CardTitle>
-          )}
+          <CardHeader>
+            {type === "new" ? (
+              <CardTitle>New Issue</CardTitle>
+            ) : (
+              <CardTitle>Edit Issue</CardTitle>
+            )}
+          </CardHeader>
           <CardDivider />
           <Form onSubmit={onSubmitIssueForm}>
             <Label htmlFor="title">Title</Label>

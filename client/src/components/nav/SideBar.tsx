@@ -1,13 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { useAppDispatch } from "../../store";
-import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
+import { logout } from "../../store/user-slice";
 import {
   BsFolder,
   BsExclamationTriangle,
   BsPeople,
   BsBoxArrowInLeft,
 } from "react-icons/bs";
-import { logout } from "../../store/user-slice";
+
+import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
 
 function SideBar() {
   const location = useLocation();

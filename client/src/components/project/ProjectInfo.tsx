@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BsPlusLg } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { deleteProject } from "../../store/project-action";
+
 import {
   Card,
   CardTitle,
   CardDescription,
   CardButtons,
+  CardHeader,
 } from "../styles/UI/Card";
-import Button from "../styles/UI/Button";
+import Button, { SmallButton } from "../styles/UI/Button";
 import ProjectForm from "./ProjectForm";
-import { deleteProject } from "../../store/project-action";
+import UserAssignForm from "../user/UserAssignForm";
+
 import { IProject } from "../../types/interface";
 
 interface IProjectInfo {
@@ -18,6 +23,7 @@ interface IProjectInfo {
 
 function ProjectInfo({ data }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showUserAssignForm, setShowUserAssignForm] = useState(false);
   const accessToken = useAppSelector((state) => state.user.accessToken);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -29,6 +35,16 @@ function ProjectInfo({ data }: IProjectInfo) {
 
   const hideProjectFormHandler = () => {
     setShowProjectForm(false);
+    document.body.style.overflow = "unset";
+  };
+
+  const showUserAssignFormHandler = () => {
+    document.body.style.overflow = "hidden";
+    setShowUserAssignForm(true);
+  };
+
+  const hideUserAssignFormHandler = () => {
+    setShowUserAssignForm(false);
     document.body.style.overflow = "unset";
   };
 
@@ -52,8 +68,14 @@ function ProjectInfo({ data }: IProjectInfo) {
           projectId={data._id}
         />
       ) : null}
+      {showUserAssignForm ? <UserAssignForm hideForm={hideUserAssignFormHandler}/> : null}
       <Card style={{ marginBottom: "1rem" }}>
-        <CardTitle>{data.title}</CardTitle>
+        <CardHeader>
+          <CardTitle>{data.title}</CardTitle>
+          <SmallButton onClick={showUserAssignFormHandler}>
+            <BsPlusLg />
+          </SmallButton>
+        </CardHeader>
         <CardDescription>{data.description}</CardDescription>
         <CardButtons>
           <Button onClick={showProjectFormHandler}>Edit</Button>

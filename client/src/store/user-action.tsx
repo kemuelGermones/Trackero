@@ -8,7 +8,7 @@ import { IUserData } from "../types/interface";
 
 export const registerUser = (
   data: IUserData
-): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
+): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
@@ -24,14 +24,12 @@ export const registerUser = (
         })
       );
       dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
-      return postResponse.data.status;
+      dispatch(showNotification("success", "Successfully created an account"));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
       }
-      return 400;
     }
   };
 };
@@ -39,7 +37,7 @@ export const registerUser = (
 export const loginUser = (
   email: string,
   password: string
-): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
+): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
@@ -55,14 +53,12 @@ export const loginUser = (
         })
       );
       dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
-      return postResponse.data.status;
+      dispatch(showNotification("success", "Welcome back"));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
       }
-      return 400;
     }
   };
 };

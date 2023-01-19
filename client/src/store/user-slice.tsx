@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { IRecievedUserData } from "../types/interface";
+
 interface IInitialStateUserSlice {
   login: boolean;
   userId: string | null;
@@ -18,7 +20,7 @@ const userSlice = createSlice({
   name: "User",
   initialState,
   reducers: {
-    login(state, action) {
+    login(state, action: PayloadAction<IRecievedUserData>) {
       state.login = true;
       state.userId = action.payload.id;
       state.accessToken = action.payload.token;

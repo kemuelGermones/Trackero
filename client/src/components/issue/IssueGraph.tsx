@@ -1,9 +1,12 @@
 import { useMemo } from "react";
-import { GraphLayout, GraphBox } from "../styles/layout/GraphLayout";
-import { Card, CardDivider, CardTitle } from "../styles/UI/Card";
-import "chart.js/auto";
 import { Chart } from "react-chartjs-2";
+import "chart.js/auto";
+
+import { GraphLayout, GraphBox } from "../styles/layout/GraphLayout";
+import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
+
 import { IIssue, IModifiedIssue } from "../../types/interface";
+
 
 interface IIssueGraph {
   issues: IIssue[] | IModifiedIssue[];
@@ -60,14 +63,18 @@ function IssueGraph({ issues }: IIssueGraph) {
   return (
     <GraphLayout>
       <Card>
-        <CardTitle>Issues Status Chart</CardTitle>
+        <CardHeader>
+          <CardTitle>Issues Status Chart</CardTitle>
+        </CardHeader>
         <CardDivider />
         <GraphBox>
           <Chart type="bar" data={statusData} options={STATUS_OPTIONS} />
         </GraphBox>
       </Card>
       <Card>
-        <CardTitle>Issues Importance Chart</CardTitle>
+        <CardHeader>
+          <CardTitle>Issues Importance Chart</CardTitle>
+        </CardHeader>
         <CardDivider />
         <GraphBox>
           <Chart type="doughnut" data={importanceData} />

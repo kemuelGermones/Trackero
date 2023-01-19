@@ -15,8 +15,18 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const showProjects = async (req: Request, res: Response) => {
   const projects = await Project.find()
-    .populate({ path: "issues", populate: { path: "comments" } })
-    .populate("comments");
+    .populate({
+      path: "issues",
+      populate: {
+        path: "comments",
+        populate: { path: "author", select: "username _id role" },
+      },
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "author", select: "username _id role" },
+    })
+    .populate({ path: "members", select: "username _id role" });
   res.status(200).send(projects);
 };
 

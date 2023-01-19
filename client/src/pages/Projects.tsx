@@ -7,15 +7,15 @@ import ProjectForm from "../components/project/ProjectForm";
 import {
   Card,
   CardTitle,
+  CardHeader,
   CardDescription,
   CardLogo,
 } from "../components/styles/UI/Card";
-import { isArrayOfIProject } from "../types/type-guard";
 
 function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const navigate = useNavigate();
-  const projects = useAppSelector((state) => state.project.data);
+  const projects = useAppSelector((state) => state.project.projectsData);
 
   const showProjectFormHandler = () => {
     document.body.style.overflow = "hidden";
@@ -42,16 +42,20 @@ function Projects() {
             <BsPlusLg size="1.5em" /> Add Project
           </CardLogo>
         </Card>
-        { isArrayOfIProject(projects) ? projects.map((project) => (
-          <Card
-            key={project._id}
-            onClick={() => navigate(`/projects/${project._id}`)}
-            style={{ height: "15rem" }}
-          >
-            <CardTitle>{project.title}</CardTitle>
-            <CardDescription>{project.description}</CardDescription>
-          </Card>
-        )) : null }
+        {!!projects
+          ? projects.map((project) => (
+              <Card
+                key={project._id}
+                onClick={() => navigate(`/projects/${project._id}`)}
+                style={{ height: "15rem" }}
+              >
+                <CardHeader>
+                  <CardTitle>{project.title}</CardTitle>
+                </CardHeader>
+                <CardDescription>{project.description}</CardDescription>
+              </Card>
+            ))
+          : null}
       </ProjectList>
     </>
   );

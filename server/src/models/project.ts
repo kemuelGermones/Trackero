@@ -5,7 +5,6 @@ import Comment from "./comment";
 const projectSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  
   issues: [
     {
       type: Schema.Types.ObjectId,
@@ -16,6 +15,12 @@ const projectSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Comment",
+    },
+  ],
+  members: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
 });

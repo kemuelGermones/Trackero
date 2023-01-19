@@ -11,23 +11,19 @@ import IssueInfo from "../components/issue/IssueInfo";
 import IssueComment from "../components/issue/IssueComment";
 import modifyIssueList from "../lib/modifyIssueList";
 import { IModifiedIssue } from "../types/interface";
-import {
-  isArrayOfIProject,
-  isArrayofIMofifiedIssue,
-} from "../types/type-guard";
 
 type TModifiedIssueState = IModifiedIssue[] | null;
 type TCurrentModifiedIssueState = IModifiedIssue | null;
 
 function Issues() {
-  const projects = useAppSelector((state) => state.project.data);
+  const projects = useAppSelector((state) => state.project.projectsData);
   const [modifiedIssues, setModifiedIssues] =
     useState<TModifiedIssueState>(null);
   const [currentModifiedIssue, setCurrentModifiedIssue] =
     useState<TCurrentModifiedIssueState>(null);
 
   useEffect(() => {
-    if (isArrayOfIProject(projects)) {
+    if (!!projects) {
       setModifiedIssues(modifyIssueList(projects));
     }
   }, [projects]);
@@ -49,7 +45,7 @@ function Issues() {
   return (
     <Dashboard $templateColumns="1.5fr 1fr">
       <FirstSection>
-        {isArrayofIMofifiedIssue(modifiedIssues) ? (
+        {!!modifiedIssues ? (
           <>
             <IssueGraph issues={modifiedIssues} />
             <IssueTable

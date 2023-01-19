@@ -1,5 +1,11 @@
 import { Fragment } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
+import {
+  deleteProjectComment,
+  addProjectComment,
+} from "../../store/project-action";
+import useValidation from "../../hooks/useValidation";
+
 import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
   CommentAuthor,
@@ -10,12 +16,8 @@ import Form from "../styles/UI/Form";
 import Button from "../styles/UI/Button";
 import TextArea from "../styles/UI/TextArea";
 import Label from "../styles/UI/Label";
+
 import { IComment } from "../../types/interface";
-import useValidation from "../../hooks/useValidation";
-import {
-  deleteProjectComment,
-  addProjectComment,
-} from "../../store/project-action";
 
 interface IProjectComment {
   projectId: string;
@@ -24,7 +26,7 @@ interface IProjectComment {
 
 function ProjectComment({ projectId, comments }: IProjectComment) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
+  const { accessToken, userId } = useAppSelector((state) => state.user);
   const {
     value: comment,
     valueError: commentError,
@@ -37,8 +39,8 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
     projectId: string,
     commentId: string
   ) => {
-    if (!!accessToken) {
-      dispatch(deleteProjectComment(projectId, commentId, accessToken));
+    if (!!accessToken && !!userId) {
+      dispatch(deleteProjectComment(projectId, commentId, userId, accessToken));
     }
   };
 
@@ -51,8 +53,10 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && !!accessToken) {
-      dispatch(addProjectComment(projectId, comment, accessToken));
+    if (commentIsValid && !!accessToken && !!userId) {
+      dispatch(
+        addProjectComment({ comment, author: userId }, projectId, accessToken)
+      );
       commentReset();
     }
   };
@@ -75,14 +79,16 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
         <Fragment key={comment._id}>
           <CardDescription>{comment.comment}</CardDescription>
           <CommentFooter>
-            <CommentAuthor>Posted by: Ironman</CommentAuthor>
-            <CommentDeleteButton
-              onClick={deleteProjectCommentRequest.bind(
-                null,
-                projectId,
-                comment._id
-              )}
-            />
+            <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
+            {comment.author._id === userId ? (
+              <CommentDeleteButton
+                onClick={deleteProjectCommentRequest.bind(
+                  null,
+                  projectId,
+                  comment._id
+                )}
+              />
+            ) : null}
           </CommentFooter>
           <CardDivider />
         </Fragment>

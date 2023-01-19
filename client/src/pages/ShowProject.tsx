@@ -10,7 +10,6 @@ import IssueInfo from "../components/issue/IssueInfo";
 import IssueTable from "../components/issue/IssueTable";
 import ProjectInfo from "../components/project/ProjectInfo";
 import ProjectComment from "../components/project/ProjectComment";
-import { instanceOfIProject, isArrayOfIProject } from "../types/type-guard";
 import { IIssue, IProject } from "../types/interface";
 import IssueComment from "../components/issue/IssueComment";
 import IssueGraph from "../components/issue/IssueGraph";
@@ -21,14 +20,14 @@ type TIssueState = IIssue | null;
 function ShowProject() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const projects = useAppSelector((state) => state.project.data);
+  const projects = useAppSelector((state) => state.project.projectsData);
   const [project, setProject] = useState<TProjectState>(null);
   const [currentIssue, setCurrentIssue] = useState<TIssueState>(null);
 
   useEffect(() => {
-    if (isArrayOfIProject(projects)) {
+    if (!!projects) {
       const foundProject = projects.find((project) => project._id === id);
-      if (instanceOfIProject(foundProject)) {
+      if (!!foundProject) {
         setProject(foundProject);
       } else {
         navigate("*");
@@ -54,7 +53,7 @@ function ShowProject() {
     <>
       <Dashboard $templateColumns="1fr 1.5fr">
         <FirstSection>
-          {instanceOfIProject(project) ? (
+          {!!project ? (
             <>
               <ProjectInfo data={project} />
               <ProjectComment
@@ -65,7 +64,7 @@ function ShowProject() {
           ) : null}
         </FirstSection>
         <SecondSection>
-          {instanceOfIProject(project) ? (
+          {!!project ? (
             <>
               <IssueGraph issues={project.issues} />
               <IssueTable
