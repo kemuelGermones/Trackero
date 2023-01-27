@@ -16,13 +16,7 @@ const projectSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Comment",
     },
-  ],
-  members: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  ]
 });
 
 projectSchema.post("findOneAndDelete", async function (doc) {

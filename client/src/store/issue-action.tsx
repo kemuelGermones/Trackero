@@ -5,14 +5,17 @@ import {
   editProjectIssue,
   deleteProjectIssue,
   deleteProjectIssueComment,
+  updateProjectIssueStatus,
+  updateProjectIssueAssignedTo,
 } from "./project-slice";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import {
   IProject,
   IIssueData,
-  IEditIssueData,
   ICommentData,
+  IIssueStatus,
+  IUser,
 } from "../types/interface";
 import { RootState, ThunkAction } from ".";
 
@@ -56,7 +59,9 @@ export const addIssue = (
 // Edit issue
 
 export const editIssue = (
-  data: IEditIssueData,
+  data: IIssueData,
+  projectId: string,
+  issueId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -64,19 +69,19 @@ export const editIssue = (
     try {
       const putResponse = await axios({
         method: "put",
-        url: `http://localhost:5000/projects/${data.projectId}/issues/${data.issueId}`,
-        data: {
-          title: data.title,
-          description: data.description,
-          importance: data.importance,
-          status: data.status,
-          dueDate: data.dueDate,
-        },
+        url: `http://localhost:5000/projects/${projectId}/issues/${issueId}`,
+        data,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(editProjectIssue(data));
+      dispatch(
+        editProjectIssue({
+          ...data,
+          projectId,
+          issueId,
+        })
+      );
       dispatch(hideLoading());
       dispatch(showNotification("success", putResponse.data.message));
     } catch (error: unknown) {
@@ -87,6 +92,8 @@ export const editIssue = (
     }
   };
 };
+
+// Delete issue
 
 export const deleteIssue = (
   projectId: string,
@@ -115,6 +122,74 @@ export const deleteIssue = (
   };
 };
 
+// Update issue status
+
+export const updateIssueStatus = (
+  data: IIssueStatus,
+  projectId: string,
+  issueId: string,
+  token: string
+): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      const patchResponse = await axios({
+        method: "patch",
+        url: `http://localhost:5000/projects/${projectId}/issues/${issueId}/status`,
+        data,
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(
+        updateProjectIssueStatus({ status: data.status, projectId, issueId })
+      );
+      dispatch(hideLoading());
+      dispatch(showNotification("success", patchResponse.data.message));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        dispatch(hideLoading());
+        dispatch(showNotification("error", error.response?.data.message));
+      }
+    }
+  };
+};
+
+// Update issue assignedTo
+
+export const updateIssueAssignedTo = (
+  data: IUser[],
+  projectId: string,
+  issueId: string,
+  token: string
+): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      const patchResponse = await axios({
+        method: "patch",
+        url: `http://localhost:5000/projects/${projectId}/issues/${issueId}/assignedTo`,
+        data: { assignedTo: data.map((user) => user._id) },
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(
+        updateProjectIssueAssignedTo({ assignedTo: data, projectId, issueId })
+      );
+      dispatch(hideLoading());
+      dispatch(showNotification("success", patchResponse.data.message));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        dispatch(hideLoading());
+        dispatch(showNotification("error", error.response?.data.message));
+      }
+    }
+  };
+};
+
+// Add issue comment
+
 export const addIssueComment = (
   data: ICommentData,
   issueId: string,
@@ -126,7 +201,7 @@ export const addIssueComment = (
       const postResponse = await axios({
         method: "post",
         url: `http://localhost:5000/issues/${issueId}/comments`,
-        data,
+        data: data,
         headers: {
           Authorization: token,
         },
@@ -150,11 +225,12 @@ export const addIssueComment = (
   };
 };
 
+// Delete issue comment
+
 export const deleteIssueComment = (
   projectId: string,
   issueId: string,
   commentId: string,
-  userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -162,7 +238,7 @@ export const deleteIssueComment = (
     try {
       const deleteResponse = await axios({
         method: "delete",
-        url: `http://localhost:5000/issues/${issueId}/comments/${commentId}/users/${userId}`,
+        url: `http://localhost:5000/issues/${issueId}/comments/${commentId}`,
         headers: {
           Authorization: token,
         },

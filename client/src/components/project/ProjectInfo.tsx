@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BsPlusLg } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { deleteProject } from "../../store/project-action";
 
@@ -11,19 +10,17 @@ import {
   CardButtons,
   CardHeader,
 } from "../styles/UI/Card";
-import Button, { SmallButton } from "../styles/UI/Button";
+import Button from "../styles/UI/Button";
 import ProjectForm from "./ProjectForm";
-import UserAssignForm from "../user/UserAssignForm";
 
 import { IProject } from "../../types/interface";
 
 interface IProjectInfo {
-  data: IProject;
+  projectData: IProject;
 }
 
-function ProjectInfo({ data }: IProjectInfo) {
+function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
-  const [showUserAssignForm, setShowUserAssignForm] = useState(false);
   const accessToken = useAppSelector((state) => state.user.accessToken);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -38,19 +35,9 @@ function ProjectInfo({ data }: IProjectInfo) {
     document.body.style.overflow = "unset";
   };
 
-  const showUserAssignFormHandler = () => {
-    document.body.style.overflow = "hidden";
-    setShowUserAssignForm(true);
-  };
-
-  const hideUserAssignFormHandler = () => {
-    setShowUserAssignForm(false);
-    document.body.style.overflow = "unset";
-  };
-
   const deleteProjectRequest = async () => {
-    if (!!accessToken) {
-      const deleteStatus = await dispatch(deleteProject(data._id, accessToken));
+    if (accessToken) {
+      const deleteStatus = await dispatch(deleteProject(projectData._id, accessToken));
       if (deleteStatus === 200) {
         navigate("/projects");
       }
@@ -61,22 +48,15 @@ function ProjectInfo({ data }: IProjectInfo) {
     <>
       {showProjectForm ? (
         <ProjectForm
-          type="edit"
-          initialTitle={data.title}
-          initialDescription={data.description}
+          initialValues={projectData}
           hideForm={hideProjectFormHandler}
-          projectId={data._id}
         />
       ) : null}
-      {showUserAssignForm ? <UserAssignForm hideForm={hideUserAssignFormHandler}/> : null}
       <Card style={{ marginBottom: "1rem" }}>
         <CardHeader>
-          <CardTitle>{data.title}</CardTitle>
-          <SmallButton onClick={showUserAssignFormHandler}>
-            <BsPlusLg />
-          </SmallButton>
+          <CardTitle>{projectData.title}</CardTitle>
         </CardHeader>
-        <CardDescription>{data.description}</CardDescription>
+        <CardDescription $hasLimit={false}>{projectData.description}</CardDescription>
         <CardButtons>
           <Button onClick={showProjectFormHandler}>Edit</Button>
           <Button onClick={deleteProjectRequest}>Delete</Button>

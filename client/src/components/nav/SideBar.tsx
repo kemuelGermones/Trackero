@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useAppDispatch } from "../../store";
-import { logout } from "../../store/user-slice";
+import { logoutUser } from "../../store/user-action";
 import {
   BsFolder,
   BsExclamationTriangle,
@@ -15,7 +15,7 @@ function SideBar() {
   const dispatch = useAppDispatch();
 
   const logoutHandler = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
   };
 
   return (

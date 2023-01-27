@@ -5,11 +5,11 @@ import "chart.js/auto";
 import { GraphLayout, GraphBox } from "../styles/layout/GraphLayout";
 import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
 
-import { IIssue, IModifiedIssue } from "../../types/interface";
+import { IIssue } from "../../types/interface";
 
 
 interface IIssueGraph {
-  issues: IIssue[] | IModifiedIssue[];
+  issuesData: IIssue[];
 }
 
 const STATUS_OPTIONS = {
@@ -21,7 +21,7 @@ const STATUS_OPTIONS = {
   },
 };
 
-function IssueGraph({ issues }: IIssueGraph) {
+function IssueGraph({ issuesData }: IIssueGraph) {
   const statusData = useMemo(() => {
     return {
       labels: ["Pending", "In Progress", "Done"],
@@ -29,9 +29,9 @@ function IssueGraph({ issues }: IIssueGraph) {
         {
           label: "Total",
           data: [
-            issues.filter((issue) => issue.status === "Pending").length,
-            issues.filter((issue) => issue.status === "In Progress").length,
-            issues.filter((issue) => issue.status === "Done").length,
+            issuesData.filter((issue) => issue.status === "Pending").length,
+            issuesData.filter((issue) => issue.status === "In Progress").length,
+            issuesData.filter((issue) => issue.status === "Done").length,
           ],
           backgroundColor: ["#FB706C", "#FADF98", "#7BD67D"],
           borderColor: "black",
@@ -39,7 +39,7 @@ function IssueGraph({ issues }: IIssueGraph) {
         },
       ],
     };
-  }, [issues]);
+  }, [issuesData]);
 
   const importanceData = useMemo(() => {
     return {
@@ -48,9 +48,9 @@ function IssueGraph({ issues }: IIssueGraph) {
         {
           label: "Total",
           data: [
-            issues.filter((issue) => issue.importance === "High").length,
-            issues.filter((issue) => issue.importance === "Mid").length,
-            issues.filter((issue) => issue.importance === "Low").length,
+            issuesData.filter((issue) => issue.importance === "High").length,
+            issuesData.filter((issue) => issue.importance === "Mid").length,
+            issuesData.filter((issue) => issue.importance === "Low").length,
           ],
           backgroundColor: ["#FB706C", "#FADF98", "#7BD67D"],
           borderColor: "black",
@@ -58,7 +58,7 @@ function IssueGraph({ issues }: IIssueGraph) {
         },
       ],
     };
-  }, [issues]);
+  }, [issuesData]);
 
   return (
     <GraphLayout>

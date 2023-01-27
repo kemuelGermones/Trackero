@@ -14,15 +14,14 @@ import Form from "../styles/UI/Form";
 import TextArea from "../styles/UI/TextArea";
 import Button from "../styles/UI/Button";
 
-import { IComment } from "../../types/interface";
+import { IIssue } from "../../types/interface";
 
 interface IIssueComment {
   projectId: string;
-  issueId: string;
-  comments: IComment[];
+  issueData: IIssue;
 }
 
-function IssueComment({ projectId, issueId, comments }: IIssueComment) {
+function IssueComment({ projectId, issueData }: IIssueComment) {
   const dispatch = useAppDispatch();
   const { accessToken, userId } = useAppSelector((state) => state.user);
 
@@ -43,19 +42,15 @@ function IssueComment({ projectId, issueId, comments }: IIssueComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && !!accessToken && !!userId) {
-      dispatch(
-        addIssueComment({ comment, author: userId }, issueId, accessToken)
-      );
+    if (commentIsValid && accessToken) {
+      dispatch(addIssueComment({ comment }, issueData._id, accessToken));
       commentReset();
     }
   };
 
   const deleteIssueCommentHandler = (issueId: string, commentId: string) => {
-    if (!!accessToken && !!userId) {
-      dispatch(
-        deleteIssueComment(projectId, issueId, commentId, userId, accessToken)
-      );
+    if (accessToken) {
+      dispatch(deleteIssueComment(projectId, issueId, commentId, accessToken));
     }
   };
 
@@ -71,17 +66,19 @@ function IssueComment({ projectId, issueId, comments }: IIssueComment) {
         />
         <Button>Submit</Button>
       </Form>
-      <Label>{comments.length === 0 ? "No comments" : "Comments"}</Label>
-      {comments.map((comment) => (
+      <Label>
+        {issueData.comments.length === 0 ? "No comments" : "Comments"}
+      </Label>
+      {issueData.comments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardDescription>{comment.comment}</CardDescription>
+          <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
           <CommentFooter>
             <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
             {comment.author._id === userId ? (
               <CommentDeleteButton
                 onClick={deleteIssueCommentHandler.bind(
                   null,
-                  issueId,
+                  issueData._id,
                   comment._id
                 )}
               />

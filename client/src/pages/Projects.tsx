@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store";
+
 import ProjectList from "../components/styles/layout/ProjectList";
 import ProjectForm from "../components/project/ProjectForm";
 import {
@@ -18,8 +19,8 @@ function Projects() {
   const projects = useAppSelector((state) => state.project.projectsData);
 
   const showProjectFormHandler = () => {
-    document.body.style.overflow = "hidden";
     setShowProjectForm(true);
+    document.body.style.overflow = "hidden";
   };
 
   const hideProjectFormHandler = () => {
@@ -30,7 +31,7 @@ function Projects() {
   return (
     <>
       {showProjectForm ? (
-        <ProjectForm type="new" hideForm={hideProjectFormHandler} />
+        <ProjectForm hideForm={hideProjectFormHandler} />
       ) : null}
       <ProjectList>
         <Card
@@ -42,7 +43,7 @@ function Projects() {
             <BsPlusLg size="1.5em" /> Add Project
           </CardLogo>
         </Card>
-        {!!projects
+        {projects
           ? projects.map((project) => (
               <Card
                 key={project._id}
@@ -52,7 +53,9 @@ function Projects() {
                 <CardHeader>
                   <CardTitle>{project.title}</CardTitle>
                 </CardHeader>
-                <CardDescription>{project.description}</CardDescription>
+                <CardDescription $hasLimit={true}>
+                  {project.description}
+                </CardDescription>
               </Card>
             ))
           : null}

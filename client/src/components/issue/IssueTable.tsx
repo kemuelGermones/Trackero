@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
-import sortIssues from "../../lib/sortIssues";
+import { sortIssues } from "../../lib/lib";
 
-import { SmallButton, PaginationButton } from "../styles/UI/Button";
+import { PaginationButton, SmallButton } from "../styles/UI/Button";
 import {
   DropdownContainer,
   Dropdown,
@@ -17,36 +17,27 @@ import {
 } from "../styles/UI/Table";
 import IssueForm from "./IssueForm";
 
-import { IIssue, IModifiedIssue } from "../../types/interface";
-import {
-  instanceOfIIssue,
-  instanceOfIModifiedIssue,
-} from "../../types/type-guard";
+import { IIssue } from "../../types/interface";
 
-
-type TCurrentIssuesState = IIssue[] | IModifiedIssue[];
-
-interface IProjectIssueTable {
+interface IIssueTable {
   projectId?: string;
-  issuesData: TCurrentIssuesState;
-  setCurrentIssue?: (issue: IIssue) => void;
-  setCurrentModifiedIssue?: (issue: IModifiedIssue) => void;
+  issuesData: IIssue[];
+  setCurrentIssue: (issue: IIssue) => void;
   issuesPerTable: number;
 }
 
-function ProjectIssueTable({
+function IssueTable({
   projectId,
   issuesData,
   setCurrentIssue,
-  setCurrentModifiedIssue,
   issuesPerTable,
-}: IProjectIssueTable) {
+}: IIssueTable) {
+  const [showNewIssueForm, setShowNewIssueForm] = useState(false);
   const [issues, setIssues] = useState(issuesData);
   const [sortCategory, setSortCategory] = useState("importance");
-  const [showNewIssueForm, setShowNewIssueForm] = useState(false);
   const [currentTablePage, setCurrentTablePage] = useState(1);
 
-  const currentIssues = useMemo<TCurrentIssuesState>(() => {
+  const currentIssues = useMemo(() => {
     const lastIssuetIndex = currentTablePage * issuesPerTable;
     const firstIssueIndex = lastIssuetIndex - issuesPerTable;
     return issues.slice(firstIssueIndex, lastIssuetIndex);
@@ -61,7 +52,7 @@ function ProjectIssueTable({
   }, [issues, issuesPerTable]);
 
   useEffect(() => {
-    setIssues(sortIssues(issuesData, sortCategory));
+    setIssues(sortIssues<IIssue[]>(issuesData, sortCategory));
   }, [issuesData, sortCategory]);
 
   useEffect(() => {
@@ -84,14 +75,6 @@ function ProjectIssueTable({
     setCurrentTablePage(page);
   };
 
-  const setCurrentIssueHandler = (issue: IIssue | IModifiedIssue) => {
-    if (!!setCurrentIssue && instanceOfIIssue(issue)) {
-      setCurrentIssue(issue);
-    } else if (!!setCurrentModifiedIssue && instanceOfIModifiedIssue(issue)) {
-      setCurrentModifiedIssue(issue);
-    }
-  };
-
   const changeSortCategoryHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -100,12 +83,8 @@ function ProjectIssueTable({
 
   return (
     <>
-      {showNewIssueForm && !!projectId ? (
-        <IssueForm
-          type="new"
-          hideForm={hideNewIssueForm}
-          projectId={projectId}
-        />
+      {showNewIssueForm && projectId ? (
+        <IssueForm hideForm={hideNewIssueForm} projectId={projectId} />
       ) : null}
       <TableContainer>
         <TableSubHead>
@@ -117,7 +96,7 @@ function ProjectIssueTable({
               <option value="dueDate">Due Date</option>
             </Dropdown>
           </DropdownContainer>
-          {!!projectId ? (
+          {projectId ? (
             <SmallButton onClick={showNewIssueFormHandler}>
               Add issue
             </SmallButton>
@@ -137,19 +116,16 @@ function ProjectIssueTable({
               <tr>
                 <td colSpan={4}>No Data</td>
               </tr>
-            ) : null}
-
-            {currentIssues.map((issue) => (
-              <tr
-                key={issue._id}
-                onClick={setCurrentIssueHandler.bind(null, issue)}
-              >
-                <td>{issue.title}</td>
-                <td>{issue.importance}</td>
-                <td>{issue.status}</td>
-                <td>{new Date(issue.dueDate).toDateString()}</td>
-              </tr>
-            ))}
+            ) : (
+              currentIssues.map((issue) => (
+                <tr key={issue._id} onClick={setCurrentIssue.bind(null, issue)}>
+                  <td>{issue.title}</td>
+                  <td>{issue.importance}</td>
+                  <td>{issue.status}</td>
+                  <td>{new Date(issue.dueDate).toDateString()}</td>
+                </tr>
+              ))
+            )}
           </TableBody>
         </Table>
         <TablePagination>
@@ -168,4 +144,4 @@ function ProjectIssueTable({
   );
 }
 
-export default ProjectIssueTable;
+export default IssueTable;

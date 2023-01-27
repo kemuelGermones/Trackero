@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./store";
-import { getProjects } from "./store/project-action";
+import { getData } from "./store/data-action";
 import { logout } from "./store/user-slice";
 
 import GlobalStyle from "./components/styles/base/GlobalStyle";
@@ -28,15 +28,15 @@ function App() {
 
   useEffect(() => {
     const currentTime = new Date().getTime();
-    if (!!accessToken && !!expirationTime && expirationTime > currentTime) {
-      dispatch(getProjects(accessToken));
+    if (accessToken && expirationTime && expirationTime > currentTime) {
+      dispatch(getData(accessToken));
     }
   }, [accessToken]);
 
   useEffect(() => {
     if (isLoggedIn) {
       const currentTime = new Date().getTime();
-      if (!!expirationTime && expirationTime > currentTime) {
+      if (expirationTime && expirationTime > currentTime) {
         logoutTimer = setTimeout(() => {
           dispatch(logout());
         }, expirationTime - currentTime);
@@ -63,7 +63,7 @@ function App() {
           <Route element={<WithNav />}>
             <Route path="/projects">
               <Route index element={<Projects />} />
-              <Route path=":id" element={<ShowProject />} />
+              <Route path=":projectId" element={<ShowProject />} />
             </Route>
             <Route path="/issues" element={<Issues />} />
             <Route path="/users" element={<Users />} />

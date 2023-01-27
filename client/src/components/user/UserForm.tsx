@@ -91,7 +91,7 @@ function UserForm() {
   return (
     <Card $width="30rem">
       <CardHeader>
-        <CardTitle>{!!isLogin ? "Login" : "Sign Up"}</CardTitle>
+        <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>
       </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
@@ -131,10 +131,10 @@ function UserForm() {
             </Select>
           </>
         ) : null}
-        <Button>{!!isLogin ? "Login" : "Sign Up"}</Button>
+        <Button>{isLogin ? "Login" : "Sign Up"}</Button>
       </Form>
       <CardFooterText onClick={isLoginToggler}>
-        {!!isLogin ? "Don't have an account?" : "Have an account?"}
+        {isLogin ? "Don't have an account?" : "Have an account?"}
       </CardFooterText>
     </Card>
   );

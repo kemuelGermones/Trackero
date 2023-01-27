@@ -17,16 +17,16 @@ import Button from "../styles/UI/Button";
 import TextArea from "../styles/UI/TextArea";
 import Label from "../styles/UI/Label";
 
-import { IComment } from "../../types/interface";
+import { IProject } from "../../types/interface";
 
 interface IProjectComment {
-  projectId: string;
-  comments: IComment[];
+  projectData: IProject;
 }
 
-function ProjectComment({ projectId, comments }: IProjectComment) {
+function ProjectComment({ projectData }: IProjectComment) {
   const dispatch = useAppDispatch();
   const { accessToken, userId } = useAppSelector((state) => state.user);
+  
   const {
     value: comment,
     valueError: commentError,
@@ -39,8 +39,8 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
     projectId: string,
     commentId: string
   ) => {
-    if (!!accessToken && !!userId) {
-      dispatch(deleteProjectComment(projectId, commentId, userId, accessToken));
+    if (accessToken) {
+      dispatch(deleteProjectComment(projectId, commentId, accessToken));
     }
   };
 
@@ -53,9 +53,9 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && !!accessToken && !!userId) {
+    if (commentIsValid && accessToken) {
       dispatch(
-        addProjectComment({ comment, author: userId }, projectId, accessToken)
+        addProjectComment({ comment }, projectData._id, accessToken)
       );
       commentReset();
     }
@@ -74,17 +74,17 @@ function ProjectComment({ projectId, comments }: IProjectComment) {
         />
         <Button>Submit</Button>
       </Form>
-      <Label>{comments.length === 0 ? "No comments" : "Comments"}</Label>
-      {comments.map((comment) => (
+      <Label>{projectData.comments.length === 0 ? "No comments" : "Comments"}</Label>
+      {projectData.comments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardDescription>{comment.comment}</CardDescription>
+          <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
           <CommentFooter>
             <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
             {comment.author._id === userId ? (
               <CommentDeleteButton
                 onClick={deleteProjectCommentRequest.bind(
                   null,
-                  projectId,
+                  projectData._id,
                   comment._id
                 )}
               />

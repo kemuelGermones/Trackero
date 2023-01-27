@@ -1,14 +1,16 @@
-import { IModifiedIssue, IIssue } from "../types/interface";
+import { IProject, IIssue } from "../types/interface";
 
-function sortIssues(issues: IModifiedIssue[] | IIssue[], category: string) {
+// Sort issues
+
+export const sortIssues = <T>(issues: T, category: string) => {
   //SORT BY DATE
-  if (category === "dueDate") {
+  if (category === "dueDate" && Array.isArray(issues)) {
     return [...issues].sort(
       (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
     );
   }
   //SORT BY STATUS
-  if (category === "status") {
+  if (category === "status" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
       let B: number;
@@ -33,7 +35,7 @@ function sortIssues(issues: IModifiedIssue[] | IIssue[], category: string) {
     });
   }
   //SORT BY IMPORTANCE
-  if (category === "importance") {
+  if (category === "importance" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
       let B: number;
@@ -58,6 +60,24 @@ function sortIssues(issues: IModifiedIssue[] | IIssue[], category: string) {
     });
   }
   return issues;
-}
+};
 
-export default sortIssues;
+// List all issues
+
+export const listAllIssues = (projects: IProject[]): IIssue[] => {
+  if (projects.length === 0) return [];
+  return projects[0].issues.concat(listAllIssues(projects.slice(1)));
+};
+
+// Find Project id
+
+export const foundProjectId = (
+  projects: IProject[],
+  issueId: string
+): string | null => {
+  const projectId = projects.find(
+    (project) =>
+      project.issues.findIndex((issue) => issue._id === issueId) !== -1
+  )?._id;
+  return projectId ? projectId : null;
+};

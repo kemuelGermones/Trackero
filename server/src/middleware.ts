@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import Comment from "./models/comment";
 import User from "./models/user";
+import Comment from "./models/comment";
+import Issue from "./models/issue";
 import AppError from "./utils/AppError";
 import {
   projectSchema,
   issueSchema,
   commentSchema,
-  registerUserSchema,
-  loginUserSchema,
+  issueAssignedToSchema,
+  issueStatusSchema,
 } from "./schema";
+
+// Validate Project Request
 
 export const validateProject = (
   req: Request,
@@ -24,6 +27,8 @@ export const validateProject = (
   }
 };
 
+// Validate Issue Request
+
 export const validateIssue = (
   req: Request,
   res: Response,
@@ -37,6 +42,8 @@ export const validateIssue = (
     next();
   }
 };
+
+// Validate Comment Request
 
 export const validateComment = (
   req: Request,
@@ -52,74 +59,62 @@ export const validateComment = (
   }
 };
 
-export const validateNewUser = (
+// Validates if the user is the owner of a issue
+
+export const isIssueAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = registerUserSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new AppError(msg, 400);
-  } else {
-    next();
+  const { issueId } = req.params;
+  const issue = await Issue.findById(issueId);
+  if (!issue?.author!.equals(req.user!._id)) {
+    return res.status(400).json({
+      status: 400,
+      message: "You are not allowed to edit/delete this issue",
+    });
   }
+  next();
 };
 
-export const validateOldUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { error } = loginUserSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new AppError(msg, 400);
-  } else {
-    next();
-  }
-};
+// Validates if the user is the owner of a comment
 
 export const isCommentAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { commentId, userId } = req.params;
+  const { commentId } = req.params;
   const comment = await Comment.findById(commentId);
-  if (comment && !comment.author.equals(userId)) {
+  if (!comment?.author!.equals(req.user!._id)) {
     return res.status(400).json({
       status: 400,
-      message: "You do not have permission to delete this comment",
+      message: "You are not allowed to delete this comment",
     });
   }
   next();
 };
 
-export const isValidAuthor = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { author: userId } = req.body;
-  const user = await User.findById(userId);
-  if (!user) {
-    return res.status(400).json({ status: 400, message: "User doesn't exist" });
-  }
-  next();
-};
+// Validates if all members are valid users
 
-export const isValidMembers = async (
+export const isValidUsers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { members } = req.body;
-  const membersSet = new Set(members);
-  if (members.length !== membersSet.size) {
+  const { error } = issueAssignedToSchema.validate(req.body)
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    return res
+      .status(400)
+      .json({ status: 400, message: msg });
+  }
+  const { assignedTo } = req.body;
+  const assignedSet = new Set(assignedTo);
+  if (assignedTo.length !== assignedSet.size) {
     return res.status(400).json({ status: 400, message: "Duplicate users" });
   }
-  for (let userId of members) {
+  for (let userId of assignedTo) {
     const user = await User.findById(userId);
     if (!user) {
       return res
@@ -128,4 +123,20 @@ export const isValidMembers = async (
     }
   }
   next();
+};
+
+// Validates issue status
+
+export const isValidStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = issueStatusSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
 };

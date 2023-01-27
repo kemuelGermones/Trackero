@@ -12,21 +12,14 @@ import { Card, CardTitle, CardDivider, CardHeader } from "../styles/UI/Card";
 import Button from "../styles/UI/Button";
 import { PositionCenter } from "../styles/utils/PositionCenter";
 
+import { IProject } from "../../types/interface";
+
 interface IProjectForm {
-  type: "new" | "edit";
   hideForm: () => void;
-  initialTitle?: string;
-  initialDescription?: string;
-  projectId?: string;
+  initialValues?: IProject;
 }
 
-function ProjectForm({
-  type,
-  hideForm,
-  initialTitle,
-  initialDescription,
-  projectId,
-}: IProjectForm) {
+function ProjectForm({ hideForm, initialValues }: IProjectForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
 
@@ -37,7 +30,7 @@ function ProjectForm({
     validateValue: validateTitle,
   } = useValidation(
     (str) => str.trim().length > 0,
-    !!initialTitle ? initialTitle : ""
+    initialValues ? initialValues.title : ""
   );
 
   const {
@@ -47,7 +40,7 @@ function ProjectForm({
     validateValue: validateDescription,
   } = useValidation(
     (str) => str.trim().length > 0,
-    !!initialDescription ? initialDescription : ""
+    initialValues ? initialValues.description : ""
   );
 
   const onChangeTitleHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,18 +57,14 @@ function ProjectForm({
     event.preventDefault();
     const titleIsValid = validateTitle();
     const descriptionIsValid = validateDescription();
-    if (titleIsValid && descriptionIsValid && type === "new" && !!accessToken) {
+    if (titleIsValid && descriptionIsValid && !initialValues && accessToken) {
       dispatch(addProject({ title, description }, accessToken));
       hideForm();
     }
-    if (
-      titleIsValid &&
-      descriptionIsValid &&
-      type === "edit" &&
-      !!projectId &&
-      !!accessToken
-    ) {
-      dispatch(editProject({ title, description, id: projectId }, accessToken));
+    if (titleIsValid && descriptionIsValid && initialValues && accessToken) {
+      dispatch(
+        editProject({ title, description }, initialValues._id, accessToken)
+      );
       hideForm();
     }
   };
@@ -86,7 +75,7 @@ function ProjectForm({
       <PositionCenter>
         <Card>
           <CardHeader>
-            {type === "edit" ? (
+            {initialValues ? (
               <CardTitle>Edit Project</CardTitle>
             ) : (
               <CardTitle>Add Project</CardTitle>

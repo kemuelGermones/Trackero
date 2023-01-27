@@ -1,33 +1,37 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/index";
+
 import {
   Dashboard,
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/Dashboard";
-import IssueInfo from "../components/issue/IssueInfo";
-import IssueTable from "../components/issue/IssueTable";
 import ProjectInfo from "../components/project/ProjectInfo";
 import ProjectComment from "../components/project/ProjectComment";
-import { IIssue, IProject } from "../types/interface";
+import IssueInfo from "../components/issue/IssueInfo";
 import IssueComment from "../components/issue/IssueComment";
 import IssueGraph from "../components/issue/IssueGraph";
+import IssueTable from "../components/issue/IssueTable";
+
+import { IIssue, IProject } from "../types/interface";
 
 type TProjectState = IProject | null;
 type TIssueState = IIssue | null;
 
 function ShowProject() {
-  const { id } = useParams();
+  const { projectId } = useParams();
   const navigate = useNavigate();
   const projects = useAppSelector((state) => state.project.projectsData);
   const [project, setProject] = useState<TProjectState>(null);
   const [currentIssue, setCurrentIssue] = useState<TIssueState>(null);
 
   useEffect(() => {
-    if (!!projects) {
-      const foundProject = projects.find((project) => project._id === id);
-      if (!!foundProject) {
+    if (projects) {
+      const foundProject = projects.find(
+        (project) => project._id === projectId
+      );
+      if (foundProject) {
         setProject(foundProject);
       } else {
         navigate("*");
@@ -36,13 +40,13 @@ function ShowProject() {
   }, [projects]);
 
   useEffect(() => {
-    if (!!currentIssue && !!project) {
+    if (project && currentIssue) {
       setCurrentIssue((state) => {
-        if (!!state) {
+        if (state) {
           const foundIssue = project.issues.find(
             (issue) => issue._id === state._id
           );
-          return !!foundIssue ? foundIssue : null;
+          return foundIssue ? foundIssue : state;
         }
         return state;
       });
@@ -53,33 +57,29 @@ function ShowProject() {
     <>
       <Dashboard $templateColumns="1fr 1.5fr">
         <FirstSection>
-          {!!project ? (
+          {project ? (
             <>
-              <ProjectInfo data={project} />
-              <ProjectComment
-                projectId={project._id}
-                comments={project.comments}
-              />
+              <ProjectInfo projectData={project} />
+              <ProjectComment projectData={project} />
             </>
           ) : null}
         </FirstSection>
         <SecondSection>
-          {!!project ? (
+          {project ? (
             <>
-              <IssueGraph issues={project.issues} />
+              <IssueGraph issuesData={project.issues} />
               <IssueTable
                 projectId={project._id}
                 issuesData={project.issues}
                 setCurrentIssue={setCurrentIssue}
                 issuesPerTable={5}
               />
-              {!!currentIssue ? (
+              {currentIssue ? (
                 <>
-                  <IssueInfo projectId={project._id} issue={currentIssue} />
+                  <IssueInfo projectId={project._id} issueData={currentIssue} />
                   <IssueComment
                     projectId={project._id}
-                    issueId={currentIssue._id}
-                    comments={currentIssue.comments}
+                    issueData={currentIssue}
                   />
                 </>
               ) : null}

@@ -2,9 +2,14 @@ import axios, { AxiosError } from "axios";
 import { AnyAction } from "@reduxjs/toolkit";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
-import { login } from "./user-slice";
+import { login, logout } from "./user-slice";
+import { clearProjectsData } from "./project-slice";
+import { clearUsersData } from "./user-list-slice";
+
 import { RootState, ThunkAction } from "./index";
 import { IUserData } from "../types/interface";
+
+// Registers the user
 
 export const registerUser = (
   data: IUserData
@@ -18,7 +23,7 @@ export const registerUser = (
       );
       dispatch(
         login({
-          id: postResponse.data.id,
+          userId: postResponse.data.id,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })
@@ -34,6 +39,8 @@ export const registerUser = (
   };
 };
 
+// logins the user
+
 export const loginUser = (
   email: string,
   password: string
@@ -47,7 +54,7 @@ export const loginUser = (
       });
       dispatch(
         login({
-          id: postResponse.data.id,
+          userId: postResponse.data.id,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })
@@ -60,5 +67,20 @@ export const loginUser = (
         dispatch(showNotification("error", error.response?.data.message));
       }
     }
+  };
+};
+
+// Logouts the user
+
+export const logoutUser = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  AnyAction
+> => {
+  return (dispatch) => {
+    dispatch(logout());
+    dispatch(clearProjectsData());
+    dispatch(clearUsersData());
   };
 };

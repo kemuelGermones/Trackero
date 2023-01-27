@@ -9,38 +9,7 @@ import {
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { RootState, ThunkAction } from "./index";
-import {
-  ICommentData,
-  IProject,
-  IProjectData,
-  IEditProjectData,
-} from "../types/interface";
-
-// Get all projects
-
-export const getProjects = (
-  token: string
-): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
-    dispatch(showLoading());
-    try {
-      const response = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(response.data));
-      dispatch(hideLoading());
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
-      }
-    }
-  };
-};
+import { ICommentData, IProject, IProjectData } from "../types/interface";
 
 // Add project
 
@@ -81,7 +50,8 @@ export const addProject = (
 // Edit project
 
 export const editProject = (
-  data: IEditProjectData,
+  data: IProjectData,
+  projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -89,13 +59,13 @@ export const editProject = (
     try {
       const putResponse = await axios({
         method: "put",
-        url: `http://localhost:5000/projects/${data.id}`,
-        data: { title: data.title, description: data.description },
+        url: `http://localhost:5000/projects/${projectId}`,
+        data,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(editProjectData(data));
+      dispatch(editProjectData({ ...data, projectId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", putResponse.data.message));
     } catch (error: unknown) {
@@ -110,7 +80,7 @@ export const editProject = (
 // Delete project
 
 export const deleteProject = (
-  id: string,
+  projectId: string,
   token: string
 ): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -118,12 +88,12 @@ export const deleteProject = (
     try {
       const deleteResponse = await axios({
         method: "delete",
-        url: `http://localhost:5000/projects/${id}`,
+        url: `http://localhost:5000/projects/${projectId}`,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(deleteProjectData(id));
+      dispatch(deleteProjectData(projectId));
       dispatch(hideLoading());
       dispatch(showNotification("success", deleteResponse.data.message));
       return deleteResponse.data.status;
@@ -141,7 +111,7 @@ export const deleteProject = (
 
 export const addProjectComment = (
   data: ICommentData,
-  id: string,
+  projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -149,7 +119,7 @@ export const addProjectComment = (
     try {
       const postResponse = await axios({
         method: "post",
-        url: `http://localhost:5000/projects/${id}/comments`,
+        url: `http://localhost:5000/projects/${projectId}/comments`,
         data,
         headers: {
           Authorization: token,
@@ -179,7 +149,6 @@ export const addProjectComment = (
 export const deleteProjectComment = (
   projectId: string,
   commentId: string,
-  userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
@@ -187,7 +156,7 @@ export const deleteProjectComment = (
     try {
       const deleteResponse = await axios({
         method: "delete",
-        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}/users/${userId}`,
+        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}`,
         headers: {
           Authorization: token,
         },
@@ -199,7 +168,6 @@ export const deleteProjectComment = (
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
-        return error.response?.data.status;
       }
     }
   };
