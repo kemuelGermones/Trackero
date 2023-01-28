@@ -1,14 +1,16 @@
-import { IProject, IIssue } from "../types/interface";
+import { IProject, IIssue, IUser } from "../types/interface";
+import store from "../store";
 
 // Sort issues
 
-export const sortIssues = <T>(issues: T, category: string) => {
+export const sortIssues = (issues: IIssue[], category: string) => {
   //SORT BY DATE
   if (category === "dueDate" && Array.isArray(issues)) {
     return [...issues].sort(
       (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
     );
   }
+
   //SORT BY STATUS
   if (category === "status" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
@@ -34,6 +36,7 @@ export const sortIssues = <T>(issues: T, category: string) => {
       return A - B;
     });
   }
+
   //SORT BY IMPORTANCE
   if (category === "importance" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
@@ -59,6 +62,21 @@ export const sortIssues = <T>(issues: T, category: string) => {
       return A - B;
     });
   }
+
+  // SORT BY YOUR ISSUES
+  if (category === "yourIssues" && Array.isArray(issues)) {
+    const userId = store.getState().user.userId;
+    return [...issues].filter((issue) => issue.author._id === userId);
+  }
+
+  // SORT BY ASSIGNED ISSUES
+  if (category === "assignedIssues" && Array.isArray(issues)) {
+    const userId = store.getState().user.userId;
+    return [...issues].filter(
+      (issue) => issue.assignedTo.findIndex((user: IUser) => user._id === userId) > -1
+    );
+  }
+
   return issues;
 };
 

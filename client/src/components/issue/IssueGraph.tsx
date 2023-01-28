@@ -7,7 +7,6 @@ import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
 
 import { IIssue } from "../../types/interface";
 
-
 interface IIssueGraph {
   issuesData: IIssue[];
 }

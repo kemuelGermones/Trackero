@@ -52,7 +52,7 @@ function IssueTable({
   }, [issues, issuesPerTable]);
 
   useEffect(() => {
-    setIssues(sortIssues<IIssue[]>(issuesData, sortCategory));
+    setIssues(sortIssues(issuesData, sortCategory));
   }, [issuesData, sortCategory]);
 
   useEffect(() => {
@@ -93,7 +93,9 @@ function IssueTable({
             <Dropdown onChange={changeSortCategoryHandler}>
               <option value="importance">Importance</option>
               <option value="status">Status</option>
-              <option value="dueDate">Due Date</option>
+              <option value="dueDate">Due date</option>
+              <option value="yourIssues">Your issues</option>
+              <option value="assignedIssues">Assigned issues</option>
             </Dropdown>
           </DropdownContainer>
           {projectId ? (

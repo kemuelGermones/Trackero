@@ -113,6 +113,12 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
           {issueData.author.username}
         </CardDescription>
         <CardDescription $hasLimit={false}>
+          <TextLight>Assigned to: </TextLight>
+          {issueData.assignedTo.length !== 0
+            ? issueData.assignedTo.map((user) => user.username).join(", ")
+            : "No one"}
+        </CardDescription>
+        <CardDescription $hasLimit={false}>
           <TextLight>Status: </TextLight>
           {issueData.status}
         </CardDescription>

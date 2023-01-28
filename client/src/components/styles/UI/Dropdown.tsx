@@ -4,12 +4,12 @@ export const DropdownContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 10rem;
+  width: 12rem;
 `;
 
 export const Dropdown = styled.select`
     padding: 0.3rem 0.5rem;
-    width: 6.5rem;
+    width: 8.5rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
     border: none;

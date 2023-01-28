@@ -36,7 +36,7 @@ function Issues() {
       setCurrentIssue((state) => {
         if (state) {
           const foundIssue = allIssues.find((issue) => issue._id === state._id);
-          return foundIssue ? foundIssue : state;
+          return foundIssue ? foundIssue : null;
         }
         return state;
       });

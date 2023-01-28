@@ -46,7 +46,7 @@ function ShowProject() {
           const foundIssue = project.issues.find(
             (issue) => issue._id === state._id
           );
-          return foundIssue ? foundIssue : state;
+          return foundIssue ? foundIssue : null;
         }
         return state;
       });
