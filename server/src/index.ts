@@ -2,13 +2,21 @@ import express, { Request, Response, urlencoded, NextFunction } from "express";
 import { connect, connection } from "mongoose";
 import projectRoute from "./routes/project";
 import issueRoute from "./routes/issue";
-import projectCommentRoute from "./routes/projectComment";
-import issueCommentRoute from "./routes/issueComment";
 import userRoute from "./routes/user";
 import AppError from "./utils/AppError";
 import cors from "cors";
 import passport from "passport";
 import passportConfig from "./config/passport";
+import { Types } from "mongoose";
+
+declare global {
+  namespace Express {
+    export interface User {
+      _id: Types.ObjectId;
+      role: "Administrator" | "Developer";
+    }
+  }
+}
 
 const app = express();
 
@@ -30,9 +38,7 @@ passportConfig(passport);
 
 app.use("/", userRoute);
 app.use("/projects", projectRoute);
-app.use("/projects/:projectId/issues", issueRoute);
-app.use("/projects/:projectId/comments", projectCommentRoute);
-app.use("/issues/:issueId/comments", issueCommentRoute);
+app.use("/issues", issueRoute);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError("Page Not Found", 404));

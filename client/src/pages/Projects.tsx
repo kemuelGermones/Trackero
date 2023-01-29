@@ -2,24 +2,26 @@ import { useState } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store";
+
 import ProjectList from "../components/styles/layout/ProjectList";
 import ProjectForm from "../components/project/ProjectForm";
 import {
   Card,
   CardTitle,
+  CardHeader,
   CardDescription,
   CardLogo,
 } from "../components/styles/UI/Card";
-import { isArrayOfIProject } from "../types/type-guard";
 
 function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const navigate = useNavigate();
-  const projects = useAppSelector((state) => state.project.data);
+  const projects = useAppSelector((state) => state.project.projectsData);
+  const userRole = useAppSelector((state) => state.user.userRole);
 
   const showProjectFormHandler = () => {
-    document.body.style.overflow = "hidden";
     setShowProjectForm(true);
+    document.body.style.overflow = "hidden";
   };
 
   const hideProjectFormHandler = () => {
@@ -30,28 +32,36 @@ function Projects() {
   return (
     <>
       {showProjectForm ? (
-        <ProjectForm type="new" hideForm={hideProjectFormHandler} />
+        <ProjectForm hideForm={hideProjectFormHandler} />
       ) : null}
       <ProjectList>
-        <Card
-          $center={true}
-          onClick={showProjectFormHandler}
-          style={{ height: "15rem" }}
-        >
-          <CardLogo>
-            <BsPlusLg size="1.5em" /> Add Project
-          </CardLogo>
-        </Card>
-        { isArrayOfIProject(projects) ? projects.map((project) => (
+        {userRole === "Administrator" ? (
           <Card
-            key={project._id}
-            onClick={() => navigate(`/projects/${project._id}`)}
+            $center={true}
+            onClick={showProjectFormHandler}
             style={{ height: "15rem" }}
           >
-            <CardTitle>{project.title}</CardTitle>
-            <CardDescription>{project.description}</CardDescription>
+            <CardLogo>
+              <BsPlusLg size="1.5em" /> Add Project
+            </CardLogo>
           </Card>
-        )) : null }
+        ) : null}
+        {projects
+          ? projects.map((project) => (
+              <Card
+                key={project._id}
+                onClick={() => navigate(`/projects/${project._id}`)}
+                style={{ height: "15rem" }}
+              >
+                <CardHeader>
+                  <CardTitle>{project.title}</CardTitle>
+                </CardHeader>
+                <CardDescription $hasLimit={true}>
+                  {project.description}
+                </CardDescription>
+              </Card>
+            ))
+          : null}
       </ProjectList>
     </>
   );

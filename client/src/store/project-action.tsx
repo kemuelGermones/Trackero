@@ -8,50 +8,34 @@ import {
 } from "./project-slice";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
+
 import { RootState, ThunkAction } from "./index";
-import { IProject, IProjectData } from "../types/interface";
-import { IEditProjectAction } from "./project-slice";
-
-// Get all projects
-
-export const getProjects = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  AnyAction
-> => {
-  return async (dispatch) => {
-    dispatch(showLoading());
-    try {
-      const response = await axios.get<IProject[]>(
-        "http://localhost:5000/projects"
-      );
-      dispatch(updateProjectsData(response.data));
-      dispatch(hideLoading());
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
-      }
-    }
-  };
-};
+import { ICommentData, IProject, IProjectData } from "../types/interface";
 
 // Add project
 
 export const addProject = (
-  data: IProjectData
+  data: IProjectData,
+  token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const postResponse = await axios.post(
-        "http://localhost:5000/projects",
-        data
-      );
-      const getResponse = await axios.get<IProject[]>(
-        "http://localhost:5000/projects"
-      );
+      const postResponse = await axios({
+        method: "post",
+        url: "http://localhost:5000/projects",
+        data,
+        headers: {
+          Authorization: token,
+        },
+      });
+      const getResponse = await axios<IProject[]>({
+        method: "get",
+        url: "http://localhost:5000/projects",
+        headers: {
+          Authorization: token,
+        },
+      });
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
@@ -67,16 +51,22 @@ export const addProject = (
 // Edit project
 
 export const editProject = (
-  data: IEditProjectAction
+  data: IProjectData,
+  projectId: string,
+  token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const putResponse = await axios.put(
-        `http://localhost:5000/projects/${data.id}`,
-        { title: data.title, description: data.description }
-      );
-      dispatch(editProjectData(data));
+      const putResponse = await axios({
+        method: "put",
+        url: `http://localhost:5000/projects/${projectId}`,
+        data,
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(editProjectData({ ...data, projectId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", putResponse.data.message));
     } catch (error: unknown) {
@@ -91,15 +81,20 @@ export const editProject = (
 // Delete project
 
 export const deleteProject = (
-  id: string
+  projectId: string,
+  token: string
 ): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:5000/projects/${id}`
-      );
-      dispatch(deleteProjectData(id));
+      const deleteResponse = await axios({
+        method: "delete",
+        url: `http://localhost:5000/projects/${projectId}`,
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(deleteProjectData(projectId));
       dispatch(hideLoading());
       dispatch(showNotification("success", deleteResponse.data.message));
       return deleteResponse.data.status;
@@ -116,19 +111,28 @@ export const deleteProject = (
 // Add comment to the project
 
 export const addProjectComment = (
-  id: string,
-  comment: string
+  data: ICommentData,
+  projectId: string,
+  token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const postResponse = await axios.post(
-        `http://localhost:5000/projects/${id}/comments`,
-        { comment }
-      );
-      const getResponse = await axios.get<IProject[]>(
-        "http://localhost:5000/projects"
-      );
+      const postResponse = await axios({
+        method: "post",
+        url: `http://localhost:5000/projects/${projectId}/comments`,
+        data,
+        headers: {
+          Authorization: token,
+        },
+      });
+      const getResponse = await axios<IProject[]>({
+        method: "get",
+        url: "http://localhost:5000/projects",
+        headers: {
+          Authorization: token,
+        },
+      });
       dispatch(updateProjectsData(getResponse.data));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
@@ -145,14 +149,19 @@ export const addProjectComment = (
 
 export const deleteProjectComment = (
   projectId: string,
-  commentId: string
+  commentId: string,
+  token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:5000/projects/${projectId}/comments/${commentId}`
-      );
+      const deleteResponse = await axios({
+        method: "delete",
+        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}`,
+        headers: {
+          Authorization: token,
+        },
+      });
       dispatch(deleteProjectCommentData({ projectId, commentId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", deleteResponse.data.message));
@@ -160,7 +169,6 @@ export const deleteProjectComment = (
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
         dispatch(showNotification("error", error.response?.data.message));
-        return error.response?.data.status;
       }
     }
   };

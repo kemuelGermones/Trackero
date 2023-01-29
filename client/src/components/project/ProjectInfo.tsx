@@ -1,23 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { deleteProject } from "../../store/project-action";
+
 import {
   Card,
   CardTitle,
   CardDescription,
   CardButtons,
+  CardHeader,
 } from "../styles/UI/Card";
 import Button from "../styles/UI/Button";
 import ProjectForm from "./ProjectForm";
-import { deleteProject } from "../../store/project-action";
+
 import { IProject } from "../../types/interface";
 
 interface IProjectInfo {
-  data: IProject;
+  projectData: IProject;
 }
 
-function ProjectInfo({ data }: IProjectInfo) {
+function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const { accessToken, userRole } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -32,31 +36,37 @@ function ProjectInfo({ data }: IProjectInfo) {
   };
 
   const deleteProjectRequest = async () => {
-    const deleteStatus = await dispatch(deleteProject(data._id));
-    console.log(deleteStatus);
-    if (deleteStatus === 200) {
-      navigate("/projects");
-    };
+    if (accessToken) {
+      const deleteStatus = await dispatch(
+        deleteProject(projectData._id, accessToken)
+      );
+      if (deleteStatus === 200) {
+        navigate("/projects");
+      }
+    }
   };
 
   return (
     <>
       {showProjectForm ? (
         <ProjectForm
-          type="edit"
-          initialTitle={data.title}
-          initialDescription={data.description}
+          initialValues={projectData}
           hideForm={hideProjectFormHandler}
-          projectId={data._id}
         />
       ) : null}
       <Card style={{ marginBottom: "1rem" }}>
-        <CardTitle>{data.title}</CardTitle>
-        <CardDescription>{data.description}</CardDescription>
-        <CardButtons>
-          <Button onClick={showProjectFormHandler}>Edit</Button>
-          <Button onClick={deleteProjectRequest}>Delete</Button>
-        </CardButtons>
+        <CardHeader>
+          <CardTitle>{projectData.title}</CardTitle>
+        </CardHeader>
+        <CardDescription $hasLimit={false}>
+          {projectData.description}
+        </CardDescription>
+        {userRole === "Administrator" ? (
+          <CardButtons>
+            <Button onClick={showProjectFormHandler}>Edit</Button>
+            <Button onClick={deleteProjectRequest}>Delete</Button>
+          </CardButtons>
+        ) : null}
       </Card>
     </>
   );

@@ -1,5 +1,6 @@
 import { AnyAction } from "@reduxjs/toolkit";
 import { showNotif, hideNotif } from "./notification-slice";
+
 import { RootState, ThunkAction } from "./index";
 
 // Show notification

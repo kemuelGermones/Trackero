@@ -1,21 +1,24 @@
 import { Router } from "express";
 import wrapAsync from "../utils/wrapAsync";
-import { registerUser, loginUser, refreshUser } from "../controllers/user";
-import { validateNewUser, validateOldUser } from "../middleware";
+import { registerUser, loginUser, showUsers } from "../controllers/user";
 import passport from "passport";
 
 const router = Router();
 
 // Registers the user
 
-router.post("/register", validateNewUser, wrapAsync(registerUser));
+router.post("/register", wrapAsync(registerUser));
 
 // Login the user
 
-router.post("/login", validateOldUser, wrapAsync(loginUser));
+router.post("/login", wrapAsync(loginUser));
 
-// Refresh the user
+// Show users
 
-router.post("/refresh", passport.authenticate("jwt", { session: false }), wrapAsync(refreshUser));
+router.get(
+  "/users",
+  passport.authenticate("jwt", { session: false }),
+  wrapAsync(showUsers)
+);
 
 export default router;

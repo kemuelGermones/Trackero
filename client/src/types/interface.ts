@@ -21,6 +21,7 @@ export interface ICommentData {
 export interface IComment extends ICommentData {
   _id: string;
   __v: number;
+  author: IUser;
 }
 
 // Issue Interface
@@ -29,7 +30,6 @@ export interface IIssueData {
   title: string;
   description: string;
   importance: string;
-  status: string;
   dueDate: string;
 }
 
@@ -37,11 +37,13 @@ export interface IIssue extends IIssueData {
   _id: string;
   __v: number;
   comments: IComment[];
+  author: IUser;
+  assignedTo: IUser[];
+  status: string;
 }
 
-export interface IModifiedIssue extends IIssue {
-  projectId: string;
-  projectName: string;
+export interface IIssueStatus {
+  status: string;
 }
 
 // User interface
@@ -53,14 +55,8 @@ export interface IUserData {
   role: string;
 }
 
-export interface IUser extends IUserData {
+export interface IUser {
   _id: string;
-  __v: number;
-}
-
-// Response Status Interface
-
-export interface IStatus {
-  status: number;
-  description: string;
+  username: string;
+  role: string;
 }

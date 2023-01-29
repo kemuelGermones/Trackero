@@ -1,31 +1,27 @@
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch } from "../../store";
+import { addProject, editProject } from "../../store/project-action";
+import { useAppSelector } from "../../store";
+
 import Backdrop from "../styles/UI/Backdrop";
 import Form from "../styles/UI/Form";
 import Label from "../styles/UI/Label";
 import Input from "../styles/UI/Input";
 import TextArea from "../styles/UI/TextArea";
-import { Card, CardTitle, CardDivider } from "../styles/UI/Card";
+import { Card, CardTitle, CardDivider, CardHeader } from "../styles/UI/Card";
 import Button from "../styles/UI/Button";
 import { PositionCenter } from "../styles/utils/PositionCenter";
-import useValidation from "../../hooks/useValidation";
-import { useAppDispatch } from "../../store";
-import { addProject, editProject } from "../../store/project-action";
 
-interface IProjecForm {
-  type: "new" | "edit";
+import { IProject } from "../../types/interface";
+
+interface IProjectForm {
   hideForm: () => void;
-  initialTitle?: string;
-  initialDescription?: string;
-  projectId?: string;
+  initialValues?: IProject;
 }
 
-function ProjectForm({
-  type,
-  hideForm,
-  initialTitle,
-  initialDescription,
-  projectId,
-}: IProjecForm) {
+function ProjectForm({ hideForm, initialValues }: IProjectForm) {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   const {
     value: title,
@@ -34,7 +30,7 @@ function ProjectForm({
     validateValue: validateTitle,
   } = useValidation(
     (str) => str.trim().length > 0,
-    !!initialTitle ? initialTitle : ""
+    initialValues ? initialValues.title : ""
   );
 
   const {
@@ -44,7 +40,7 @@ function ProjectForm({
     validateValue: validateDescription,
   } = useValidation(
     (str) => str.trim().length > 0,
-    !!initialDescription ? initialDescription : ""
+    initialValues ? initialValues.description : ""
   );
 
   const onChangeTitleHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,12 +57,14 @@ function ProjectForm({
     event.preventDefault();
     const titleIsValid = validateTitle();
     const descriptionIsValid = validateDescription();
-    if (titleIsValid && descriptionIsValid && type === "new") {
-      dispatch(addProject({ title, description }));
+    if (titleIsValid && descriptionIsValid && !initialValues && accessToken) {
+      dispatch(addProject({ title, description }, accessToken));
       hideForm();
     }
-    if (titleIsValid && descriptionIsValid && type === "edit" && !!projectId) {
-      dispatch(editProject({ title, description, id: projectId }));
+    if (titleIsValid && descriptionIsValid && initialValues && accessToken) {
+      dispatch(
+        editProject({ title, description }, initialValues._id, accessToken)
+      );
       hideForm();
     }
   };
@@ -76,11 +74,13 @@ function ProjectForm({
       <Backdrop onClick={hideForm} />
       <PositionCenter>
         <Card>
-          {type === "edit" ? (
-            <CardTitle>Edit Project</CardTitle>
-          ) : (
-            <CardTitle>Add Project</CardTitle>
-          )}
+          <CardHeader>
+            {initialValues ? (
+              <CardTitle>Edit Project</CardTitle>
+            ) : (
+              <CardTitle>Add Project</CardTitle>
+            )}
+          </CardHeader>
           <CardDivider />
           <Form onSubmit={onSubmitHandler}>
             <Label htmlFor="title">Title</Label>

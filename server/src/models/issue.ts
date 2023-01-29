@@ -5,8 +5,22 @@ const issueSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   importance: { type: String, required: true, enum: ["High", "Mid", "Low"] },
-  status: { type: String, required: true, enum: ["Pending", "Done", "In Progress"] },
   dueDate: { type: Date, required: true },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  status: {
+    type: String,
+    enum: ["Pending", "Done", "In Progress"],
+    default: "Pending",
+  },
+  assignedTo: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   comments: [
     {
       type: Schema.Types.ObjectId,

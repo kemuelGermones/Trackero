@@ -22,15 +22,17 @@ const Button = styled.button`
 `;
 
 export const SmallButton = styled.button`
-  padding: 0.3rem 0.75rem;
+  padding: 0.2rem 0.75rem;
   box-sizing: border-box;
   border-radius: 0.5rem;
   border: none;
   background-color: var(--tertiary);
   color: white;
-  font-size: 0.75rem
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
   font-family: "Poppins";
-  margin-left: 1rem;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background-color: var(--quaternary);

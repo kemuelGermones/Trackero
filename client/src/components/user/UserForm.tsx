@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../store";
-import { useNavigate } from "react-router-dom";
+import useValidation from "../../hooks/useValidation";
+import { registerUser, loginUser } from "../../store/user-action";
+
 import {
   Card,
   CardTitle,
   CardDivider,
   CardFooterText,
+  CardHeader,
 } from "../styles/UI/Card";
 import Label from "../styles/UI/Label";
 import Button from "../styles/UI/Button";
 import Input from "../styles/UI/Input";
 import Select from "../styles/UI/Select";
 import Form from "../styles/UI/Form";
-import useValidation from "../../hooks/useValidation";
-import { registerUser, loginUser } from "../../store/user-action";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const {
     value: email,
@@ -47,8 +47,7 @@ function UserForm() {
   const {
     value: role,
     onChangeValueHandler: roleChange,
-    onResetValueHandler: resetRole,
-  } = useValidation(null, "Administrator");
+  } = useValidation(null, "Developer");
 
   const onChangeEmailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     emailChange(event.target.value);
@@ -70,17 +69,15 @@ function UserForm() {
     roleChange(event.target.value);
   };
 
-  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
     const isUsernameValid = validateUsername();
     if (!isLogin && isEmailValid && isPasswordValid && isUsernameValid) {
-      const registerStatus = await dispatch(registerUser({ email, username, password, role }));
-      if (registerStatus === 200) navigate("/projects");
+      dispatch(registerUser({ email, username, password, role }));
     } else if (isLogin && isEmailValid && isPasswordValid) {
-      const loginStatus = await dispatch(loginUser(email, password));
-      if (loginStatus === 200) navigate("/projects");
+      dispatch(loginUser(email, password));
     }
   };
 
@@ -93,7 +90,9 @@ function UserForm() {
 
   return (
     <Card $width="30rem">
-      <CardTitle>{!!isLogin ? "Login" : "Sign Up"}</CardTitle>
+      <CardHeader>
+        <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>
+      </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
         <Label htmlFor="email">Your email</Label>
@@ -127,15 +126,15 @@ function UserForm() {
             />
             <Label htmlFor="role">Your role</Label>
             <Select onChange={onChangeRoleHandler} value={role}>
-              <option value="Administrator">Administrator</option>
               <option value="Developer">Developer</option>
+              <option value="Administrator">Administrator</option>
             </Select>
           </>
         ) : null}
-        <Button>{!!isLogin ? "Login" : "Sign Up"}</Button>
+        <Button>{isLogin ? "Login" : "Sign Up"}</Button>
       </Form>
       <CardFooterText onClick={isLoginToggler}>
-        {!!isLogin ? "Don't have an account?" : "Have an account?"}
+        {isLogin ? "Don't have an account?" : "Have an account?"}
       </CardFooterText>
     </Card>
   );

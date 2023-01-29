@@ -1,20 +1,27 @@
 import { Router } from "express";
-import { createIssue, editIssue, deleteIssue } from "../controllers/issue";
-import { validateNewIssue, validateEditIssue } from "../middleware";
 import wrapAsync from "../utils/wrapAsync";
+import { createComment, deleteComment, } from "../controllers/issue";
+import { validateComment, isAdminAndCommentAuthor } from "../middleware";
+import passport from "passport";
 
 const router = Router({ mergeParams: true });
 
-// Create issue
+// Create issue comment
 
-router.post("/", validateNewIssue, wrapAsync(createIssue));
+router.post(
+  "/:issueId/comments",
+  passport.authenticate("jwt", { session: false }),
+  validateComment,
+  wrapAsync(createComment)
+);
 
-// Edit issue
+// Delete issue comment
 
-router.put("/:issueId", validateEditIssue, wrapAsync(editIssue));
-
-// Delete issue
-
-router.delete("/:issueId", wrapAsync(deleteIssue));
+router.delete(
+  "/:issueId/comments/:commentId",
+  passport.authenticate("jwt", { session: false }),
+  isAdminAndCommentAuthor,
+  wrapAsync(deleteComment)
+);
 
 export default router;

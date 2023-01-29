@@ -20,14 +20,12 @@ export const registerUser = async (req: Request, res: Response) => {
     await newUser.save();
 
     const findUser = await User.findOne({ email });
-    if (!!findUser) {
+    if (findUser) {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          status: 200,
-          message: "Successfully created an account",
-          id: payload.id,
-          username: payload.username,
+          id: findUser._id,
+          role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,
         });
@@ -42,19 +40,17 @@ export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const findUser = await User.findOne({ email });
   if (!findUser) {
-    res.status(400).json({ status: "400", message: "User doesn't exists" });
+    res.status(400).json({ status: 400, message: "User doesn't exists" });
   } else {
     const result = await bcrypt.compare(password, findUser.password);
     if (!result) {
-      res.status(400).json({ status: "400", message: "Incorrect password" });
+      res.status(400).json({ status: 400, message: "Incorrect password" });
     } else {
       const payload = { id: findUser._id, username: findUser.username };
-      jwt.sign(payload, secret, { expiresIn: 3660 }, (err, token) => {
+      jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          status: 200,
-          message: "Successfully logged in",
-          id: payload.id,
-          username: payload.username,
+          id: findUser._id,
+          role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,
         });
@@ -63,23 +59,9 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-// New token
+// Show all users
 
-export const refreshUser = async (req: Request, res: Response) => {
-  const { id, username } = req.body;
-  const findUser = await User.findById(id);
-  if (!findUser) {
-    res.status(400).json({ status: "400", message: "User doesn't exists" });
-  } else {
-    jwt.sign({ id, username }, secret, { expiresIn: 3600 }, (err, token) => {
-      res.status(200).json({
-        status: 200,
-        message: "Successfully generated new token",
-        id,
-        username,
-        expiresIn: 3600,
-        token: "Bearer " + token,
-      });
-    });
-  }
+export const showUsers = async (req: Request, res: Response) => {
+  const users = await User.find().select("_id username role");
+  res.status(200).send(users);
 };

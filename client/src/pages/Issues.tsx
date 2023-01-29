@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../store";
+import { listAllIssues, foundProjectId } from "../lib/lib";
+
 import {
   Dashboard,
   FirstSection,
@@ -9,68 +11,68 @@ import IssueGraph from "../components/issue/IssueGraph";
 import IssueTable from "../components/issue/IssueTable";
 import IssueInfo from "../components/issue/IssueInfo";
 import IssueComment from "../components/issue/IssueComment";
-import modifyIssueList from "../lib/modifyIssueList";
-import { IModifiedIssue } from "../types/interface";
-import {
-  isArrayOfIProject,
-  isArrayofIMofifiedIssue,
-} from "../types/type-guard";
 
-type TModifiedIssueState = IModifiedIssue[] | null;
-type TCurrentModifiedIssueState = IModifiedIssue | null;
+import { IIssue } from "../types/interface";
+
+type TIssueState = IIssue[] | null;
+type TCurrentIssueState = IIssue | null;
+type TCurrentProjectIssueId = string | null;
 
 function Issues() {
-  const projects = useAppSelector((state) => state.project.data);
-  const [modifiedIssues, setModifiedIssues] =
-    useState<TModifiedIssueState>(null);
-  const [currentModifiedIssue, setCurrentModifiedIssue] =
-    useState<TCurrentModifiedIssueState>(null);
+  const projects = useAppSelector((state) => state.project.projectsData);
+  const [allIssues, setAllIssues] = useState<TIssueState>(null);
+  const [currentIssue, setCurrentIssue] = useState<TCurrentIssueState>(null);
+  const [currentProjectIssueId, setCurrentProjectIssueId] =
+    useState<TCurrentProjectIssueId>(null);
 
   useEffect(() => {
-    if (isArrayOfIProject(projects)) {
-      setModifiedIssues(modifyIssueList(projects));
+    if (projects) {
+      setAllIssues(listAllIssues(projects));
     }
   }, [projects]);
 
   useEffect(() => {
-    if (!!currentModifiedIssue && !!modifiedIssues) {
-      setCurrentModifiedIssue((state) => {
-        if (!!state) {
-          const foundModifiedIssue = modifiedIssues.find(
-            (issue) => issue._id === state._id
-          );
-          return !!foundModifiedIssue ? foundModifiedIssue : null;
+    if (allIssues && currentIssue) {
+      setCurrentIssue((state) => {
+        if (state) {
+          const foundIssue = allIssues.find((issue) => issue._id === state._id);
+          return foundIssue ? foundIssue : null;
         }
         return state;
       });
     }
-  }, [modifiedIssues]);
+  }, [allIssues]);
+
+  useEffect(() => {
+    if (currentIssue && projects) {
+      setCurrentProjectIssueId(foundProjectId(projects, currentIssue._id));
+    }
+  }, [currentIssue]);
 
   return (
     <Dashboard $templateColumns="1.5fr 1fr">
       <FirstSection>
-        {isArrayofIMofifiedIssue(modifiedIssues) ? (
+        {allIssues ? (
           <>
-            <IssueGraph issues={modifiedIssues} />
+            <IssueGraph issuesData={allIssues} />
             <IssueTable
-              issuesData={modifiedIssues}
-              setCurrentModifiedIssue={setCurrentModifiedIssue}
+              issuesData={allIssues}
+              setCurrentIssue={setCurrentIssue}
               issuesPerTable={10}
             />
           </>
         ) : null}
       </FirstSection>
       <SecondSection>
-        {!!currentModifiedIssue ? (
+        {currentIssue && currentProjectIssueId ? (
           <>
             <IssueInfo
-              projectId={currentModifiedIssue.projectId}
-              issue={currentModifiedIssue}
+              projectId={currentProjectIssueId}
+              issueData={currentIssue}
             />
             <IssueComment
-              projectId={currentModifiedIssue.projectId}
-              issueId={currentModifiedIssue._id}
-              comments={currentModifiedIssue.comments}
+              projectId={currentProjectIssueId}
+              issueData={currentIssue}
             />
           </>
         ) : null}

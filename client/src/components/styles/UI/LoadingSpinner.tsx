@@ -57,7 +57,7 @@ export const LoadingSpinnerContainer = styled.div<ILoadingSpinnerContainerCustom
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 5%;
-  left: 50%;
+  left: 47.5%;
   transform: translate(-50%, -50%);
   z-index: 20;
   animation: ${(props) => (props.$show ? ShowToBottom : HideToTop)} 0.4s

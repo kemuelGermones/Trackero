@@ -8,25 +8,27 @@ import projectReducer from "./project-slice";
 import notificationReducer from "./notification-slice";
 import loadingReducer from "./loading-slice";
 import userReducer from "./user-slice";
+import userListReducer from "./user-list-slice";
 
 const persistConfig = {
   key: "root",
-  blacklist: ["project", "notification", "loading"],
+  blacklist: ["project", "notification", "loading", "userList"],
   version: 1,
-  storage
-}
+  storage,
+};
 
 const reducer = combineReducers({
   project: projectReducer,
   notification: notificationReducer,
   loading: loadingReducer,
-  user: userReducer
+  user: userReducer,
+  userList: userListReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
 
 const store = configureStore({
-  reducer: persistedReducer
+  reducer: persistedReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

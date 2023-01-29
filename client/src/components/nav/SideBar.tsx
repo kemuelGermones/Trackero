@@ -1,20 +1,21 @@
 import { useLocation } from "react-router-dom";
 import { useAppDispatch } from "../../store";
-import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
+import { logoutUser } from "../../store/user-action";
 import {
   BsFolder,
   BsExclamationTriangle,
   BsPeople,
   BsBoxArrowInLeft,
 } from "react-icons/bs";
-import { logout } from "../../store/user-slice";
+
+import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
 
 function SideBar() {
   const location = useLocation();
   const dispatch = useAppDispatch();
 
   const logoutHandler = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
   };
 
   return (

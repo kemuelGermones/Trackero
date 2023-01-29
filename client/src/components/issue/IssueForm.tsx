@@ -1,26 +1,32 @@
-import { useAppDispatch } from "../../store";
-import Backdrop from "../styles/UI/Backdrop";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { addIssue, editIssue } from "../../store/issue-action";
+import useValidation from "../../hooks/useValidation";
+
 import { PositionCenter } from "../styles/utils/PositionCenter";
-import { Card, CardDivider, CardTitle } from "../styles/UI/Card";
+import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
+import Backdrop from "../styles/UI/Backdrop";
 import Label from "../styles/UI/Label";
 import Input from "../styles/UI/Input";
 import Form from "../styles/UI/Form";
 import TextArea from "../styles/UI/TextArea";
 import Button from "../styles/UI/Button";
 import Select from "../styles/UI/Select";
-import useValidation from "../../hooks/useValidation";
-import { addIssue, editIssue } from "../../store/issue-action";
+
 import { IIssue } from "../../types/interface";
 
 interface IIssueForm {
   projectId: string;
-  type: "new" | "edit";
   hideForm: () => void;
-  initialValue?: IIssue;
+  initialValues?: IIssue;
 }
 
-function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
+function IssueForm({
+  hideForm,
+  projectId,
+  initialValues,
+}: IIssueForm) {
   const dispatch = useAppDispatch();
+  const { accessToken } = useAppSelector((state) => state.user);
 
   const {
     value: title,
@@ -29,7 +35,7 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     validateValue: validateTitle,
   } = useValidation(
     (str) => str.trim().length > 0,
-    type === "edit" && !!initialValue ? initialValue.title : ""
+    initialValues ? initialValues.title : ""
   );
 
   const {
@@ -39,19 +45,11 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     validateValue: validateDescription,
   } = useValidation(
     (str) => str.trim().length > 0,
-    type === "edit" && !!initialValue ? initialValue.description : ""
+    initialValues ? initialValues.description : ""
   );
 
   const { value: importance, onChangeValueHandler: importanceChange } =
-    useValidation(
-      null,
-      type === "edit" && !!initialValue ? initialValue.importance : "High"
-    );
-
-  const { value: status, onChangeValueHandler: statusChange } = useValidation(
-    null,
-    type === "edit" && !!initialValue ? initialValue.status : "Pending"
-  );
+    useValidation(null, initialValues ? initialValues.importance : "High");
 
   const {
     value: dueDate,
@@ -59,10 +57,8 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     onChangeValueHandler: dueDateChange,
     validateValue: validateDueDate,
   } = useValidation(
-    type === "new"
-      ? (str) => new Date(str).getTime() > new Date().getTime()
-      : (str) => str.trim().length > 0,
-    type === "edit" && !!initialValue ? initialValue.dueDate.split("T")[0] : ""
+    (str) => new Date(str).getTime() > new Date().getTime(),
+    initialValues ? initialValues.dueDate.split("T")[0] : ""
   );
 
   const onChangeTitleHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +77,6 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
     importanceChange(event.target.value);
   };
 
-  const onChangeStatusHandler = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    statusChange(event.target.value);
-  };
-
   const onChangeDueDateHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -102,10 +92,20 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       titleIsValid &&
       descriptionIsValid &&
       dueDateIsValid &&
-      type === "new"
+      !initialValues &&
+      accessToken
     ) {
       dispatch(
-        addIssue(projectId, { title, description, importance, status, dueDate })
+        addIssue(
+          {
+            title,
+            description,
+            importance,
+            dueDate,
+          },
+          projectId,
+          accessToken
+        )
       );
       hideForm();
     }
@@ -113,19 +113,21 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       titleIsValid &&
       descriptionIsValid &&
       dueDateIsValid &&
-      type === "edit" &&
-      !!initialValue
+      initialValues &&
+      accessToken
     ) {
       dispatch(
-        editIssue({
+        editIssue(
+          {
+            title,
+            description,
+            importance,
+            dueDate,
+          },
           projectId,
-          issueId: initialValue._id,
-          title,
-          description,
-          importance,
-          status,
-          dueDate,
-        })
+          initialValues._id,
+          accessToken
+        )
       );
       hideForm();
     }
@@ -136,11 +138,13 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
       <Backdrop onClick={hideForm} />
       <PositionCenter>
         <Card>
-          {type === "new" ? (
-            <CardTitle>New Issue</CardTitle>
-          ) : (
-            <CardTitle>Edit Issue</CardTitle>
-          )}
+          <CardHeader>
+            {!initialValues ? (
+              <CardTitle>New Issue</CardTitle>
+            ) : (
+              <CardTitle>Edit Issue</CardTitle>
+            )}
+          </CardHeader>
           <CardDivider />
           <Form onSubmit={onSubmitIssueForm}>
             <Label htmlFor="title">Title</Label>
@@ -169,20 +173,6 @@ function IssueForm({ type, hideForm, projectId, initialValue }: IIssueForm) {
               <option value="Mid">Mid</option>
               <option value="Low">Low</option>
             </Select>
-            {type === "edit" && (
-              <>
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  id="status"
-                  onChange={onChangeStatusHandler}
-                  value={status}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Done">Done</option>
-                </Select>
-              </>
-            )}
             <Label htmlFor="dueDate">Due Date</Label>
             <Input
               id="dueDate"

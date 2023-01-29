@@ -5,6 +5,10 @@ interface ICustomCardProp {
   $width?: string;
 }
 
+interface ICustomCardDescriptionProp {
+  $hasLimit: boolean;
+}
+
 export const Card = styled.div<ICustomCardProp>`
   background: var(--secondary);
   border-radius: 0.5rem;
@@ -30,17 +34,24 @@ export const CardLogo = styled.div`
 `;
 
 export const CardTitle = styled.h1`
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: var(--quaternary);
   font-size: 1.5rem;
 `;
 
-export const CardDescription = styled.p`
+export const CardHeader = styled.div`
   margin: 0 0 0.5rem 0;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const CardDescription = styled.p<ICustomCardDescriptionProp>`
+  margin: 0 0 0.5rem 0;
+  display: ${(state) => (state.$hasLimit ? "-webkit-box" : "")};
+  overflow: ${(state) => (state.$hasLimit ? "hidden" : "")};
+  -webkit-box-orient: ${(state) => (state.$hasLimit ? "vertical" : "")};
+  -webkit-line-clamp: ${(state) => (state.$hasLimit ? "5" : "")};
 `;
 
 export const CardDivider = styled.hr`
@@ -66,7 +77,7 @@ export const CardFooterText = styled.p`
   color: var(--tertiary);
   margin: 0 auto;
   cursor: pointer;
-  
+
   &:hover {
     color: var(--quaternary);
   }

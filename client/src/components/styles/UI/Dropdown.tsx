@@ -4,12 +4,12 @@ export const DropdownContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 10rem;
+  width: 12rem;
 `;
 
 export const Dropdown = styled.select`
     padding: 0.3rem 0.5rem;
-    width: 6.5rem;
+    width: 8.5rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
     border: none;
@@ -18,7 +18,7 @@ export const Dropdown = styled.select`
     appearance: none;
     background: url("/white-arrow-down.png");
     background-repeat: no-repeat;
-    background-size: 0.75rem;
+    background-size: 0.6rem;
     background-position: 93% center;
     background-color: var(--tertiary);
     color: white;

@@ -1,38 +1,29 @@
 import { Request, Response } from "express";
+import Comment from "../models/comment";
 import Issue from "../models/issue";
-import Project from "../models/project";
 
-// Create issue
+// Create issue comment
 
-export const createIssue = async (req: Request, res: Response) => {
-  const { projectId } = req.params;
-  const project = await Project.findById(projectId);
-  const issue = new Issue(req.body);
-  project?.issues.push(issue._id);
-  await issue.save();
-  await project?.save();
-  res
-    .status(200)
-    .json({ status: 200, message: "Successfully created an issue" });
-};
-
-// Edit issue
-
-export const editIssue = async (req: Request, res: Response) => {
+export const createComment = async (req: Request, res: Response) => {
   const { issueId } = req.params;
-  await Issue.findByIdAndUpdate(issueId, req.body);
+  const issue = await Issue.findById(issueId);
+  const comment = new Comment(req.body);
+  comment.author = req.user!._id;
+  issue!.comments.push(comment._id);
+  await comment.save();
+  await issue!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully edited an issue" });
+    .json({ status: 200, message: "Successfully created a comment" });
 };
 
-// Delete issue
+// Delete issue comment
 
-export const deleteIssue = async (req: Request, res: Response) => {
-  const { projectId, issueId } = req.params;
-  await Project.findByIdAndUpdate(projectId, { $pull: { issues: issueId } });
-  await Issue.findByIdAndDelete(issueId);
+export const deleteComment = async (req: Request, res: Response) => {
+  const { issueId, commentId } = req.params;
+  await Issue.findByIdAndUpdate(issueId, { $pull: { comments: commentId } });
+  await Comment.findByIdAndDelete(commentId);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully deleted an issue" });
+    .json({ status: 200, message: "Successfully deleted a comment" });
 };
