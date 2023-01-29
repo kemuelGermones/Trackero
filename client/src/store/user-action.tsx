@@ -24,6 +24,7 @@ export const registerUser = (
       dispatch(
         login({
           userId: postResponse.data.id,
+          userRole: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })
@@ -55,6 +56,7 @@ export const loginUser = (
       dispatch(
         login({
           userId: postResponse.data.id,
+          userRole: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })

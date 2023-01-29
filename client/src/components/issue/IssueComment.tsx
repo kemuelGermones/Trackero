@@ -23,7 +23,9 @@ interface IIssueComment {
 
 function IssueComment({ projectId, issueData }: IIssueComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId } = useAppSelector((state) => state.user);
+  const { accessToken, userId, userRole } = useAppSelector(
+    (state) => state.user
+  );
 
   const {
     value: comment,
@@ -74,7 +76,7 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
           <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
           <CommentFooter>
             <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
-            {comment.author._id === userId ? (
+            {comment.author._id === userId || userRole === "Administrator" ? (
               <CommentDeleteButton
                 onClick={deleteIssueCommentHandler.bind(
                   null,

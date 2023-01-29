@@ -28,7 +28,9 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
   const [showStatusForm, setShowStatusForm] = useState(false);
   const [showAssignForm, setShowAssignForm] = useState(false);
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
+  const { accessToken, userId, userRole } = useAppSelector(
+    (state) => state.user
+  );
   const userList = useAppSelector((state) => state.userList.usersData);
 
   const showEditIssueFormHandler = () => {
@@ -97,12 +99,20 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
         <CardHeader>
           <CardTitle>{issueData.title}</CardTitle>
           <div style={{ display: "flex" }}>
-            <SmallButton onClick={showAssignIssueFormHandler}>
-              <BsPlusLg />
-            </SmallButton>
-            <SmallButton onClick={showStatusIssueFormHandler}>
-              <BsPen />
-            </SmallButton>
+            {issueData.author._id === userId || userRole === "Administrator" ? (
+              <SmallButton onClick={showAssignIssueFormHandler}>
+                <BsPlusLg />
+              </SmallButton>
+            ) : null}
+            {issueData.author._id === userId ||
+            userRole === "Administrator" ||
+            issueData.assignedTo.findIndex(
+              (assignedUser) => assignedUser._id === userId
+            ) > -1 ? (
+              <SmallButton onClick={showStatusIssueFormHandler}>
+                <BsPen />
+              </SmallButton>
+            ) : null}
           </div>
         </CardHeader>
         <CardDescription $hasLimit={false}>
@@ -130,14 +140,16 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
           <TextLight>Due Date: </TextLight>
           {new Date(issueData.dueDate).toDateString()}
         </CardDescription>
-        <CardButtons>
-          <Button onClick={showEditIssueFormHandler}>Edit</Button>
-          <Button
-            onClick={deleteIssueHandler.bind(null, projectId, issueData._id)}
-          >
-            Delete
-          </Button>
-        </CardButtons>
+        {issueData.author._id === userId || userRole === "Administrator" ? (
+          <CardButtons>
+            <Button onClick={showEditIssueFormHandler}>Edit</Button>
+            <Button
+              onClick={deleteIssueHandler.bind(null, projectId, issueData._id)}
+            >
+              Delete
+            </Button>
+          </CardButtons>
+        ) : null}
       </Card>
     </>
   );

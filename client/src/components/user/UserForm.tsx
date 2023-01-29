@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../store";
+import useValidation from "../../hooks/useValidation";
+import { registerUser, loginUser } from "../../store/user-action";
+
 import {
   Card,
   CardTitle,
@@ -12,8 +15,6 @@ import Button from "../styles/UI/Button";
 import Input from "../styles/UI/Input";
 import Select from "../styles/UI/Select";
 import Form from "../styles/UI/Form";
-import useValidation from "../../hooks/useValidation";
-import { registerUser, loginUser } from "../../store/user-action";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -46,8 +47,7 @@ function UserForm() {
   const {
     value: role,
     onChangeValueHandler: roleChange,
-    onResetValueHandler: resetRole,
-  } = useValidation(null, "Administrator");
+  } = useValidation(null, "Developer");
 
   const onChangeEmailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     emailChange(event.target.value);
@@ -126,8 +126,8 @@ function UserForm() {
             />
             <Label htmlFor="role">Your role</Label>
             <Select onChange={onChangeRoleHandler} value={role}>
-              <option value="Administrator">Administrator</option>
               <option value="Developer">Developer</option>
+              <option value="Administrator">Administrator</option>
             </Select>
           </>
         ) : null}

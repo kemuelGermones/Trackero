@@ -165,8 +165,8 @@ export const isAdminAndIssueAuthorAndAssignedUser = async (
 ) => {
   const { issueId } = req.params;
   const issue = await Issue.findById(issueId);
-  const foundUserIndex = issue?.assignedTo.findIndex(
-    (user) => user._id === req.user!._id
+  const foundUserIndex = issue?.assignedTo.findIndex((user) =>
+    user.equals(req.user!._id)
   );
   if (
     req.user!.role === "Administrator" ||

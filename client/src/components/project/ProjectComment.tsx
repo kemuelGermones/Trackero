@@ -25,8 +25,10 @@ interface IProjectComment {
 
 function ProjectComment({ projectData }: IProjectComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId } = useAppSelector((state) => state.user);
-  
+  const { accessToken, userId, userRole } = useAppSelector(
+    (state) => state.user
+  );
+
   const {
     value: comment,
     valueError: commentError,
@@ -54,9 +56,7 @@ function ProjectComment({ projectData }: IProjectComment) {
     event.preventDefault();
     const commentIsValid = validateComment();
     if (commentIsValid && accessToken) {
-      dispatch(
-        addProjectComment({ comment }, projectData._id, accessToken)
-      );
+      dispatch(addProjectComment({ comment }, projectData._id, accessToken));
       commentReset();
     }
   };
@@ -74,13 +74,15 @@ function ProjectComment({ projectData }: IProjectComment) {
         />
         <Button>Submit</Button>
       </Form>
-      <Label>{projectData.comments.length === 0 ? "No comments" : "Comments"}</Label>
+      <Label>
+        {projectData.comments.length === 0 ? "No comments" : "Comments"}
+      </Label>
       {projectData.comments.map((comment) => (
         <Fragment key={comment._id}>
           <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
           <CommentFooter>
             <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
-            {comment.author._id === userId ? (
+            {comment.author._id === userId || userRole === "Administrator" ? (
               <CommentDeleteButton
                 onClick={deleteProjectCommentRequest.bind(
                   null,

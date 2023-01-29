@@ -17,6 +17,7 @@ function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const navigate = useNavigate();
   const projects = useAppSelector((state) => state.project.projectsData);
+  const userRole = useAppSelector((state) => state.user.userRole);
 
   const showProjectFormHandler = () => {
     setShowProjectForm(true);
@@ -34,15 +35,17 @@ function Projects() {
         <ProjectForm hideForm={hideProjectFormHandler} />
       ) : null}
       <ProjectList>
-        <Card
-          $center={true}
-          onClick={showProjectFormHandler}
-          style={{ height: "15rem" }}
-        >
-          <CardLogo>
-            <BsPlusLg size="1.5em" /> Add Project
-          </CardLogo>
-        </Card>
+        {userRole === "Administrator" ? (
+          <Card
+            $center={true}
+            onClick={showProjectFormHandler}
+            style={{ height: "15rem" }}
+          >
+            <CardLogo>
+              <BsPlusLg size="1.5em" /> Add Project
+            </CardLogo>
+          </Card>
+        ) : null}
         {projects
           ? projects.map((project) => (
               <Card

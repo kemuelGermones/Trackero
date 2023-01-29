@@ -21,7 +21,7 @@ interface IProjectInfo {
 
 function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
-  const accessToken = useAppSelector((state) => state.user.accessToken);
+  const { accessToken, userRole } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -37,7 +37,9 @@ function ProjectInfo({ projectData }: IProjectInfo) {
 
   const deleteProjectRequest = async () => {
     if (accessToken) {
-      const deleteStatus = await dispatch(deleteProject(projectData._id, accessToken));
+      const deleteStatus = await dispatch(
+        deleteProject(projectData._id, accessToken)
+      );
       if (deleteStatus === 200) {
         navigate("/projects");
       }
@@ -56,11 +58,15 @@ function ProjectInfo({ projectData }: IProjectInfo) {
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
         </CardHeader>
-        <CardDescription $hasLimit={false}>{projectData.description}</CardDescription>
-        <CardButtons>
-          <Button onClick={showProjectFormHandler}>Edit</Button>
-          <Button onClick={deleteProjectRequest}>Delete</Button>
-        </CardButtons>
+        <CardDescription $hasLimit={false}>
+          {projectData.description}
+        </CardDescription>
+        {userRole === "Administrator" ? (
+          <CardButtons>
+            <Button onClick={showProjectFormHandler}>Edit</Button>
+            <Button onClick={deleteProjectRequest}>Delete</Button>
+          </CardButtons>
+        ) : null}
       </Card>
     </>
   );
