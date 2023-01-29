@@ -2,11 +2,13 @@ import { Router } from "express";
 import {
   validateProject,
   validateComment,
-  isCommentAuthor,
   validateIssue,
-  isIssueAuthor,
   isValidUsers,
   isValidStatus,
+  isAdmin,
+  isAdminAndCommentAuthor,
+  isAdminAndIssueAuthor,
+  isAdminAndIssueAuthorAndAssignedUser
 } from "../middleware";
 import wrapAsync from "../utils/wrapAsync";
 import {
@@ -39,6 +41,7 @@ router.get(
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
+  isAdmin,
   validateProject,
   wrapAsync(createProject)
 );
@@ -48,6 +51,7 @@ router.post(
 router.put(
   "/:projectId",
   passport.authenticate("jwt", { session: false }),
+  isAdmin,
   validateProject,
   wrapAsync(editProject)
 );
@@ -57,6 +61,7 @@ router.put(
 router.delete(
   "/:projectId",
   passport.authenticate("jwt", { session: false }),
+  isAdmin,
   wrapAsync(deleteProject)
 );
 
@@ -74,7 +79,7 @@ router.post(
 router.delete(
   "/:projectId/comments/:commentId",
   passport.authenticate("jwt", { session: false }),
-  isCommentAuthor,
+  isAdminAndCommentAuthor,
   wrapAsync(deleteComment)
 );
 
@@ -92,7 +97,7 @@ router.post(
 router.put(
   "/:projectId/issues/:issueId",
   passport.authenticate("jwt", { session: false }),
-  isIssueAuthor,
+  isAdminAndIssueAuthor,
   validateIssue,
   wrapAsync(editIssue)
 );
@@ -102,7 +107,7 @@ router.put(
 router.delete(
   "/:projectId/issues/:issueId",
   passport.authenticate("jwt", { session: false }),
-  isIssueAuthor,
+  isAdminAndIssueAuthor,
   wrapAsync(deleteIssue)
 );
 
@@ -111,7 +116,7 @@ router.delete(
 router.patch(
   "/:projectId/issues/:issueId/status",
   passport.authenticate("jwt", { session: false }),
-  isIssueAuthor,
+  isAdminAndIssueAuthorAndAssignedUser,
   isValidStatus,
   wrapAsync(updateIssueStatus)
 );
@@ -121,6 +126,7 @@ router.patch(
 router.patch(
   "/:projectId/issues/:issueId/assignedTo",
   passport.authenticate("jwt", { session: false }),
+  isAdminAndIssueAuthor,
   isValidUsers,
   wrapAsync(updateIssueAssignedTo)
 );

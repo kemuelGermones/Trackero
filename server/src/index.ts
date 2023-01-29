@@ -13,6 +13,7 @@ declare global {
   namespace Express {
     export interface User {
       _id: Types.ObjectId;
+      role: "Administrator" | "Developer";
     }
   }
 }

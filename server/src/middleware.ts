@@ -59,42 +59,6 @@ export const validateComment = (
   }
 };
 
-// Validates if the user is the owner of a issue
-
-export const isIssueAuthor = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { issueId } = req.params;
-  const issue = await Issue.findById(issueId);
-  if (!issue?.author!.equals(req.user!._id)) {
-    return res.status(400).json({
-      status: 400,
-      message: "You are not allowed to edit/delete this issue",
-    });
-  }
-  next();
-};
-
-// Validates if the user is the owner of a comment
-
-export const isCommentAuthor = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { commentId } = req.params;
-  const comment = await Comment.findById(commentId);
-  if (!comment?.author!.equals(req.user!._id)) {
-    return res.status(400).json({
-      status: 400,
-      message: "You are not allowed to delete this comment",
-    });
-  }
-  next();
-};
-
 // Validates if all members are valid users
 
 export const isValidUsers = async (
@@ -102,12 +66,10 @@ export const isValidUsers = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = issueAssignedToSchema.validate(req.body)
+  const { error } = issueAssignedToSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
-    return res
-      .status(400)
-      .json({ status: 400, message: msg });
+    return res.status(400).json({ status: 400, message: msg });
   }
   const { assignedTo } = req.body;
   const assignedSet = new Set(assignedTo);
@@ -139,4 +101,82 @@ export const isValidStatus = (
   } else {
     next();
   }
+};
+
+// Validates if the user is admin
+
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user!.role !== "Administrator") {
+    const msg = "You are not allowed";
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validates if the user is admin and comment author
+
+export const isAdminAndCommentAuthor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { commentId } = req.params;
+  const comment = await Comment.findById(commentId);
+  if (
+    req.user!.role === "Administrator" ||
+    comment?.author!.equals(req.user!._id)
+  ) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed to delete this comment",
+  });
+};
+
+// Validates if the user is admin and issue author
+
+export const isAdminAndIssueAuthor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { issueId } = req.params;
+  const issue = await Issue.findById(issueId);
+  if (
+    req.user!.role === "Administrator" ||
+    issue?.author!.equals(req.user!._id)
+  ) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed to edit/delete this issue",
+  });
+};
+
+// Validates if the user is admin, issue author and assigned user
+
+export const isAdminAndIssueAuthorAndAssignedUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { issueId } = req.params;
+  const issue = await Issue.findById(issueId);
+  const foundUserIndex = issue?.assignedTo.findIndex(
+    (user) => user._id === req.user!._id
+  );
+  if (
+    req.user!.role === "Administrator" ||
+    issue?.author!.equals(req.user!._id) ||
+    foundUserIndex !== -1
+  ) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed to edit/delete this issue",
+  });
 };
