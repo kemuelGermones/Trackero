@@ -107,7 +107,7 @@ export const isValidStatus = (
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.user!.role !== "Administrator") {
-    const msg = "You are not allowed";
+    const msg = "You are not an admin";
     throw new AppError(msg, 400);
   } else {
     next();

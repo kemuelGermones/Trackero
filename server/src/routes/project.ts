@@ -1,4 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
+import wrapAsync from "../utils/wrapAsync";
 import {
   validateProject,
   validateComment,
@@ -10,7 +12,6 @@ import {
   isAdminAndIssueAuthor,
   isAdminAndIssueAuthorAndAssignedUser
 } from "../middleware";
-import wrapAsync from "../utils/wrapAsync";
 import {
   showProjects,
   createProject,
@@ -24,7 +25,7 @@ import {
   updateIssueStatus,
   updateIssueAssignedTo,
 } from "../controllers/project";
-import passport from "passport";
+
 
 const router = Router({ mergeParams: true });
 

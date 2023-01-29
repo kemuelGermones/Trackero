@@ -16,7 +16,7 @@ function Login() {
         <HeroTitle>Trackero</HeroTitle>
         <HeroDescription>
           The ultimate issue tracking app for all your project management needs.
-          With TrackIt, you can easily track, prioritize and resolve issues,
+          With Trackero, you can easily track, prioritize and resolve issues,
           bugs and tasks in one central location.
         </HeroDescription>
       </HeroSection>

@@ -33,7 +33,7 @@ function IssueAssignForm({
 }: IIssueAssignForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
-  const [selectedMembers, setSelectedMembers] = useState(initialAssignedUsers);
+  const [assignedUsers, setAssignedUsers] = useState(initialAssignedUsers);
   const [currentTablePage, setCurrentTablePage] = useState(1);
 
   const currentUsers = useMemo(() => {
@@ -57,20 +57,22 @@ function IssueAssignForm({
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const userData: IUser = JSON.parse(event.target.value);
     const isChecked =
-      selectedMembers.findIndex((member) => member._id === userData._id) !== -1;
+      assignedUsers.findIndex(
+        (assignedUser) => assignedUser._id === userData._id
+      ) !== -1;
     if (isChecked) {
-      setSelectedMembers((state) =>
+      setAssignedUsers((state) =>
         state.filter((member) => member._id !== userData._id)
       );
     } else {
-      setSelectedMembers((state) => [...state, userData]);
+      setAssignedUsers((state) => [...state, userData]);
     }
   };
 
   const onSubmitSelectedUsers = () => {
     if (accessToken) {
       dispatch(
-        updateIssueAssignedTo(selectedMembers, projectId, issueId, accessToken)
+        updateIssueAssignedTo(assignedUsers, projectId, issueId, accessToken)
       );
     }
     hideForm();
@@ -102,8 +104,8 @@ function IssueAssignForm({
                       type="checkbox"
                       value={JSON.stringify(user)}
                       checked={
-                        selectedMembers.findIndex(
-                          (member) => member._id === user._id
+                        assignedUsers.findIndex(
+                          (assignedUser) => assignedUser._id === user._id
                         ) !== -1
                       }
                       onChange={onChangeHandler}
