@@ -1,4 +1,9 @@
 import {
+  updateUserUsername,
+  updateUserPassword,
+} from "../../store/user-action";
+
+import {
   Card,
   CardHeader,
   CardTitle,
@@ -6,8 +11,7 @@ import {
   CardDescription,
 } from "../styles/UI/Card";
 import TextLight from "../styles/utils/TextLight";
-import UserChangePasswordForm from "./UserChangePassword";
-import UserChangeUsernameForm from "./UserChangeUsernameForm";
+import UserUpdateForm from "./UserUpdateForm";
 
 import { IUser } from "../../types/interface";
 
@@ -42,9 +46,19 @@ function UserInfo({ userData }: IUserInfo) {
         up-to-date. Thank you for your attention to this important matter.
       </CardDescription>
       <CardDivider />
-      <UserChangeUsernameForm userId={userData._id} />
+      <UserUpdateForm
+        inputType="text"
+        name="username"
+        userId={userData._id}
+        submitFunction={updateUserUsername}
+      />
       <CardDivider />
-      <UserChangePasswordForm userId={userData._id} />
+      <UserUpdateForm
+        inputType="password"
+        name="password"
+        userId={userData._id}
+        submitFunction={updateUserPassword}
+      />
     </Card>
   );
 }

@@ -90,7 +90,7 @@ export const logoutUser = (): ThunkAction<
 // Update user's username
 
 export const updateUserUsername = (
-  data: { username: string },
+  value: string,
   userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
@@ -100,12 +100,12 @@ export const updateUserUsername = (
       const patchResponse = await axios({
         method: "patch",
         url: `http://localhost:5000/users/${userId}/username`,
-        data,
+        data: { username: value },
         headers: {
           Authorization: token,
         },
       });
-      dispatch(updateUserUsernameData({ username: data.username, userId }));
+      dispatch(updateUserUsernameData({ username: value, userId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", patchResponse.data.message));
     } catch (error: unknown) {
@@ -120,7 +120,7 @@ export const updateUserUsername = (
 // Update user's password
 
 export const updateUserPassword = (
-  data: { password: string },
+  value: string,
   userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
@@ -130,7 +130,7 @@ export const updateUserPassword = (
       const patchResponse = await axios({
         method: "patch",
         url: `http://localhost:5000/users/${userId}/password`,
-        data,
+        data: { password: value },
         headers: {
           Authorization: token,
         },

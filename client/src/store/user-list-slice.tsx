@@ -34,7 +34,7 @@ const userListSlice = createSlice({
     },
 
     // Update user's username
-    
+
     updateUserUsernameData(
       state,
       action: PayloadAction<IUpdateUserUsernameDataAction>
