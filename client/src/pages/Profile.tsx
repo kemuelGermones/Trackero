@@ -21,7 +21,7 @@ function Profile() {
       if (foundUser) {
         setUser(foundUser);
       } else {
-        navigate("*");
+        navigate("/error");
       }
     }
   }, [userList]);

@@ -16,12 +16,11 @@ export const ErrorLogo = styled.img`
 
 export const ErrorTitle = styled.h1`
   margin: 0;
-  font-size: 3rem;
+  font-size: 2.5rem;
 `;
 
 export const ErrorDescription = styled.p`
   margin: 0;
-  font-size: 1.5rem;
   text-align: center;
   padding: 0 20rem;
 `;

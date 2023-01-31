@@ -34,7 +34,7 @@ function ShowProject() {
       if (foundProject) {
         setProject(foundProject);
       } else {
-        navigate("*");
+        navigate("/error");
       }
     }
   }, [projects]);

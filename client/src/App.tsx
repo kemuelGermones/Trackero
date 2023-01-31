@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./store";
 import { getData } from "./store/data-action";
 import { logout } from "./store/user-slice";
@@ -76,7 +76,8 @@ function App() {
               </Route>
             </Route>
             <Route path="/issues" element={<Issues />} />
-            <Route path="*" element={<Error />} />
+            <Route path="/error" element={<Error />} />
+            <Route path="*" element={<Navigate to="/error" />} />
           </Route>
         </Route>
       </Routes>

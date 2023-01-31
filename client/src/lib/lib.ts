@@ -5,14 +5,16 @@ import { IProject, IIssue, IUser } from "../types/interface";
 // Sort issues
 
 export const sortIssues = (issues: IIssue[], category: string) => {
-  //SORT BY DATE
+  // Sort by date
+
   if (category === "dueDate" && Array.isArray(issues)) {
     return [...issues].sort(
       (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
     );
   }
 
-  //SORT BY STATUS
+  // Sort by status
+
   if (category === "status" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
@@ -38,7 +40,8 @@ export const sortIssues = (issues: IIssue[], category: string) => {
     });
   }
 
-  //SORT BY IMPORTANCE
+  // Sort by importance
+
   if (category === "importance" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
@@ -64,17 +67,20 @@ export const sortIssues = (issues: IIssue[], category: string) => {
     });
   }
 
-  // SORT BY YOUR ISSUES
+  // Sort by your issues
+
   if (category === "yourIssues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter((issue) => issue.author._id === userId);
   }
 
-  // SORT BY ASSIGNED ISSUES
+  // Sort by assigned issues
+
   if (category === "assignedIssues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter(
-      (issue) => issue.assignedTo.findIndex((user: IUser) => user._id === userId) > -1
+      (issue) =>
+        issue.assignedTo.findIndex((user: IUser) => user._id === userId) > -1
     );
   }
 
