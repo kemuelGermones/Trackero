@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { AnyAction } from "@reduxjs/toolkit";
+
 import {
   updateProjectsData,
   editProjectIssue,
@@ -11,13 +11,8 @@ import {
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 
-import {
-  IProject,
-  IIssueData,
-  ICommentData,
-  IIssueStatus,
-  IUser,
-} from "../types/interface";
+import { IProject, IIssueData, ICommentData, IUser } from "../types/interface";
+import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from ".";
 
 // Add issue
@@ -126,7 +121,7 @@ export const deleteIssue = (
 // Update issue status
 
 export const updateIssueStatus = (
-  data: IIssueStatus,
+  data: { status: string },
   projectId: string,
   issueId: string,
   token: string

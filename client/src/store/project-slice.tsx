@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { IProject } from "../types/interface";
-import {IIssueData, IIssueStatus, IProjectData } from "../types/interface";
+import { IIssueData, IProjectData } from "../types/interface";
 
 interface IDataId {
   projectId: string;
@@ -27,8 +27,7 @@ interface IDeleteProjectIssueCommentAction extends IDataId {
 
 type TEditIssueDataAction = IDataId & IIssueData;
 
-type TUpdateIssueStatusAction = IDataId & IIssueStatus;
-
+type TUpdateIssueStatusAction = IDataId & { status: string };
 
 const initialState: IDataState = {
   projectsData: null,
@@ -115,10 +114,7 @@ const projectSlice = createSlice({
 
     // Delete Project Issue
 
-    deleteProjectIssue(
-      state,
-      action: PayloadAction<IDataId>
-    ) {
+    deleteProjectIssue(state, action: PayloadAction<IDataId>) {
       if (state.projectsData) {
         const foundProjectIndex = state.projectsData.findIndex(
           (project) => project._id === action.payload.projectId

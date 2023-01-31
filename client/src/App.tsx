@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./store";
 import { getData } from "./store/data-action";
 import { logout } from "./store/user-slice";
@@ -11,12 +11,14 @@ import Users from "./pages/Users";
 import Error from "./pages/Error";
 import Login from "./pages/Login";
 import ShowProject from "./pages/ShowProject";
+import Profile from "./pages/Profile";
 import Notification from "./components/notification/Notification";
 import Loading from "./components/loading/Loading";
 import WithoutNav from "./components/outlet/WithoutNav";
 import WithNav from "./components/outlet/WithNav";
 import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
 import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
+import IsYourProfile from "./components/outlet/IsYourProfile";
 
 let logoutTimer: number;
 
@@ -65,9 +67,17 @@ function App() {
               <Route index element={<Projects />} />
               <Route path=":projectId" element={<ShowProject />} />
             </Route>
+            <Route path="/users">
+              <Route index element={<Users />} />
+              <Route path=":userId">
+                <Route element={<IsYourProfile />}>
+                  <Route index element={<Profile />} />
+                </Route>
+              </Route>
+            </Route>
             <Route path="/issues" element={<Issues />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="*" element={<Error />} />
+            <Route path="/error" element={<Error />} />
+            <Route path="*" element={<Navigate to="/error" />} />
           </Route>
         </Route>
       </Routes>

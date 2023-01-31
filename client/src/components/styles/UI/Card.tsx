@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface ICustomCardProp {
   $center?: boolean;
   $width?: string;
+  $marginBottom?: boolean;
 }
 
 interface ICustomCardDescriptionProp {
@@ -13,24 +14,14 @@ export const Card = styled.div<ICustomCardProp>`
   background: var(--secondary);
   border-radius: 0.5rem;
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
-  width: ${(props) => (!!props.$width ? props.$width : "")};
+  width: ${(props) => (props.$width ? props.$width : "")};
   box-sizing: border-box;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: ${(props) => (props.$center ? "center" : "")};
   align-items: ${(props) => (props.$center ? "center" : "")};
-`;
-
-export const CardLogo = styled.div`
-  height: 5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--quaternary);
+  margin-bottom: ${(props) => (props.$marginBottom ? "1rem" : "")};
 `;
 
 export const CardTitle = styled.h1`
@@ -40,14 +31,18 @@ export const CardTitle = styled.h1`
 `;
 
 export const CardHeader = styled.div`
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
+export const CardBody = styled.div`
+  margin-bottom: 0.5rem;
+`;
+
 export const CardDescription = styled.p<ICustomCardDescriptionProp>`
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   display: ${(state) => (state.$hasLimit ? "-webkit-box" : "")};
   overflow: ${(state) => (state.$hasLimit ? "hidden" : "")};
   -webkit-box-orient: ${(state) => (state.$hasLimit ? "vertical" : "")};
@@ -61,16 +56,10 @@ export const CardDivider = styled.hr`
   border: none;
 `;
 
-export const CardButtons = styled.div`
+export const CardFooter = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1rem;
-`;
-
-export const CardFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 export const CardFooterText = styled.p`

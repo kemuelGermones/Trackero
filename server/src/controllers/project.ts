@@ -3,7 +3,7 @@ import Project from "../models/project";
 import Comment from "../models/comment";
 import Issue from "../models/issue";
 
-// Create new project
+// Create New Project
 
 export const createProject = async (req: Request, res: Response) => {
   const project = new Project(req.body);
@@ -13,7 +13,7 @@ export const createProject = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created a project" });
 };
 
-// Show all projects
+// Show All Projects
 
 export const showProjects = async (req: Request, res: Response) => {
   const projects = await Project.find()
@@ -22,26 +22,26 @@ export const showProjects = async (req: Request, res: Response) => {
       populate: [
         {
           path: "comments",
-          populate: { path: "author", select: "username _id role" },
+          populate: { path: "author", select: "username _id role email" },
         },
         {
           path: "author",
-          select: "username _id role",
+          select: "username _id role email",
         },
         {
           path: "assignedTo",
-          select: "username _id role",
+          select: "username _id role email",
         },
       ],
     })
     .populate({
       path: "comments",
-      populate: { path: "author", select: "username _id role" },
+      populate: { path: "author", select: "username _id role email" },
     })
   res.status(200).send(projects);
 };
 
-// Edit project
+// Edit Project
 
 export const editProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
@@ -61,7 +61,7 @@ export const deleteProject = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully deleted a project" });
 };
 
-// Create comment
+// Create Comment
 
 export const createComment = async (req: Request, res: Response) => {
   const { projectId } = req.params;
@@ -76,7 +76,7 @@ export const createComment = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created a comment" });
 };
 
-// Delete comment
+// Delete Comment
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { projectId, commentId } = req.params;
@@ -89,7 +89,7 @@ export const deleteComment = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully deleted a comment" });
 };
 
-// Create issue
+// Create Issue
 
 export const createIssue = async (req: Request, res: Response) => {
   const { projectId } = req.params;
@@ -104,7 +104,7 @@ export const createIssue = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created an issue" });
 };
 
-// Edit issue
+// Edit Issue
 
 export const editIssue = async (req: Request, res: Response) => {
   const { issueId } = req.params;
@@ -114,7 +114,7 @@ export const editIssue = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully edited an issue" });
 };
 
-// Delete issue
+// Delete Issue
 
 export const deleteIssue = async (req: Request, res: Response) => {
   const { projectId, issueId } = req.params;
@@ -125,7 +125,7 @@ export const deleteIssue = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully deleted an issue" });
 };
 
-// Update issue status
+// Update Issue Status
 
 export const updateIssueStatus = async (req: Request, res: Response) => {
   const { issueId } = req.params;
@@ -138,7 +138,7 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully updated the status" });
 };
 
-// Update project issue assigned to
+// Update Project Issue Assigned To
 
 export const updateIssueAssignedTo = async (req: Request, res: Response) => {
   const { issueId } = req.params;

@@ -1,8 +1,70 @@
 import styled from "styled-components";
 
-const Form = styled.form`
+interface IInputCustomProps {
+  $isInvalid?: boolean;
+}
+
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
 
-export default Form;
+export const Label = styled.label`
+  margin-bottom: 0.3rem;
+  color: var(--quaternary);
+  font-weight: bold;
+`;
+
+export const Input = styled.input<IInputCustomProps>`
+  width: 100%;
+  box-sizing: border-box;   
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${props => props.$isInvalid ? "var(--danger)" : "var(--tertiary)"};
+  font-size: 1rem;
+  font-family: "Poppins";
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Select = styled.select<IInputCustomProps>`
+width: 100%;
+box-sizing: border-box;
+margin-bottom: 0.5rem;
+padding: 0.5rem 0.75rem;
+border-radius: 0.5rem;
+border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
+font-size: 1rem;
+font-family: "Poppins";
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance:none;
+background: url("/arrow-down.png");
+background-repeat: no-repeat;
+background-size: 1rem;
+background-position: 96% center;
+background-color: white;
+
+&:focus {
+  outline: none;
+}
+`;
+
+export const TextArea = styled.textarea<IInputCustomProps>`
+  width: 100%;
+  height: 8rem;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
+  font-size: 1rem;
+  font-family: "Poppins";
+
+  &:focus {
+    outline: none;
+  }
+`;

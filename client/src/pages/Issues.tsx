@@ -3,10 +3,10 @@ import { useAppSelector } from "../store";
 import { listAllIssues, foundProjectId } from "../lib/lib";
 
 import {
-  Dashboard,
+  PageDashboardLayout,
   FirstSection,
   SecondSection,
-} from "../components/styles/layout/Dashboard";
+} from "../components/styles/layout/PageDashboardLayout";
 import IssueGraph from "../components/issue/IssueGraph";
 import IssueTable from "../components/issue/IssueTable";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -50,7 +50,7 @@ function Issues() {
   }, [currentIssue]);
 
   return (
-    <Dashboard $templateColumns="1.5fr 1fr">
+    <PageDashboardLayout $templateColumns="1.5fr 1fr">
       <FirstSection>
         {allIssues ? (
           <>
@@ -77,7 +77,7 @@ function Issues() {
           </>
         ) : null}
       </SecondSection>
-    </Dashboard>
+    </PageDashboardLayout>
   );
 }
 

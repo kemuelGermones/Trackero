@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IRecievedUserDataAction {
   userId: string;
-  userRole: string;
+  userRole: "Administrator" | "Developer";
   token: string;
   expiresIn: number;
 }
@@ -10,7 +10,7 @@ interface IRecievedUserDataAction {
 interface IInitialStateUserSlice {
   login: boolean;
   userId: string | null;
-  userRole: string | null;
+  userRole: "Administrator" | "Developer" | null;
   accessToken: string | null;
   expiration: number | null;
 }

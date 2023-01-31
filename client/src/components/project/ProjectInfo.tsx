@@ -7,10 +7,11 @@ import {
   Card,
   CardTitle,
   CardDescription,
-  CardButtons,
+  CardFooter,
   CardHeader,
+  CardBody,
 } from "../styles/UI/Card";
-import Button from "../styles/UI/Button";
+import { Button } from "../styles/UI/Button";
 import ProjectForm from "./ProjectForm";
 
 import { IProject } from "../../types/interface";
@@ -54,18 +55,20 @@ function ProjectInfo({ projectData }: IProjectInfo) {
           hideForm={hideProjectFormHandler}
         />
       ) : null}
-      <Card style={{ marginBottom: "1rem" }}>
+      <Card $marginBottom={true}>
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
         </CardHeader>
-        <CardDescription $hasLimit={false}>
-          {projectData.description}
-        </CardDescription>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            {projectData.description}
+          </CardDescription>
+        </CardBody>
         {userRole === "Administrator" ? (
-          <CardButtons>
+          <CardFooter>
             <Button onClick={showProjectFormHandler}>Edit</Button>
             <Button onClick={deleteProjectRequest}>Delete</Button>
-          </CardButtons>
+          </CardFooter>
         ) : null}
       </Card>
     </>

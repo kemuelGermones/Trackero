@@ -8,7 +8,7 @@ import { showLoading, hideLoading } from "./loading-slice";
 import { RootState, ThunkAction } from "./index";
 import { IUser, IProject } from "../types/interface";
 
-// Get projects data and issues data 
+// Get projects data and issues data
 
 export const getData = (
   token: string

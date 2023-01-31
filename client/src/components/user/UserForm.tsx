@@ -10,11 +10,8 @@ import {
   CardFooterText,
   CardHeader,
 } from "../styles/UI/Card";
-import Label from "../styles/UI/Label";
-import Button from "../styles/UI/Button";
-import Input from "../styles/UI/Input";
-import Select from "../styles/UI/Select";
-import Form from "../styles/UI/Form";
+import { Button } from "../styles/UI/Button";
+import { Form, Input, Select, Label } from "../styles/UI/Form";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -44,10 +41,10 @@ function UserForm() {
     onResetValueHandler: resetUsername,
   } = useValidation((str) => str.trim().length > 0, "");
 
-  const {
-    value: role,
-    onChangeValueHandler: roleChange,
-  } = useValidation(null, "Developer");
+  const { value: role, onChangeValueHandler: roleChange } = useValidation(
+    null,
+    "Developer"
+  );
 
   const onChangeEmailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     emailChange(event.target.value);

@@ -6,7 +6,7 @@ import passport from "passport";
 
 const router = Router({ mergeParams: true });
 
-// Create issue comment
+// Create Issue Comment
 
 router.post(
   "/:issueId/comments",
@@ -15,7 +15,7 @@ router.post(
   wrapAsync(createComment)
 );
 
-// Delete issue comment
+// Delete Issue Comment
 
 router.delete(
   "/:issueId/comments/:commentId",

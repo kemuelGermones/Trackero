@@ -3,10 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/index";
 
 import {
-  Dashboard,
+  PageDashboardLayout,
   FirstSection,
   SecondSection,
-} from "../components/styles/layout/Dashboard";
+} from "../components/styles/layout/PageDashboardLayout";
 import ProjectInfo from "../components/project/ProjectInfo";
 import ProjectComment from "../components/project/ProjectComment";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -34,7 +34,7 @@ function ShowProject() {
       if (foundProject) {
         setProject(foundProject);
       } else {
-        navigate("*");
+        navigate("/error");
       }
     }
   }, [projects]);
@@ -55,7 +55,7 @@ function ShowProject() {
 
   return (
     <>
-      <Dashboard $templateColumns="1fr 1.5fr">
+      <PageDashboardLayout $templateColumns="1fr 1.5fr">
         <FirstSection>
           {project ? (
             <>
@@ -86,7 +86,7 @@ function ShowProject() {
             </>
           ) : null}
         </SecondSection>
-      </Dashboard>
+      </PageDashboardLayout>
     </>
   );
 }

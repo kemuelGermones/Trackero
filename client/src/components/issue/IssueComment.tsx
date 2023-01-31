@@ -3,18 +3,18 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
 import useValidation from "../../hooks/useValidation";
 
-import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
-  CommentAuthor,
-  CommentFooter,
-  CommentDeleteButton,
-} from "../styles/layout/CommentLayout";
-import Label from "../styles/UI/Label";
-import Form from "../styles/UI/Form";
-import TextArea from "../styles/UI/TextArea";
-import Button from "../styles/UI/Button";
+  Card,
+  CardBody,
+  CardDescription,
+  CardDivider,
+  CardHeader,
+} from "../styles/UI/Card";
+import { Form, TextArea, Label } from "../styles/UI/Form";
+import { Button, TrashButton } from "../styles/UI/Button";
 
 import { IIssue } from "../../types/interface";
+import TextLight from "../styles/utils/TextLight";
 
 interface IIssueComment {
   projectId: string;
@@ -73,11 +73,17 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
       </Label>
       {issueData.comments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
-          <CommentFooter>
-            <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
+          <CardBody>
+            <CardDescription $hasLimit={false}>
+              {comment.comment}
+            </CardDescription>
+          </CardBody>
+          <CardHeader>
+            <CardDescription $hasLimit={false}>
+              <TextLight>Posted by: </TextLight> {comment.author.username}
+            </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
-              <CommentDeleteButton
+              <TrashButton
                 onClick={deleteIssueCommentHandler.bind(
                   null,
                   issueData._id,
@@ -85,7 +91,7 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
                 )}
               />
             ) : null}
-          </CommentFooter>
+          </CardHeader>
           <CardDivider />
         </Fragment>
       ))}

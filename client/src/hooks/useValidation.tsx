@@ -1,12 +1,10 @@
 import { useState } from "react";
 
-type TValidation = (str: string) => boolean;
-
-function useValidation(validation: TValidation | null, defaultValue: string) {
+function useValidation<T>(validation: ((str: T) => boolean) | null, defaultValue: T) {
   const [value, setValue] = useState(defaultValue);
   const [valueError, setValueError] = useState(false);
 
-  const onChangeValueHandler = (text: string) => {
+  const onChangeValueHandler = (text: T) => {
     setValue(text);
     setValueError(false);
   };

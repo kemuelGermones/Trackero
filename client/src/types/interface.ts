@@ -42,10 +42,6 @@ export interface IIssue extends IIssueData {
   status: string;
 }
 
-export interface IIssueStatus {
-  status: string;
-}
-
 // User interface
 
 export interface IUserData {
@@ -59,4 +55,5 @@ export interface IUser {
   _id: string;
   username: string;
   role: string;
+  email: string;
 }

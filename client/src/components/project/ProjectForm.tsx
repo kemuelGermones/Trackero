@@ -3,14 +3,12 @@ import { useAppDispatch } from "../../store";
 import { addProject, editProject } from "../../store/project-action";
 import { useAppSelector } from "../../store";
 
-import Backdrop from "../styles/UI/Backdrop";
-import Form from "../styles/UI/Form";
-import Label from "../styles/UI/Label";
-import Input from "../styles/UI/Input";
-import TextArea from "../styles/UI/TextArea";
+import { Form, Label, Input, TextArea } from "../styles/UI/Form";
 import { Card, CardTitle, CardDivider, CardHeader } from "../styles/UI/Card";
-import Button from "../styles/UI/Button";
 import { PositionCenter } from "../styles/utils/PositionCenter";
+import { Button } from "../styles/UI/Button";
+import Backdrop from "../styles/UI/Backdrop";
+
 
 import { IProject } from "../../types/interface";
 
@@ -73,7 +71,7 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
     <>
       <Backdrop onClick={hideForm} />
       <PositionCenter>
-        <Card>
+        <Card $width="25rem">
           <CardHeader>
             {initialValues ? (
               <CardTitle>Edit Project</CardTitle>

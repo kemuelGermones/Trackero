@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { AnyAction } from "@reduxjs/toolkit";
 import {
   updateProjectsData,
   editProjectData,
@@ -9,6 +8,7 @@ import {
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 
+import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from "./index";
 import { ICommentData, IProject, IProjectData } from "../types/interface";
 

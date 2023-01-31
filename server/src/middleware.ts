@@ -9,6 +9,9 @@ import {
   commentSchema,
   issueAssignedToSchema,
   issueStatusSchema,
+  userPasswordSchema,
+  userRoleSchema,
+  userUsernameSchema,
 } from "./schema";
 
 // Validate Project Request
@@ -87,7 +90,7 @@ export const isValidUsers = async (
   next();
 };
 
-// Validates issue status
+// Validates Issue Status
 
 export const isValidStatus = (
   req: Request,
@@ -95,6 +98,54 @@ export const isValidStatus = (
   next: NextFunction
 ) => {
   const { error } = issueStatusSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validates User Username
+
+export const isValidUsername = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = userUsernameSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validates User Password
+
+export const isValidPassword = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = userPasswordSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validates User Role
+
+export const isValidRole = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = userRoleSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -178,5 +229,23 @@ export const isAdminAndIssueAuthorAndAssignedUser = async (
   res.status(400).json({
     status: 400,
     message: "You are not allowed to edit/delete this issue",
+  });
+};
+
+// Validates if the user is admin and is actual user
+
+export const isAdminAndActualUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  if (req.user!.role === "Administrator" || user?._id!.equals(req.user!._id)) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed update this user",
   });
 };
