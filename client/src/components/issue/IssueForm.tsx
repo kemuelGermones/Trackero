@@ -20,11 +20,7 @@ interface IIssueForm {
   initialValues?: IIssue;
 }
 
-function IssueForm({
-  hideForm,
-  projectId,
-  initialValues,
-}: IIssueForm) {
+function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
   const dispatch = useAppDispatch();
   const { accessToken } = useAppSelector((state) => state.user);
 

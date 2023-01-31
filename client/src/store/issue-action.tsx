@@ -15,7 +15,6 @@ import {
   IProject,
   IIssueData,
   ICommentData,
-  IIssueStatus,
   IUser,
 } from "../types/interface";
 import { RootState, ThunkAction } from ".";
@@ -126,7 +125,7 @@ export const deleteIssue = (
 // Update issue status
 
 export const updateIssueStatus = (
-  data: IIssueStatus,
+  data: { status: string },
   projectId: string,
   issueId: string,
   token: string

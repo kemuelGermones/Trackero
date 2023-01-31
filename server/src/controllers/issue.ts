@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Comment from "../models/comment";
 import Issue from "../models/issue";
 
-// Create issue comment
+// Create Issue Comment
 
 export const createComment = async (req: Request, res: Response) => {
   const { issueId } = req.params;
@@ -17,7 +17,7 @@ export const createComment = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Successfully created a comment" });
 };
 
-// Delete issue comment
+// Delete Issue Comment
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { issueId, commentId } = req.params;

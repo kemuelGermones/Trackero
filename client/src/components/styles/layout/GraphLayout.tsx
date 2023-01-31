@@ -8,6 +8,6 @@ export const GraphLayout = styled.div`
 `;
 
 export const GraphBox = styled.div`
-  width: 250px;
+  width: 245px;
   margin: 0 auto;
 `;

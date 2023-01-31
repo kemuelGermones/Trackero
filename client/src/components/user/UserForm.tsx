@@ -44,10 +44,10 @@ function UserForm() {
     onResetValueHandler: resetUsername,
   } = useValidation((str) => str.trim().length > 0, "");
 
-  const {
-    value: role,
-    onChangeValueHandler: roleChange,
-  } = useValidation(null, "Developer");
+  const { value: role, onChangeValueHandler: roleChange } = useValidation(
+    null,
+    "Developer"
+  );
 
   const onChangeEmailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     emailChange(event.target.value);

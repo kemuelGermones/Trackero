@@ -29,7 +29,7 @@ import {
 
 const router = Router({ mergeParams: true });
 
-// Show projects
+// Show Projects
 
 router.get(
   "/",
@@ -37,7 +37,7 @@ router.get(
   wrapAsync(showProjects)
 );
 
-// Create project
+// Create Project
 
 router.post(
   "/",
@@ -47,7 +47,7 @@ router.post(
   wrapAsync(createProject)
 );
 
-// Edit project
+// Edit Project
 
 router.put(
   "/:projectId",
@@ -57,7 +57,7 @@ router.put(
   wrapAsync(editProject)
 );
 
-// Delete project
+// Delete Project
 
 router.delete(
   "/:projectId",
@@ -66,7 +66,7 @@ router.delete(
   wrapAsync(deleteProject)
 );
 
-// Create project comment
+// Create Project Comment
 
 router.post(
   "/:projectId/comments",
@@ -75,7 +75,7 @@ router.post(
   wrapAsync(createComment)
 );
 
-// Delete project comment
+// Delete Project Comment
 
 router.delete(
   "/:projectId/comments/:commentId",
@@ -84,7 +84,7 @@ router.delete(
   wrapAsync(deleteComment)
 );
 
-// Create project issue
+// Create Project Issue
 
 router.post(
   "/:projectId/issues",
@@ -93,7 +93,7 @@ router.post(
   wrapAsync(createIssue)
 );
 
-// Edit project issue
+// Edit Project Issue
 
 router.put(
   "/:projectId/issues/:issueId",
@@ -103,7 +103,7 @@ router.put(
   wrapAsync(editIssue)
 );
 
-// Delete project issue
+// Delete Project Issue
 
 router.delete(
   "/:projectId/issues/:issueId",
@@ -112,7 +112,7 @@ router.delete(
   wrapAsync(deleteIssue)
 );
 
-// Update project issue status
+// Update Project Issue Status
 
 router.patch(
   "/:projectId/issues/:issueId/status",
@@ -122,7 +122,7 @@ router.patch(
   wrapAsync(updateIssueStatus)
 );
 
-// Update project issue assigned to
+// Update Project Issue Assigned To
 
 router.patch(
   "/:projectId/issues/:issueId/assignedTo",

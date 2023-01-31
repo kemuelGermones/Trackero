@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const secret = "mySecret";
 
-// Registers the user
+// Registers The User
 
 export const registerUser = async (req: Request, res: Response) => {
   const { email, username, password, role } = req.body;
@@ -34,7 +34,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-// Login the user
+// Login The User
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -59,9 +59,48 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-// Show all users
+// Show All Users
 
 export const showUsers = async (req: Request, res: Response) => {
-  const users = await User.find().select("_id username role");
+  const users = await User.find().select("_id username role email");
   res.status(200).send(users);
+};
+
+// Update User Username
+
+export const updateUserUsername = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  user!.username = req.body.username;
+  await user!.save();
+  res
+    .status(200)
+    .json({ status: 200, message: "Successfully updated user's username" });
+};
+
+// Update User Password
+
+export const updateUserPassword = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const { password } = req.body;
+  const user = await User.findById(userId);
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  user!.password = hash;
+  await user!.save();
+  res
+    .status(200)
+    .json({ status: 200, message: "Successfully updated user's password" });
+};
+
+// Update User Role
+
+export const updateUserRole = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  user!.role = req.body.role;
+  await user!.save();
+  res
+    .status(200)
+    .json({ status: 200, message: "Successfully updated user's role" });
 };
