@@ -10,11 +10,8 @@ import {
   CardFooterText,
   CardHeader,
 } from "../styles/UI/Card";
-import Label from "../styles/UI/Label";
-import Button from "../styles/UI/Button";
-import Input from "../styles/UI/Input";
-import Select from "../styles/UI/Select";
-import Form from "../styles/UI/Form";
+import { Button } from "../styles/UI/Button";
+import { Form, Input, Select, Label } from "../styles/UI/Form";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);

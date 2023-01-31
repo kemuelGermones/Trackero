@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Chart } from "react-chartjs-2";
 import "chart.js/auto";
 
-import { GraphLayout, GraphBox } from "../styles/layout/GraphLayout";
+import { IssueGraphLayout, GraphBox } from "../styles/layout/IssueGraphLayout";
 import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
 
 import { IIssue } from "../../types/interface";
@@ -60,7 +60,7 @@ function IssueGraph({ issuesData }: IIssueGraph) {
   }, [issuesData]);
 
   return (
-    <GraphLayout>
+    <IssueGraphLayout>
       <Card>
         <CardHeader>
           <CardTitle>Issues Status Chart</CardTitle>
@@ -79,7 +79,7 @@ function IssueGraph({ issuesData }: IIssueGraph) {
           <Chart type="doughnut" data={importanceData} />
         </GraphBox>
       </Card>
-    </GraphLayout>
+    </IssueGraphLayout>
   );
 }
 

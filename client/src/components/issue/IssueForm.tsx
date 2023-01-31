@@ -4,13 +4,9 @@ import useValidation from "../../hooks/useValidation";
 
 import { PositionCenter } from "../styles/utils/PositionCenter";
 import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
+import { Form, Label, Input, TextArea, Select } from "../styles/UI/Form";
 import Backdrop from "../styles/UI/Backdrop";
-import Label from "../styles/UI/Label";
-import Input from "../styles/UI/Input";
-import Form from "../styles/UI/Form";
-import TextArea from "../styles/UI/TextArea";
-import Button from "../styles/UI/Button";
-import Select from "../styles/UI/Select";
+import { Button } from "../styles/UI/Button";
 
 import { IIssue } from "../../types/interface";
 
@@ -133,7 +129,7 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
     <>
       <Backdrop onClick={hideForm} />
       <PositionCenter>
-        <Card>
+        <Card $width="25rem">
           <CardHeader>
             {!initialValues ? (
               <CardTitle>New Issue</CardTitle>

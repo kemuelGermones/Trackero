@@ -82,7 +82,7 @@ function IssueAssignForm({
     <>
       <Backdrop onClick={hideForm} />
       <PositionCenter>
-        <TableContainer>
+        <TableContainer $width="25rem">
           <TableSubHead>
             <SmallButton onClick={onSubmitSelectedUsers}>Assign</SmallButton>
           </TableSubHead>

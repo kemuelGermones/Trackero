@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const GraphLayout = styled.div`
+export const IssueGraphLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;

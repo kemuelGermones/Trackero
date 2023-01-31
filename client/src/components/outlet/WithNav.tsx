@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import Container from "../styles/layout/Container";
+import Container from "../styles/utils/Container";
 import SideBar from "../nav/SideBar";
 
 function WithNav() {

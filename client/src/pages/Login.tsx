@@ -1,16 +1,16 @@
 import {
-  FrontPageLayout,
+  LoginPageLayout,
   HeroSection,
   FormSection,
   HeroImg,
   HeroTitle,
   HeroDescription,
-} from "../components/styles/layout/FrontPageLayout";
+} from "../components/styles/layout/LoginPageLayout";
 import UserForm from "../components/user/UserForm";
 
 function Login() {
   return (
-    <FrontPageLayout>
+    <LoginPageLayout>
       <HeroSection>
         <HeroImg src="/Build.png" alt="hero" />
         <HeroTitle>Trackero</HeroTitle>
@@ -23,7 +23,7 @@ function Login() {
       <FormSection>
         <UserForm />
       </FormSection>
-    </FrontPageLayout>
+    </LoginPageLayout>
   );
 }
 

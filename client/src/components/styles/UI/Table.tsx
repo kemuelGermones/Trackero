@@ -1,9 +1,14 @@
 import styled from "styled-components";
 
-export const TableContainer = styled.div`
+interface ITableContainerCustomProps {
+  $width?: string;
+}
+
+export const TableContainer = styled.div<ITableContainerCustomProps>`
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
   margin-bottom: 1rem;
   font-size: 0.75rem;
+  width: ${(state) => (state.$width ? state.$width : "")};
 `;
 
 export const Table = styled.table`

@@ -7,10 +7,11 @@ import {
   Card,
   CardTitle,
   CardDescription,
-  CardButtons,
+  CardFooter,
   CardHeader,
+  CardBody,
 } from "../styles/UI/Card";
-import Button, { SmallButton } from "../styles/UI/Button";
+import { Button, SmallButton } from "../styles/UI/Button";
 import IssueForm from "./IssueForm";
 import TextLight from "../styles/utils/TextLight";
 import IssueStatusForm from "./IssueStatusForm";
@@ -115,40 +116,52 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
             ) : null}
           </div>
         </CardHeader>
-        <CardDescription $hasLimit={false}>
-          {issueData.description}
-        </CardDescription>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Author: </TextLight>
-          {issueData.author.username}
-        </CardDescription>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Assigned to: </TextLight>
-          {issueData.assignedTo.length !== 0
-            ? issueData.assignedTo.map((user) => user.username).join(", ")
-            : "No one"}
-        </CardDescription>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Status: </TextLight>
-          {issueData.status}
-        </CardDescription>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Importance: </TextLight>
-          {issueData.importance}
-        </CardDescription>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Due Date: </TextLight>
-          {new Date(issueData.dueDate).toDateString()}
-        </CardDescription>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            {issueData.description}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Author: </TextLight>
+            {issueData.author.username}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Assigned to: </TextLight>
+            {issueData.assignedTo.length !== 0
+              ? issueData.assignedTo.map((user) => user.username).join(", ")
+              : "No one"}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Status: </TextLight>
+            {issueData.status}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Importance: </TextLight>
+            {issueData.importance}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Due Date: </TextLight>
+            {new Date(issueData.dueDate).toDateString()}
+          </CardDescription>
+        </CardBody>
         {issueData.author._id === userId || userRole === "Administrator" ? (
-          <CardButtons>
+          <CardFooter>
             <Button onClick={showEditIssueFormHandler}>Edit</Button>
             <Button
               onClick={deleteIssueHandler.bind(null, projectId, issueData._id)}
             >
               Delete
             </Button>
-          </CardButtons>
+          </CardFooter>
         ) : null}
       </Card>
     </>

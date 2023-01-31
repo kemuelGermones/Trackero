@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { BsPlusLg } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store";
 
-import ProjectList from "../components/styles/layout/ProjectList";
+import ProjectsPageLayout from "../components/styles/layout/ProjectsPageLayout";
 import ProjectForm from "../components/project/ProjectForm";
 import {
   Card,
   CardTitle,
   CardHeader,
   CardDescription,
-  CardLogo,
+  CardBody,
 } from "../components/styles/UI/Card";
+import { PlusButton } from "../components/styles/UI/Button";
 
 function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -34,16 +34,15 @@ function Projects() {
       {showProjectForm ? (
         <ProjectForm hideForm={hideProjectFormHandler} />
       ) : null}
-      <ProjectList>
+      <ProjectsPageLayout>
         {userRole === "Administrator" ? (
           <Card
             $center={true}
             onClick={showProjectFormHandler}
             style={{ height: "15rem" }}
           >
-            <CardLogo>
-              <BsPlusLg size="1.5em" /> Add Project
-            </CardLogo>
+            <PlusButton />
+            <CardTitle>Add Project</CardTitle>
           </Card>
         ) : null}
         {projects
@@ -56,13 +55,15 @@ function Projects() {
                 <CardHeader>
                   <CardTitle>{project.title}</CardTitle>
                 </CardHeader>
-                <CardDescription $hasLimit={true}>
-                  {project.description}
-                </CardDescription>
+                <CardBody>
+                  <CardDescription $hasLimit={true}>
+                    {project.description}
+                  </CardDescription>
+                </CardBody>
               </Card>
             ))
           : null}
-      </ProjectList>
+      </ProjectsPageLayout>
     </>
   );
 }

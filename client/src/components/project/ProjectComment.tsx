@@ -6,18 +6,18 @@ import {
 } from "../../store/project-action";
 import useValidation from "../../hooks/useValidation";
 
-import { Card, CardDescription, CardDivider } from "../styles/UI/Card";
 import {
-  CommentAuthor,
-  CommentFooter,
-  CommentDeleteButton,
-} from "../styles/layout/CommentLayout";
-import Form from "../styles/UI/Form";
-import Button from "../styles/UI/Button";
-import TextArea from "../styles/UI/TextArea";
-import Label from "../styles/UI/Label";
+  Card,
+  CardBody,
+  CardDescription,
+  CardDivider,
+  CardHeader,
+} from "../styles/UI/Card";
+import { Form, TextArea, Label } from "../styles/UI/Form";
+import { Button, TrashButton } from "../styles/UI/Button";
 
 import { IProject } from "../../types/interface";
+import TextLight from "../styles/utils/TextLight";
 
 interface IProjectComment {
   projectData: IProject;
@@ -62,7 +62,7 @@ function ProjectComment({ projectData }: IProjectComment) {
   };
 
   return (
-    <Card style={{ marginBottom: "1rem" }}>
+    <Card>
       <Form onSubmit={onSubmitComment}>
         <Label htmlFor="comment">Leave a Comment</Label>
         <TextArea
@@ -79,11 +79,18 @@ function ProjectComment({ projectData }: IProjectComment) {
       </Label>
       {projectData.comments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardDescription $hasLimit={false}>{comment.comment}</CardDescription>
-          <CommentFooter>
-            <CommentAuthor>Posted by: {comment.author.username}</CommentAuthor>
+          <CardBody>
+            <CardDescription $hasLimit={false}>
+              {comment.comment}
+            </CardDescription>
+          </CardBody>
+          <CardHeader>
+            <CardDescription $hasLimit={false}>
+              <TextLight>Posted by: </TextLight>
+              {comment.author.username}
+            </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
-              <CommentDeleteButton
+              <TrashButton
                 onClick={deleteProjectCommentRequest.bind(
                   null,
                   projectData._id,
@@ -91,7 +98,7 @@ function ProjectComment({ projectData }: IProjectComment) {
                 )}
               />
             ) : null}
-          </CommentFooter>
+          </CardHeader>
           <CardDivider />
         </Fragment>
       ))}

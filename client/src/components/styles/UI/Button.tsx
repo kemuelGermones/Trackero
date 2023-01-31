@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import { BsTrash, BsPlusLg } from "react-icons/bs";
 
 interface IPaginationCustomProps {
   $isActive: boolean;
 }
 
-const Button = styled.button`
+export const Button = styled.button`
   padding: 0.5rem;
   width: 100%;
   box-sizing: border-box;
@@ -15,6 +16,7 @@ const Button = styled.button`
   font-family: "Poppins";
   font-size: 1rem;
   margin: 0.5rem 0;
+  outline: none;
 
   &:hover {
     background-color: var(--quaternary);
@@ -33,6 +35,7 @@ export const SmallButton = styled.button`
   font-family: "Poppins";
   display: flex;
   align-items: center;
+  outline: none;
 
   &:hover {
     background-color: var(--quaternary);
@@ -56,4 +59,35 @@ export const PaginationButton = styled.button<IPaginationCustomProps>`
   }
 `;
 
-export default Button;
+export const TrashButton = styled(BsTrash)`
+  &:hover {
+    color: var(--quaternary);
+  }
+`;
+
+export const DropdownButton = styled.select`
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    width: 8rem;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("/white-arrow-down.png");
+    background-repeat: no-repeat;
+    background-size: 0.6rem;
+    background-position: 93% center;
+    background-color: var(--tertiary);
+    color: white;
+    font-size: 0.75rem
+    font-family: "Poppins";
+    outline: none;
+`;
+
+export const PlusButton = styled(BsPlusLg)`
+  color: var(--quaternary);
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+`;

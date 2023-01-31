@@ -21,7 +21,7 @@ export const NavBrand = styled.div`
   font-size: 1.5rem;
   box-sizing: border-box;
   border-bottom: 1px solid black;
-  padding: 0 0 0.5rem 0;
+  padding-bottom: 0.5rem;
   text-align: center;
   color: var(--quaternary);
 `;
@@ -34,7 +34,7 @@ export const NavMenu = styled.div`
 export const NavItem = styled(NavLink)<ICustomNavItemProp>`
   text-decoration: none;
   color: ${(props) => (props.$isActive ? "var(--quaternary)" : "black")};
-  padding: 1rem 0;
+  margin: 1rem 0;
 
   &:hover {
     color: var(--quaternary);
@@ -43,7 +43,7 @@ export const NavItem = styled(NavLink)<ICustomNavItemProp>`
 
 export const NavUnit = styled.div`
   cursor: pointer;
-  padding: 1rem 0;
+  margin: 1rem 0;
 
   &:hover {
     color: var(--quaternary);

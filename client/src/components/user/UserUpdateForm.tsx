@@ -1,10 +1,8 @@
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 
-import Button from "../styles/UI/Button";
-import Label from "../styles/UI/Label";
-import Input from "../styles/UI/Input";
-import Form from "../styles/UI/Form";
+import { Button } from "../styles/UI/Button";
+import { Form, Label, Input } from "../styles/UI/Form";
 
 import { RootState, ThunkAction } from "../../store/index";
 import { AnyAction } from "@reduxjs/toolkit";

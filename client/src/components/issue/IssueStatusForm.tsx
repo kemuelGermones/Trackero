@@ -1,14 +1,12 @@
 import { useAppDispatch, useAppSelector } from "../../store";
-import useValidation from "../../hooks/useValidation";
 import { updateIssueStatus } from "../../store/issue-action";
+import useValidation from "../../hooks/useValidation";
 
-import Backdrop from "../styles/UI/Backdrop";
 import { Card, CardHeader, CardTitle, CardDivider } from "../styles/UI/Card";
-import Label from "../styles/UI/Label";
-import Select from "../styles/UI/Select";
-import Form from "../styles/UI/Form";
-import Button from "../styles/UI/Button";
+import { Form, Label, Select } from "../styles/UI/Form";
 import { PositionCenter } from "../styles/utils/PositionCenter";
+import Backdrop from "../styles/UI/Backdrop";
+import { Button } from "../styles/UI/Button";
 
 interface IIssueStatusForm {
   hideForm: () => void;
@@ -47,7 +45,7 @@ function IssueStatusForm({
     <>
       <Backdrop onClick={hideForm} />
       <PositionCenter>
-        <Card>
+        <Card $width="25rem">
           <CardHeader>
             <CardTitle>Update Status</CardTitle>
           </CardHeader>

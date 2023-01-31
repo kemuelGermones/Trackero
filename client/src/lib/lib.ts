@@ -1,5 +1,6 @@
-import { IProject, IIssue, IUser } from "../types/interface";
 import store from "../store";
+
+import { IProject, IIssue, IUser } from "../types/interface";
 
 // Sort issues
 

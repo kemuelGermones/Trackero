@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FrontPageLayout = styled.main`
+export const LoginPageLayout = styled.main`
   height: 100vh;
   box-sizing: border-box;
   display: grid;
