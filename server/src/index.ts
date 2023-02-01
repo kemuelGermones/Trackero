@@ -7,6 +7,8 @@ import AppError from "./utils/AppError";
 import cors from "cors";
 import passport from "passport";
 import passportConfig from "./config/passport";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 import { Types } from "mongoose";
 
 declare global {
@@ -29,9 +31,17 @@ connection.once("open", () => {
 
 app.use(cors());
 
+app.use(helmet());
+
 app.use(urlencoded({ extended: true }));
 
 app.use(express.json());
+
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+);
 
 app.use(passport.initialize());
 passportConfig(passport);
