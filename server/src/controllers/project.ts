@@ -10,7 +10,7 @@ export const createProject = async (req: Request, res: Response) => {
   await project.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully created a project" });
+    .json({ status: 200, message: "Created a project" });
 };
 
 // Show All Projects
@@ -48,7 +48,7 @@ export const editProject = async (req: Request, res: Response) => {
   await Project.findByIdAndUpdate(projectId, req.body);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully edited a project" });
+    .json({ status: 200, message: "Edited a project" });
 };
 
 // Delete project
@@ -58,7 +58,7 @@ export const deleteProject = async (req: Request, res: Response) => {
   await Project.findByIdAndDelete(projectId);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully deleted a project" });
+    .json({ status: 200, message: "Deleted a project" });
 };
 
 // Create Comment
@@ -73,7 +73,7 @@ export const createComment = async (req: Request, res: Response) => {
   await project!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully created a comment" });
+    .json({ status: 200, message: "Created a comment" });
 };
 
 // Delete Comment
@@ -86,7 +86,7 @@ export const deleteComment = async (req: Request, res: Response) => {
   await Comment.findByIdAndDelete(commentId);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully deleted a comment" });
+    .json({ status: 200, message: "Deleted a comment" });
 };
 
 // Create Issue
@@ -101,7 +101,7 @@ export const createIssue = async (req: Request, res: Response) => {
   await project!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully created an issue" });
+    .json({ status: 200, message: "Created an issue" });
 };
 
 // Edit Issue
@@ -111,7 +111,7 @@ export const editIssue = async (req: Request, res: Response) => {
   await Issue.findByIdAndUpdate(issueId, req.body);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully edited an issue" });
+    .json({ status: 200, message: "Edited an issue" });
 };
 
 // Delete Issue
@@ -122,7 +122,7 @@ export const deleteIssue = async (req: Request, res: Response) => {
   await Issue.findByIdAndDelete(issueId);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully deleted an issue" });
+    .json({ status: 200, message: "Deleted an issue" });
 };
 
 // Update Issue Status
@@ -135,7 +135,7 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   await issue!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully updated the status" });
+    .json({ status: 200, message: "Updated the status" });
 };
 
 // Update Project Issue Assigned To
@@ -145,5 +145,5 @@ export const updateIssueAssignedTo = async (req: Request, res: Response) => {
   const issue = await Issue.findById(issueId);
   issue!.assignedTo = req.body.assignedTo;
   await issue!.save();
-  res.status(200).json({ status: 200, message: "Updated assigned to issue" });
+  res.status(200).json({ status: 200, message: "Updated the assigned people" });
 };

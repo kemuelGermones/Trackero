@@ -75,7 +75,7 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   await user!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully updated user's username" });
+    .json({ status: 200, message: "Updated user's username" });
 };
 
 // Update User Password
@@ -90,7 +90,7 @@ export const updateUserPassword = async (req: Request, res: Response) => {
   await user!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully updated user's password" });
+    .json({ status: 200, message: "Updated user's password" });
 };
 
 // Update User Role
@@ -102,5 +102,5 @@ export const updateUserRole = async (req: Request, res: Response) => {
   await user!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully updated user's role" });
+    .json({ status: 200, message: "Updated user's role" });
 };

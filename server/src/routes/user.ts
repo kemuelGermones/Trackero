@@ -19,15 +19,15 @@ import passport from "passport";
 
 const router = Router({ mergeParams: true });
 
-// Registers the user
+// Registers the User
 
 router.post("/register", wrapAsync(registerUser));
 
-// Login the user
+// Login the User
 
 router.post("/login", wrapAsync(loginUser));
 
-// Show users
+// Show Users
 
 router.get(
   "/users",
@@ -35,7 +35,7 @@ router.get(
   wrapAsync(showUsers)
 );
 
-// Update user username
+// Update User's Username
 
 router.patch(
   "/users/:userId/username",
@@ -45,7 +45,7 @@ router.patch(
   wrapAsync(updateUserUsername)
 );
 
-// Update user password
+// Update User's Password
 
 router.patch(
   "/users/:userId/password",
@@ -55,7 +55,7 @@ router.patch(
   wrapAsync(updateUserPassword)
 );
 
-// Update user role
+// Update User's Role
 
 router.patch(
   "/users/:userId/role",

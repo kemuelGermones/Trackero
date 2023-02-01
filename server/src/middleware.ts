@@ -246,6 +246,6 @@ export const isAdminAndActualUser = async (
   }
   res.status(400).json({
     status: 400,
-    message: "You are not allowed update this user",
+    message: "You are not allowed to update this user",
   });
 };

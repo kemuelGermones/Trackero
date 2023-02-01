@@ -14,7 +14,7 @@ export const createComment = async (req: Request, res: Response) => {
   await issue!.save();
   res
     .status(200)
-    .json({ status: 200, message: "Successfully created a comment" });
+    .json({ status: 200, message: "Created a comment" });
 };
 
 // Delete Issue Comment
@@ -25,5 +25,5 @@ export const deleteComment = async (req: Request, res: Response) => {
   await Comment.findByIdAndDelete(commentId);
   res
     .status(200)
-    .json({ status: 200, message: "Successfully deleted a comment" });
+    .json({ status: 200, message: "Deleted a comment" });
 };
