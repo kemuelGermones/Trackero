@@ -19,6 +19,9 @@ const projectSchema = new Schema({
   ],
 });
 
+// Extends the findOneAndDelete method to
+// also delete existing comment/s and issue in a project
+
 projectSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {
     await Issue.deleteMany({
