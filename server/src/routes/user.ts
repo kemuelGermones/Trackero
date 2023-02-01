@@ -12,8 +12,8 @@ import {
   isValidPassword,
   isValidUsername,
   isValidRole,
-  isAdmin,
-  isAdminAndActualUser,
+  isAdminOrActualUser,
+  isAdminAndNotActualUser
 } from "../middleware";
 import passport from "passport";
 
@@ -40,7 +40,7 @@ router.get(
 router.patch(
   "/users/:userId/username",
   passport.authenticate("jwt", { session: false }),
-  isAdminAndActualUser,
+  isAdminOrActualUser,
   isValidUsername,
   wrapAsync(updateUserUsername)
 );
@@ -50,7 +50,7 @@ router.patch(
 router.patch(
   "/users/:userId/password",
   passport.authenticate("jwt", { session: false }),
-  isAdminAndActualUser,
+  isAdminOrActualUser,
   isValidPassword,
   wrapAsync(updateUserPassword)
 );
@@ -60,7 +60,7 @@ router.patch(
 router.patch(
   "/users/:userId/role",
   passport.authenticate("jwt", { session: false }),
-  isAdmin,
+  isAdminAndNotActualUser,
   isValidRole,
   wrapAsync(updateUserRole)
 );

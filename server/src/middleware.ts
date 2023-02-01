@@ -165,9 +165,9 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// Validates if the user is admin and comment author
+// Validates if the user is admin or comment author
 
-export const isAdminAndCommentAuthor = async (
+export const isAdminOrCommentAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -186,9 +186,9 @@ export const isAdminAndCommentAuthor = async (
   });
 };
 
-// Validates if the user is admin and issue author
+// Validates if the user is admin or issue author
 
-export const isAdminAndIssueAuthor = async (
+export const isAdminOrIssueAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -207,9 +207,9 @@ export const isAdminAndIssueAuthor = async (
   });
 };
 
-// Validates if the user is admin, issue author and assigned user
+// Validates if the user is admin, issue author or assigned user
 
-export const isAdminAndIssueAuthorAndAssignedUser = async (
+export const isAdminOrIssueAuthorOrAssignedUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -232,9 +232,9 @@ export const isAdminAndIssueAuthorAndAssignedUser = async (
   });
 };
 
-// Validates if the user is admin and is actual user
+// Validates if the user is admin or is actual user
 
-export const isAdminAndActualUser = async (
+export const isAdminOrActualUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -242,6 +242,24 @@ export const isAdminAndActualUser = async (
   const { userId } = req.params;
   const user = await User.findById(userId);
   if (req.user!.role === "Administrator" || user?._id!.equals(req.user!._id)) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed to update this user",
+  });
+};
+
+// Validates if the user is admin and is not actual user
+
+export const isAdminAndNotActualUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  if (req.user!.role === "Administrator" && !user?._id!.equals(req.user!._id)) {
     return next();
   }
   res.status(400).json({
