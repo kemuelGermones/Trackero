@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../store";
 
 import { ProfilePageLayout } from "../components/styles/layout/ProfilePageLayout";
-import Instruction from "../components/instruction/instruction";
+import Instruction from "../components/instruction/Instruction";
 import UserInfo from "../components/user/UserInfo";
 
 import { IUser } from "../types/interface";

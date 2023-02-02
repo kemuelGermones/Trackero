@@ -3,7 +3,7 @@ import {
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
-import Instruction from "../components/instruction/instruction";
+import Instruction from "../components/instruction/Instruction";
 import UserTable from "../components/user/UserTable";
 
 function Users() {

@@ -7,7 +7,7 @@ import {
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
-import Instruction from "../components/instruction/instruction";
+import Instruction from "../components/instruction/Instruction";
 import ProjectInfo from "../components/project/ProjectInfo";
 import ProjectComment from "../components/project/ProjectComment";
 import IssueInfo from "../components/issue/IssueInfo";
