@@ -3,11 +3,11 @@ import { AnyAction } from "@reduxjs/toolkit";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { login, logout } from "./user-slice";
-import { clearProjectsData } from "./project-slice";
+import { clearProjectsData, updateProjectsData } from "./project-slice";
 import { clearUsersData, updateUserUsernameData } from "./user-list-slice";
 
 import { RootState, ThunkAction } from "./index";
-import { IUserData } from "../types/interface";
+import { IUserData, IProject } from "../types/interface";
 
 // Registers the user
 
@@ -105,6 +105,14 @@ export const updateUserUsername = (
           Authorization: token,
         },
       });
+      const getResponse = await axios<IProject[]>({
+        method: "get",
+        url: "http://localhost:5000/projects",
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(updateProjectsData(getResponse.data));
       dispatch(updateUserUsernameData({ username: value, userId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", patchResponse.data.message));

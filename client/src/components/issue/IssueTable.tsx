@@ -1,7 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { sortIssues } from "../../lib/lib";
 
-import { PaginationButton, SmallButton, DropdownButton } from "../styles/UI/Button";
+import {
+  PaginationButton,
+  SmallButton,
+  DropdownButton,
+} from "../styles/UI/Button";
 import {
   Table,
   TableHeader,
@@ -83,14 +87,14 @@ function IssueTable({
       ) : null}
       <TableContainer>
         <TableSubHead>
-            Sort by:
-            <DropdownButton onChange={changeSortCategoryHandler}>
-              <option value="importance">Importance</option>
-              <option value="status">Status</option>
-              <option value="dueDate">Due date</option>
-              <option value="yourIssues">Your issues</option>
-              <option value="assignedIssues">Assigned issues</option>
-            </DropdownButton>
+          Sort/Filter by:
+          <DropdownButton onChange={changeSortCategoryHandler}>
+            <option value="importance">Importance</option>
+            <option value="status">Status</option>
+            <option value="dueDate">Due date</option>
+            <option value="yourIssues">Your issues</option>
+            <option value="assignedIssues">Assigned issues</option>
+          </DropdownButton>
           {projectId ? (
             <SmallButton onClick={showNewIssueFormHandler}>
               Add issue
