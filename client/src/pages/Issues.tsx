@@ -7,6 +7,7 @@ import {
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
+import Instruction from "../components/instruction/instruction";
 import IssueGraph from "../components/issue/IssueGraph";
 import IssueTable from "../components/issue/IssueTable";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -55,6 +56,10 @@ function Issues() {
         {allIssues ? (
           <>
             <IssueGraph issuesData={allIssues} />
+            <Instruction>
+              To view the issue details in the table, locate the row containing
+              it and click on the corresponding cell with your mouse cursor.
+            </Instruction>
             <IssueTable
               issuesData={allIssues}
               setCurrentIssue={setCurrentIssue}

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../store";
 
 import { ProfilePageLayout } from "../components/styles/layout/ProfilePageLayout";
+import Instruction from "../components/instruction/instruction";
 import UserInfo from "../components/user/UserInfo";
 
 import { IUser } from "../types/interface";
@@ -28,7 +29,19 @@ function Profile() {
 
   return (
     <ProfilePageLayout>
-      {user ? <UserInfo userData={user} /> : null}
+      {user ? (
+        <>
+          <Instruction>
+            Before updating the user credentials, please make sure that you are
+            entering the correct information. Incorrect user information can
+            result in permanent loss of access to your account. To avoid this,
+            please double check that the information you are entering is
+            accurate and up-to-date. Thank you for your attention to this
+            important matter.
+          </Instruction>
+          <UserInfo userData={user} />
+        </>
+      ) : null}
     </ProfilePageLayout>
   );
 }

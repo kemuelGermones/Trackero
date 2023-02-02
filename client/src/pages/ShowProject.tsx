@@ -7,6 +7,7 @@ import {
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
+import Instruction from "../components/instruction/instruction";
 import ProjectInfo from "../components/project/ProjectInfo";
 import ProjectComment from "../components/project/ProjectComment";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -68,6 +69,11 @@ function ShowProject() {
           {project ? (
             <>
               <IssueGraph issuesData={project.issues} />
+              <Instruction>
+                To view the issue details in the table, locate the row
+                containing it and click on the corresponding cell with your
+                mouse cursor.
+              </Instruction>
               <IssueTable
                 projectId={project._id}
                 issuesData={project.issues}

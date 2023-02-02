@@ -1,5 +1,24 @@
+import {
+  PageDashboardLayout,
+  FirstSection,
+  SecondSection,
+} from "../components/styles/layout/PageDashboardLayout";
+import Instruction from "../components/instruction/instruction";
+import UserTable from "../components/user/UserTable";
+
 function Users() {
-    return <h1 style={{ textAlign: "center" }}>Users Page</h1>
+  return (
+    <PageDashboardLayout $templateColumns="1fr 1fr">
+      <FirstSection>
+        <Instruction>
+          To view the user details in the table, locate the row containing it
+          and click on the corresponding cell with your mouse cursor.
+        </Instruction>
+        <UserTable />
+      </FirstSection>
+      <SecondSection></SecondSection>
+    </PageDashboardLayout>
+  );
 }
 
 export default Users;
