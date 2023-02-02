@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../store";
+import { updateUserUsername, updateUserPassword } from "../store/user-action";
 
 import { ProfilePageLayout } from "../components/styles/layout/ProfilePageLayout";
+import { Card, CardDivider } from "../components/styles/UI/Card";
 import Instruction from "../components/instruction/Instruction";
 import UserInfo from "../components/user/UserInfo";
+import UserInputUpdateForm from "../components/user/UserInputUpdateForm";
 
 import { IUser } from "../types/interface";
 
@@ -39,7 +42,23 @@ function Profile() {
             accurate and up-to-date. Thank you for your attention to this
             important matter.
           </Instruction>
-          <UserInfo userData={user} />
+          <Card $width="100%">
+            <UserInfo userData={user} />
+            <CardDivider />
+            <UserInputUpdateForm
+              inputType="text"
+              name="username"
+              userId={user._id}
+              submitFunction={updateUserUsername}
+            />
+            <CardDivider />
+            <UserInputUpdateForm
+              inputType="password"
+              name="password"
+              userId={user._id}
+              submitFunction={updateUserPassword}
+            />
+          </Card>
         </>
       ) : null}
     </ProfilePageLayout>

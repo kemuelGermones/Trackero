@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "../store";
+import { updateUserUsername, updateUserPassword } from "../store/user-action";
 
 import {
   PageDashboardLayout,
@@ -7,6 +8,9 @@ import {
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
 import Instruction from "../components/instruction/Instruction";
+import { Card, CardDivider } from "../components/styles/UI/Card";
+import UserInputUpdateForm from "../components/user/UserInputUpdateForm";
+import UserSelectUpdateForm from "../components/user/UserSelectUpdateForm";
 import UserTable from "../components/user/UserTable";
 import UserInfo from "../components/user/UserInfo";
 
@@ -40,7 +44,7 @@ function Users() {
   }, [allUsers]);
 
   return (
-    <PageDashboardLayout $templateColumns="1fr 1fr">
+    <PageDashboardLayout $templateColumns="1.5fr 1fr">
       <FirstSection>
         <Instruction>
           To view the user details in the table, locate the row containing it
@@ -51,7 +55,27 @@ function Users() {
         ) : null}
       </FirstSection>
       <SecondSection>
-        {currentUser ? <UserInfo userData={currentUser} /> : null}
+        {currentUser ? (
+          <Card $width="100%">
+            <UserInfo userData={currentUser} />
+            <CardDivider />
+            <UserSelectUpdateForm userData={currentUser} />
+            <CardDivider />
+            <UserInputUpdateForm
+              inputType="text"
+              name="username"
+              userId={currentUser._id}
+              submitFunction={updateUserUsername}
+            />
+            <CardDivider />
+            <UserInputUpdateForm
+              inputType="password"
+              name="password"
+              userId={currentUser._id}
+              submitFunction={updateUserPassword}
+            />
+          </Card>
+        ) : null}
       </SecondSection>
     </PageDashboardLayout>
   );

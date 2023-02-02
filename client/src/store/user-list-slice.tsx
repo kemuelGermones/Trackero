@@ -47,10 +47,25 @@ const userListSlice = createSlice({
         state.usersData[foundUserIndex].username = action.payload.username;
       }
     },
+
+    // Update user's role
+
+    updateUserRoleData(state, action) {
+      if (state.usersData) {
+        const foundUserIndex = state.usersData.findIndex(
+          (user) => user._id === action.payload.userId
+        );
+        state.usersData[foundUserIndex].role = action.payload.role;
+      }
+    },
   },
 });
 
-export const { updateUsersData, clearUsersData, updateUserUsernameData } =
-  userListSlice.actions;
+export const {
+  updateUsersData,
+  clearUsersData,
+  updateUserUsernameData,
+  updateUserRoleData,
+} = userListSlice.actions;
 
 export default userListSlice.reducer;

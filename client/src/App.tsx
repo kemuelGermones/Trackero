@@ -19,7 +19,7 @@ import WithNav from "./components/outlet/WithNav";
 import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
 import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
 import IsYourProfile from "./components/outlet/IsYourProfile";
-import IsAdmin from "./components/outlet/isAdmin";
+import IsAdmin from "./components/outlet/IsAdmin";
 
 let logoutTimer: number;
 

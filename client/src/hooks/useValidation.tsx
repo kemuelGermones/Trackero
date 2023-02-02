@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function useValidation<T>(validation: ((str: T) => boolean) | null, defaultValue: T) {
+function useValidation<T>(
+  validation: ((str: T) => boolean) | null,
+  defaultValue: T
+) {
   const [value, setValue] = useState(defaultValue);
   const [valueError, setValueError] = useState(false);
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const onChangeValueHandler = (text: T) => {
     setValue(text);

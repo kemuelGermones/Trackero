@@ -76,7 +76,7 @@ function UserTable({ usersData, setCurrentUser }: IUserTable) {
             </tr>
           ) : (
             currentUsers.map((user) => (
-              <tr onClick={setCurrentUser.bind(null, user)}>
+              <tr key={user._id} onClick={setCurrentUser.bind(null, user)} >
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>{user.role}</td>

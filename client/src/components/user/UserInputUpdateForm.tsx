@@ -18,7 +18,7 @@ interface IUserChangeUsernameForm {
   ) => ThunkAction<void, RootState, unknown, AnyAction>;
 }
 
-function UserUpdateForm({
+function UserInputUpdateForm({
   userId,
   name,
   inputType,
@@ -66,4 +66,4 @@ function UserUpdateForm({
   );
 }
 
-export default UserUpdateForm;
+export default UserInputUpdateForm;
