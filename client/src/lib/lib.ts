@@ -2,19 +2,30 @@ import store from "../store";
 
 import { IProject, IIssue, IUser } from "../types/interface";
 
+// Sort users
+
+export const filterUsers = (users: IUser[], category: string) => {
+  // Filter by developer
+  if (category === "Developer" && Array.isArray(users)) {
+    return [...users].filter((user) => user.role === "Developer");
+  }
+  // Filter by administrator
+  if (category === "Administrator" && Array.isArray(users)) {
+    return [...users].filter((user) => user.role === "Administrator");
+  }
+  return users;
+};
+
 // Sort issues
 
 export const sortIssues = (issues: IIssue[], category: string) => {
   // Sort by date
-
   if (category === "dueDate" && Array.isArray(issues)) {
     return [...issues].sort(
       (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
     );
   }
-
   // Sort by status
-
   if (category === "status" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
@@ -39,9 +50,7 @@ export const sortIssues = (issues: IIssue[], category: string) => {
       return A - B;
     });
   }
-
   // Sort by importance
-
   if (category === "importance" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
@@ -66,16 +75,12 @@ export const sortIssues = (issues: IIssue[], category: string) => {
       return A - B;
     });
   }
-
   // Sort by your issues
-
   if (category === "yourIssues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter((issue) => issue.author._id === userId);
   }
-
   // Sort by assigned issues
-
   if (category === "assignedIssues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter(
@@ -83,7 +88,6 @@ export const sortIssues = (issues: IIssue[], category: string) => {
         issue.assignedTo.findIndex((user: IUser) => user._id === userId) > -1
     );
   }
-
   return issues;
 };
 

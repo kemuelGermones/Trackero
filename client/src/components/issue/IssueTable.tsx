@@ -87,13 +87,12 @@ function IssueTable({
       ) : null}
       <TableContainer>
         <TableSubHead>
-          Sort/Filter by:
           <DropdownButton onChange={changeSortCategoryHandler}>
-            <option value="importance">Importance</option>
-            <option value="status">Status</option>
-            <option value="dueDate">Due date</option>
-            <option value="yourIssues">Your issues</option>
-            <option value="assignedIssues">Assigned issues</option>
+            <option value="importance">Sort by Importance</option>
+            <option value="status">Sort by Status</option>
+            <option value="dueDate">Sort by Due Date</option>
+            <option value="yourIssues">Filter by Your Issues</option>
+            <option value="assignedIssues">Filter by Assigned Issues</option>
           </DropdownButton>
           {projectId ? (
             <SmallButton onClick={showNewIssueFormHandler}>

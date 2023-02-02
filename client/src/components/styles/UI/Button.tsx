@@ -68,7 +68,7 @@ export const TrashButton = styled(BsTrash)`
 export const DropdownButton = styled.select`
     margin-left: 0.5rem;
     padding: 0.3rem 0.5rem;
-    width: 8rem;
+    width: 11.5rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
     border: none;
