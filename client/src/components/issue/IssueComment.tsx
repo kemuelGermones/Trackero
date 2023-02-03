@@ -61,7 +61,7 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
       <Label>Leave a Comment</Label>
       <Form onSubmit={onSubmitComment}>
         <TextArea
-          placeholder="Leave a comment"
+          placeholder="Leave a Comment"
           onChange={onChangeCommentHandler}
           $isInvalid={commentError}
           value={comment}
@@ -69,7 +69,7 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
         <Button>Submit</Button>
       </Form>
       <Label>
-        {issueData.comments.length === 0 ? "No comments" : "Comments"}
+        {issueData.comments.length === 0 ? "No Comments" : "Comments"}
       </Label>
       {issueData.comments.map((comment) => (
         <Fragment key={comment._id}>

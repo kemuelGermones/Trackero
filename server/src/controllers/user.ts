@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user";
+import Project from "../models/project";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -59,13 +60,6 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-// Show All Users
-
-export const showUsers = async (req: Request, res: Response) => {
-  const users = await User.find().select("_id username role email");
-  res.status(200).send(users);
-};
-
 // Update User Username
 
 export const updateUserUsername = async (req: Request, res: Response) => {
@@ -73,9 +67,14 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.username = req.body.username;
   await user!.save();
+  const projects = await Project.find();
   res
     .status(200)
-    .json({ status: 200, message: "Updated user's username" });
+    .json({
+      status: 200,
+      message: "Updated user's username",
+      payload: projects,
+    });
 };
 
 // Update User Password
@@ -88,9 +87,7 @@ export const updateUserPassword = async (req: Request, res: Response) => {
   const hash = await bcrypt.hash(password, salt);
   user!.password = hash;
   await user!.save();
-  res
-    .status(200)
-    .json({ status: 200, message: "Updated user's password" });
+  res.status(200).json({ status: 200, message: "Updated user's password" });
 };
 
 // Update User Role
@@ -100,7 +97,5 @@ export const updateUserRole = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.role = req.body.role;
   await user!.save();
-  res
-    .status(200)
-    .json({ status: 200, message: "Updated user's role" });
+  res.status(200).json({ status: 200, message: "Updated user's role" });
 };

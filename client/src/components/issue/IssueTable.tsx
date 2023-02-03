@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { sortIssues } from "../../lib/lib";
+import sortAndFilterIssues from "../../lib/sortAndFilterIssues";
 
 import {
   PaginationButton,
@@ -32,9 +32,12 @@ function IssueTable({
   issuesPerTable,
 }: IIssueTable) {
   const [showNewIssueForm, setShowNewIssueForm] = useState(false);
-  const [issues, setIssues] = useState(issuesData);
-  const [sortCategory, setSortCategory] = useState("importance");
+  const [sortCategory, setSortCategory] = useState("Importance");
   const [currentTablePage, setCurrentTablePage] = useState(1);
+
+  const issues = useMemo(() => {
+    return sortAndFilterIssues(issuesData, sortCategory);
+  }, [issuesData, sortCategory]);
 
   const currentIssues = useMemo(() => {
     const lastIssuetIndex = currentTablePage * issuesPerTable;
@@ -49,10 +52,6 @@ function IssueTable({
     }
     return pages;
   }, [issues, issuesPerTable]);
-
-  useEffect(() => {
-    setIssues(sortIssues(issuesData, sortCategory));
-  }, [issuesData, sortCategory]);
 
   useEffect(() => {
     if (currentIssues.length === 0 && currentTablePage > 1) {
@@ -88,15 +87,15 @@ function IssueTable({
       <TableContainer>
         <TableSubHead>
           <DropdownButton onChange={changeSortCategoryHandler}>
-            <option value="importance">Sort by Importance</option>
-            <option value="status">Sort by Status</option>
-            <option value="dueDate">Sort by Due Date</option>
-            <option value="yourIssues">Filter by Your Issues</option>
-            <option value="assignedIssues">Filter by Assigned Issues</option>
+            <option value="Importance">Sort by Importance</option>
+            <option value="Status">Sort by Status</option>
+            <option value="Due Date">Sort by Due Date</option>
+            <option value="Your Issues">Filter by Your Issues</option>
+            <option value="Assigned Issues">Filter by Assigned Issues</option>
           </DropdownButton>
           {projectId ? (
             <SmallButton onClick={showNewIssueFormHandler}>
-              Add issue
+              Add Issue
             </SmallButton>
           ) : null}
         </TableSubHead>

@@ -37,4 +37,30 @@ projectSchema.post("findOneAndDelete", async function (doc) {
   }
 });
 
+// Extends the find method to auto pupulate certain fields
+
+projectSchema.pre("find", function (next) {
+  this.populate({
+    path: "issues",
+    populate: [
+      {
+        path: "comments",
+        populate: { path: "author", select: "username _id role email" },
+      },
+      {
+        path: "author",
+        select: "username _id role email",
+      },
+      {
+        path: "assignedTo",
+        select: "username _id role email",
+      },
+    ],
+  }).populate({
+    path: "comments",
+    populate: { path: "author", select: "username _id role email" },
+  });
+  next();
+});
+
 export default model("Project", projectSchema);

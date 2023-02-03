@@ -3,6 +3,7 @@ import { connect, connection } from "mongoose";
 import projectRoute from "./routes/project";
 import issueRoute from "./routes/issue";
 import userRoute from "./routes/user";
+import dataRoute from "./routes/data";
 import AppError from "./utils/AppError";
 import cors from "cors";
 import passport from "passport";
@@ -65,7 +66,8 @@ passportConfig(passport);
 
 // Routes
 
-app.use("/", userRoute);
+app.use("/", dataRoute);
+app.use("/users", userRoute);
 app.use("/projects", projectRoute);
 app.use("/issues", issueRoute);
 

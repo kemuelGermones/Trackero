@@ -30,10 +30,7 @@ function SideBar() {
         <NavItem to="/issues" $isActive={location.pathname === "/issues"}>
           <BsExclamationTriangle /> Issues
         </NavItem>
-        <NavItem
-          to={`/users/${userId}`}
-          $isActive={location.pathname === `/users/${userId}`}
-        >
+        <NavItem to={"/profile"} $isActive={location.pathname === "/profile"}>
           <BsPerson /> Profile
         </NavItem>
         {userRole === "Administrator" ? (

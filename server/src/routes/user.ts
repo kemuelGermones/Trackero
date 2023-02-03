@@ -3,7 +3,6 @@ import wrapAsync from "../utils/wrapAsync";
 import {
   registerUser,
   loginUser,
-  showUsers,
   updateUserUsername,
   updateUserPassword,
   updateUserRole,
@@ -27,18 +26,10 @@ router.post("/register", wrapAsync(registerUser));
 
 router.post("/login", wrapAsync(loginUser));
 
-// Show Users
-
-router.get(
-  "/users",
-  passport.authenticate("jwt", { session: false }),
-  wrapAsync(showUsers)
-);
-
 // Update User's Username
 
 router.patch(
-  "/users/:userId/username",
+  "/:userId/username",
   passport.authenticate("jwt", { session: false }),
   isAdminOrActualUser,
   isValidUsername,
@@ -48,7 +39,7 @@ router.patch(
 // Update User's Password
 
 router.patch(
-  "/users/:userId/password",
+  "/:userId/password",
   passport.authenticate("jwt", { session: false }),
   isAdminOrActualUser,
   isValidPassword,
@@ -58,7 +49,7 @@ router.patch(
 // Update User's Role
 
 router.patch(
-  "/users/:userId/role",
+  "/:userId/role",
   passport.authenticate("jwt", { session: false }),
   isAdminAndNotActualUser,
   isValidRole,

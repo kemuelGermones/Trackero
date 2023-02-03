@@ -16,7 +16,7 @@ type TUserState = IUser | null;
 function Profile() {
   const [user, setUser] = useState<TUserState>(null);
   const userList = useAppSelector((state) => state.userList.usersData);
-  const { userId } = useParams();
+  const userId = useAppSelector((state) => state.user.userId);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -18,7 +18,6 @@ import WithoutNav from "./components/outlet/WithoutNav";
 import WithNav from "./components/outlet/WithNav";
 import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
 import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
-import IsYourProfile from "./components/outlet/IsYourProfile";
 import IsAdmin from "./components/outlet/IsAdmin";
 
 let logoutTimer: number;
@@ -73,11 +72,9 @@ function App() {
               <Route element={<IsAdmin />}>
                 <Route index element={<Users />} />
               </Route>
-              <Route path=":userId">
-                <Route element={<IsYourProfile />}>
-                  <Route index element={<Profile />} />
-                </Route>
-              </Route>
+            </Route>
+            <Route path="/profile">
+              <Route index element={<Profile />} />
             </Route>
             <Route path="/error" element={<Error />} />
             <Route path="*" element={<Navigate to="/error" />} />

@@ -18,7 +18,7 @@ export const registerUser = (
     dispatch(showLoading());
     try {
       const postResponse = await axios.post(
-        "http://localhost:5000/register",
+        "http://localhost:5000/users/register",
         data
       );
       dispatch(
@@ -49,7 +49,7 @@ export const loginUser = (
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const postResponse = await axios.post("http://localhost:5000/login", {
+      const postResponse = await axios.post("http://localhost:5000/users/login", {
         email,
         password,
       });
@@ -105,14 +105,7 @@ export const updateUserUsername = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(patchResponse.data.payload));
       dispatch(updateUserUsernameData({ username: value, userId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", patchResponse.data.message));

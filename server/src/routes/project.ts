@@ -13,7 +13,6 @@ import {
   isAdminOrIssueAuthorOrAssignedUser
 } from "../middleware";
 import {
-  showProjects,
   createProject,
   editProject,
   deleteProject,
@@ -26,16 +25,7 @@ import {
   updateIssueAssignedTo,
 } from "../controllers/project";
 
-
 const router = Router({ mergeParams: true });
-
-// Show Projects
-
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  wrapAsync(showProjects)
-);
 
 // Create Project
 

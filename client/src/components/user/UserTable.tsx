@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { filterUsers } from "../../lib/lib";
+import filterUsers from "../../lib/filterUsers";
 
 import {
   TableContainer,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../store";
-import { listAllIssues, foundProjectId } from "../lib/lib";
+import listAllIssues from "../lib/listAllIssues";
+import foundProjectId from "../lib/foundProjectId";
 
 import {
   PageDashboardLayout,

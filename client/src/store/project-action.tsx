@@ -10,7 +10,7 @@ import { showLoading, hideLoading } from "./loading-slice";
 
 import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from "./index";
-import { ICommentData, IProject, IProjectData } from "../types/interface";
+import { ICommentData, IProjectData } from "../types/interface";
 
 // Add project
 
@@ -29,14 +29,7 @@ export const addProject = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
@@ -126,14 +119,7 @@ export const addProjectComment = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
