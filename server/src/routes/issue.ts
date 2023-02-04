@@ -1,7 +1,7 @@
 import { Router } from "express";
 import wrapAsync from "../utils/wrapAsync";
 import { createComment, deleteComment, } from "../controllers/issue";
-import { validateComment, isAdminAndCommentAuthor } from "../middleware";
+import { validateComment, isAdminOrCommentAuthor } from "../middleware";
 import passport from "passport";
 
 const router = Router({ mergeParams: true });
@@ -20,7 +20,7 @@ router.post(
 router.delete(
   "/:issueId/comments/:commentId",
   passport.authenticate("jwt", { session: false }),
-  isAdminAndCommentAuthor,
+  isAdminOrCommentAuthor,
   wrapAsync(deleteComment)
 );
 

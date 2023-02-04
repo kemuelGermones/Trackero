@@ -10,9 +10,9 @@ import { showLoading, hideLoading } from "./loading-slice";
 
 import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from "./index";
-import { ICommentData, IProject, IProjectData } from "../types/interface";
+import { ICommentData, IProjectData } from "../types/interface";
 
-// Add project
+// Add Project
 
 export const addProject = (
   data: IProjectData,
@@ -29,14 +29,7 @@ export const addProject = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
@@ -48,7 +41,7 @@ export const addProject = (
   };
 };
 
-// Edit project
+// Edit Project
 
 export const editProject = (
   data: IProjectData,
@@ -78,7 +71,7 @@ export const editProject = (
   };
 };
 
-// Delete project
+// Delete Project
 
 export const deleteProject = (
   projectId: string,
@@ -108,7 +101,7 @@ export const deleteProject = (
   };
 };
 
-// Add comment to the project
+// Add Comment to the Project
 
 export const addProjectComment = (
   data: ICommentData,
@@ -126,14 +119,7 @@ export const addProjectComment = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
@@ -145,7 +131,7 @@ export const addProjectComment = (
   };
 };
 
-// Delete project comment
+// Delete Project Comment
 
 export const deleteProjectComment = (
   projectId: string,

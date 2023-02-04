@@ -11,11 +11,11 @@ import {
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 
-import { IProject, IIssueData, ICommentData, IUser } from "../types/interface";
+import { IIssueData, ICommentData, IUser } from "../types/interface";
 import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from ".";
 
-// Add issue
+// Add Issue
 
 export const addIssue = (
   data: IIssueData,
@@ -33,14 +33,7 @@ export const addIssue = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
@@ -52,7 +45,7 @@ export const addIssue = (
   };
 };
 
-// Edit issue
+// Edit Issue
 
 export const editIssue = (
   data: IIssueData,
@@ -89,7 +82,7 @@ export const editIssue = (
   };
 };
 
-// Delete issue
+// Delete Issue
 
 export const deleteIssue = (
   projectId: string,
@@ -118,7 +111,7 @@ export const deleteIssue = (
   };
 };
 
-// Update issue status
+// Update Issue Status
 
 export const updateIssueStatus = (
   data: { status: string },
@@ -151,7 +144,7 @@ export const updateIssueStatus = (
   };
 };
 
-// Update issue assignedTo
+// Update Issue Assigned To
 
 export const updateIssueAssignedTo = (
   data: IUser[],
@@ -184,7 +177,7 @@ export const updateIssueAssignedTo = (
   };
 };
 
-// Add issue comment
+// Add Issue Comment
 
 export const addIssueComment = (
   data: ICommentData,
@@ -202,14 +195,7 @@ export const addIssueComment = (
           Authorization: token,
         },
       });
-      const getResponse = await axios<IProject[]>({
-        method: "get",
-        url: "http://localhost:5000/projects",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(getResponse.data));
+      dispatch(updateProjectsData(postResponse.data.payload));
       dispatch(hideLoading());
       dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
@@ -221,7 +207,7 @@ export const addIssueComment = (
   };
 };
 
-// Delete issue comment
+// Delete Issue Comment
 
 export const deleteIssueComment = (
   projectId: string,

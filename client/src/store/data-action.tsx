@@ -6,9 +6,8 @@ import { updateProjectsData } from "./project-slice";
 import { showLoading, hideLoading } from "./loading-slice";
 
 import { RootState, ThunkAction } from "./index";
-import { IUser, IProject } from "../types/interface";
 
-// Get projects data and issues data
+// Get Projects Data and Users Data
 
 export const getData = (
   token: string
@@ -16,22 +15,15 @@ export const getData = (
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const projectResponse = await axios<IProject[]>({
+      const getResponse = await axios({
         method: "get",
-        url: "http://localhost:5000/projects",
+        url: "http://localhost:5000/data",
         headers: {
           Authorization: token,
         },
       });
-      const userResponse = await axios<IUser[]>({
-        method: "get",
-        url: "http://localhost:5000/users",
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(updateProjectsData(projectResponse.data));
-      dispatch(updateUsersData(userResponse.data));
+      dispatch(updateProjectsData(getResponse.data.projects));
+      dispatch(updateUsersData(getResponse.data.users));
       dispatch(hideLoading());
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

@@ -27,7 +27,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // Save user credentials
+    // Save User Credentials
 
     login(state, action: PayloadAction<IRecievedUserDataAction>) {
       state.login = true;
@@ -37,7 +37,7 @@ const userSlice = createSlice({
       state.expiration = action.payload.expiresIn * 1000 + new Date().getTime();
     },
 
-    // Clear user credentials
+    // Clear User Credentials
 
     logout(state) {
       state.login = false;

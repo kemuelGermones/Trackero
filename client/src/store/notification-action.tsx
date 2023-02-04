@@ -3,7 +3,7 @@ import { showNotif, hideNotif } from "./notification-slice";
 
 import { RootState, ThunkAction } from "./index";
 
-// Show notification
+// Show Notification
 
 const showNotification = (
   title: "loading" | "success" | "error",

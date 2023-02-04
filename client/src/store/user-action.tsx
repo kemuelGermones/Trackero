@@ -3,13 +3,13 @@ import { AnyAction } from "@reduxjs/toolkit";
 import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { login, logout } from "./user-slice";
-import { clearProjectsData } from "./project-slice";
-import { clearUsersData, updateUserUsernameData } from "./user-list-slice";
+import { clearProjectsData, updateProjectsData } from "./project-slice";
+import { clearUsersData, updateUserUsernameData, updateUserRoleData } from "./user-list-slice";
 
 import { RootState, ThunkAction } from "./index";
 import { IUserData } from "../types/interface";
 
-// Registers the user
+// Registers the User
 
 export const registerUser = (
   data: IUserData
@@ -18,7 +18,7 @@ export const registerUser = (
     dispatch(showLoading());
     try {
       const postResponse = await axios.post(
-        "http://localhost:5000/register",
+        "http://localhost:5000/users/register",
         data
       );
       dispatch(
@@ -40,7 +40,7 @@ export const registerUser = (
   };
 };
 
-// logins the user
+// logins the User
 
 export const loginUser = (
   email: string,
@@ -49,7 +49,7 @@ export const loginUser = (
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const postResponse = await axios.post("http://localhost:5000/login", {
+      const postResponse = await axios.post("http://localhost:5000/users/login", {
         email,
         password,
       });
@@ -72,7 +72,7 @@ export const loginUser = (
   };
 };
 
-// Logouts the user
+// Logouts the User
 
 export const logoutUser = (): ThunkAction<
   void,
@@ -87,7 +87,7 @@ export const logoutUser = (): ThunkAction<
   };
 };
 
-// Update user's username
+// Update User's Username
 
 export const updateUserUsername = (
   value: string,
@@ -105,6 +105,7 @@ export const updateUserUsername = (
           Authorization: token,
         },
       });
+      dispatch(updateProjectsData(patchResponse.data.payload));
       dispatch(updateUserUsernameData({ username: value, userId }));
       dispatch(hideLoading());
       dispatch(showNotification("success", patchResponse.data.message));
@@ -117,7 +118,7 @@ export const updateUserUsername = (
   };
 };
 
-// Update user's password
+// Update User's Password
 
 export const updateUserPassword = (
   value: string,
@@ -146,4 +147,32 @@ export const updateUserPassword = (
   };
 };
 
-//  Update user's role
+//  Update User's Role
+
+export const updateUserRole = (
+  value: string,
+  userId: string,
+  token: string
+): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      const patchResponse = await axios({
+        method: "patch",
+        url: `http://localhost:5000/users/${userId}/role`,
+        data: { role: value },
+        headers: {
+          Authorization: token,
+        },
+      });
+      dispatch(updateUserRoleData({ role: value, userId }));
+      dispatch(hideLoading());
+      dispatch(showNotification("success", patchResponse.data.message));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        dispatch(hideLoading());
+        dispatch(showNotification("error", error.response?.data.message));
+      }
+    }
+  };
+};

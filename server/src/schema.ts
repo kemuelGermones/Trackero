@@ -1,17 +1,45 @@
-import Joi from "joi";
+import BaseJoi, { Root, CustomHelpers } from "joi";
+import sanitizeHtml from "sanitize-html";
+
+// Adds a escapeHTML method to joi and checks if the
+// a input contains HTML elements
+
+const extension = (joi: Root) => ({
+  type: "string",
+  base: joi.string(),
+  messages: {
+    "string.escapeHTML": "{{#label}} must not include HTML!",
+  },
+  rules: {
+    escapeHTML: {
+      validate(value: string, helpers: CustomHelpers) {
+        const clean = sanitizeHtml(value, {
+          allowedTags: [],
+          allowedAttributes: {},
+        });
+        if (clean !== value) {
+          return helpers.error("string.escapeHTML", { value });
+        }
+        return clean;
+      },
+    },
+  },
+});
+
+const Joi = BaseJoi.extend(extension);
 
 // Project Schema
 
 export const projectSchema = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
+  title: Joi.string().escapeHTML().required(),
+  description: Joi.string().escapeHTML().required(),
 });
 
 // Issue Schema
 
 export const issueSchema = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
+  title: Joi.string().escapeHTML().required(),
+  description: Joi.string().escapeHTML().required(),
   importance: Joi.string().valid("High", "Mid", "Low").required(),
   dueDate: Joi.date().greater("now").required(),
 });
@@ -19,13 +47,15 @@ export const issueSchema = Joi.object({
 // Comment Schema
 
 export const commentSchema = Joi.object({
-  comment: Joi.string().required(),
+  comment: Joi.string().escapeHTML().required(),
 });
 
 // Issue assignedTo Schema
 
 export const issueAssignedToSchema = Joi.object({
-  assignedTo: Joi.array().items(Joi.string().required()).required(),
+  assignedTo: Joi.array()
+    .items(Joi.string().escapeHTML().required())
+    .required(),
 });
 
 // Issue status Schema
@@ -37,13 +67,13 @@ export const issueStatusSchema = Joi.object({
 // User username Schema
 
 export const userUsernameSchema = Joi.object({
-  username: Joi.string().required(),
+  username: Joi.string().escapeHTML().required(),
 });
 
 // User password Schema
 
 export const userPasswordSchema = Joi.object({
-  password: Joi.string().required(),
+  password: Joi.string().escapeHTML().required(),
 });
 
 // User role Schema

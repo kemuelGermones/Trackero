@@ -75,7 +75,7 @@ function ProjectComment({ projectData }: IProjectComment) {
         <Button>Submit</Button>
       </Form>
       <Label>
-        {projectData.comments.length === 0 ? "No comments" : "Comments"}
+        {projectData.comments.length === 0 ? "No Comments" : "Comments"}
       </Label>
       {projectData.comments.map((comment) => (
         <Fragment key={comment._id}>

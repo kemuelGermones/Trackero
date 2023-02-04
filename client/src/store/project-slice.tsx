@@ -125,7 +125,7 @@ const projectSlice = createSlice({
       }
     },
 
-    //  Update Project issue status
+    //  Update Project Issue Status
 
     updateProjectIssueStatus(
       state,
@@ -143,7 +143,7 @@ const projectSlice = createSlice({
       }
     },
 
-    //Update Project issue assigned users
+    //Update Project Issue Assigned Users
 
     updateProjectIssueAssignedTo(state, action) {
       if (state.projectsData) {

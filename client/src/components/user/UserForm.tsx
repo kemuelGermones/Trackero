@@ -23,7 +23,11 @@ function UserForm() {
     onChangeValueHandler: emailChange,
     validateValue: validateEmail,
     onResetValueHandler: resetEmail,
-  } = useValidation((str) => str.trim().length > 0, "");
+  } = useValidation(
+    (str) =>
+      str.trim().length > 0 && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(str),
+    ""
+  );
 
   const {
     value: password,
@@ -92,7 +96,7 @@ function UserForm() {
       </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
-        <Label htmlFor="email">Your email</Label>
+        <Label htmlFor="email">Your Email</Label>
         <Input
           id="email"
           type="email"
@@ -101,7 +105,7 @@ function UserForm() {
           onChange={onChangeEmailHandler}
           $isInvalid={emailError}
         />
-        <Label htmlFor="password">Your password</Label>
+        <Label htmlFor="password">Your Password</Label>
         <Input
           id="password"
           type="password"
@@ -112,7 +116,7 @@ function UserForm() {
         />
         {!isLogin ? (
           <>
-            <Label htmlFor="username">Your username</Label>
+            <Label htmlFor="username">Your Username</Label>
             <Input
               id="username"
               type="text"
@@ -121,7 +125,7 @@ function UserForm() {
               onChange={onChangeUsernameHandler}
               $isInvalid={usernameError}
             />
-            <Label htmlFor="role">Your role</Label>
+            <Label htmlFor="role">Your Role</Label>
             <Select onChange={onChangeRoleHandler} value={role}>
               <option value="Developer">Developer</option>
               <option value="Administrator">Administrator</option>

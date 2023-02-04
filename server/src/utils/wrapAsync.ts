@@ -1,3 +1,5 @@
+// Wraps a async function and catches any error if there is any
+
 import { Request, Response, NextFunction } from "express";
 
 type outerFunc = (req: Request, res: Response, next: NextFunction) => void;

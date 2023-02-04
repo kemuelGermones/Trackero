@@ -1,7 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import { sortIssues } from "../../lib/lib";
+import sortAndFilterIssues from "../../lib/sortAndFilterIssues";
 
-import { PaginationButton, SmallButton, DropdownButton } from "../styles/UI/Button";
+import {
+  PaginationButton,
+  SmallButton,
+  DropdownButton,
+} from "../styles/UI/Button";
 import {
   Table,
   TableHeader,
@@ -28,9 +32,12 @@ function IssueTable({
   issuesPerTable,
 }: IIssueTable) {
   const [showNewIssueForm, setShowNewIssueForm] = useState(false);
-  const [issues, setIssues] = useState(issuesData);
-  const [sortCategory, setSortCategory] = useState("importance");
+  const [sortCategory, setSortCategory] = useState("Importance");
   const [currentTablePage, setCurrentTablePage] = useState(1);
+
+  const issues = useMemo(() => {
+    return sortAndFilterIssues(issuesData, sortCategory);
+  }, [issuesData, sortCategory]);
 
   const currentIssues = useMemo(() => {
     const lastIssuetIndex = currentTablePage * issuesPerTable;
@@ -45,10 +52,6 @@ function IssueTable({
     }
     return pages;
   }, [issues, issuesPerTable]);
-
-  useEffect(() => {
-    setIssues(sortIssues(issuesData, sortCategory));
-  }, [issuesData, sortCategory]);
 
   useEffect(() => {
     if (currentIssues.length === 0 && currentTablePage > 1) {
@@ -83,17 +86,16 @@ function IssueTable({
       ) : null}
       <TableContainer>
         <TableSubHead>
-            Sort by:
-            <DropdownButton onChange={changeSortCategoryHandler}>
-              <option value="importance">Importance</option>
-              <option value="status">Status</option>
-              <option value="dueDate">Due date</option>
-              <option value="yourIssues">Your issues</option>
-              <option value="assignedIssues">Assigned issues</option>
-            </DropdownButton>
+          <DropdownButton onChange={changeSortCategoryHandler}>
+            <option value="Importance">Sort by Importance</option>
+            <option value="Status">Sort by Status</option>
+            <option value="Due Date">Sort by Due Date</option>
+            <option value="Your Issues">Filter by Your Issues</option>
+            <option value="Assigned Issues">Filter by Assigned Issues</option>
+          </DropdownButton>
           {projectId ? (
             <SmallButton onClick={showNewIssueFormHandler}>
-              Add issue
+              Add Issue
             </SmallButton>
           ) : null}
         </TableSubHead>

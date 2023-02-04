@@ -35,7 +35,7 @@ function Projects() {
         <ProjectForm hideForm={hideProjectFormHandler} />
       ) : null}
       <ProjectsPageLayout>
-        {userRole === "Administrator" ? (
+        {userRole === "Administrator" && projects ? (
           <Card
             $center={true}
             onClick={showProjectFormHandler}

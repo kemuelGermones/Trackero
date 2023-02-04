@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAppSelector } from "../store";
-import { listAllIssues, foundProjectId } from "../lib/lib";
+import listAllIssues from "../lib/listAllIssues";
+import foundProjectId from "../lib/foundProjectId";
 
 import {
   PageDashboardLayout,
   FirstSection,
   SecondSection,
 } from "../components/styles/layout/PageDashboardLayout";
+import Instruction from "../components/instruction/Instruction";
 import IssueGraph from "../components/issue/IssueGraph";
 import IssueTable from "../components/issue/IssueTable";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -14,21 +16,20 @@ import IssueComment from "../components/issue/IssueComment";
 
 import { IIssue } from "../types/interface";
 
-type TIssueState = IIssue[] | null;
 type TCurrentIssueState = IIssue | null;
 type TCurrentProjectIssueId = string | null;
 
 function Issues() {
   const projects = useAppSelector((state) => state.project.projectsData);
-  const [allIssues, setAllIssues] = useState<TIssueState>(null);
   const [currentIssue, setCurrentIssue] = useState<TCurrentIssueState>(null);
   const [currentProjectIssueId, setCurrentProjectIssueId] =
     useState<TCurrentProjectIssueId>(null);
 
-  useEffect(() => {
+  const allIssues = useMemo(() => {
     if (projects) {
-      setAllIssues(listAllIssues(projects));
+      return listAllIssues(projects);
     }
+    return null;
   }, [projects]);
 
   useEffect(() => {
@@ -55,6 +56,10 @@ function Issues() {
         {allIssues ? (
           <>
             <IssueGraph issuesData={allIssues} />
+            <Instruction>
+              To view the issue details in the table, locate the row containing
+              it and click on the corresponding cell with your mouse cursor.
+            </Instruction>
             <IssueTable
               issuesData={allIssues}
               setCurrentIssue={setCurrentIssue}

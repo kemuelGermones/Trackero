@@ -16,8 +16,11 @@ const projectSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Comment",
     },
-  ]
+  ],
 });
+
+// Extends the findOneAndDelete method to
+// also delete existing comment/s and issue in a project
 
 projectSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {
@@ -32,6 +35,32 @@ projectSchema.post("findOneAndDelete", async function (doc) {
       },
     });
   }
+});
+
+// Extends the find method to auto populate certain fields
+
+projectSchema.pre("find", function (next) {
+  this.populate({
+    path: "issues",
+    populate: [
+      {
+        path: "comments",
+        populate: { path: "author", select: "username _id role email" },
+      },
+      {
+        path: "author",
+        select: "username _id role email",
+      },
+      {
+        path: "assignedTo",
+        select: "username _id role email",
+      },
+    ],
+  }).populate({
+    path: "comments",
+    populate: { path: "author", select: "username _id role email" },
+  });
+  next();
 });
 
 export default model("Project", projectSchema);

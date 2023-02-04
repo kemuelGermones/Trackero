@@ -1,21 +1,20 @@
 import store from "../store";
+import { IIssue, IUser } from "../types/interface";
 
-import { IProject, IIssue, IUser } from "../types/interface";
+// Sort Issues
 
-// Sort issues
+const sortAndFilterIssues = (issues: IIssue[], category: string) => {
+  // Sort by Date
 
-export const sortIssues = (issues: IIssue[], category: string) => {
-  // Sort by date
-
-  if (category === "dueDate" && Array.isArray(issues)) {
+  if (category === "Due Date" && Array.isArray(issues)) {
     return [...issues].sort(
       (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
     );
   }
 
-  // Sort by status
+  // Sort by Status
 
-  if (category === "status" && Array.isArray(issues)) {
+  if (category === "Status" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
       let B: number;
@@ -40,9 +39,9 @@ export const sortIssues = (issues: IIssue[], category: string) => {
     });
   }
 
-  // Sort by importance
+  // Sort by Importance
 
-  if (category === "importance" && Array.isArray(issues)) {
+  if (category === "Importance" && Array.isArray(issues)) {
     return [...issues].sort((a, b) => {
       let A: number;
       let B: number;
@@ -67,16 +66,16 @@ export const sortIssues = (issues: IIssue[], category: string) => {
     });
   }
 
-  // Sort by your issues
+  // Filter by Your Issues
 
-  if (category === "yourIssues" && Array.isArray(issues)) {
+  if (category === "Your Issues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter((issue) => issue.author._id === userId);
   }
 
-  // Sort by assigned issues
+  // Filter by Assigned Issues
 
-  if (category === "assignedIssues" && Array.isArray(issues)) {
+  if (category === "Assigned Issues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
     return [...issues].filter(
       (issue) =>
@@ -87,22 +86,4 @@ export const sortIssues = (issues: IIssue[], category: string) => {
   return issues;
 };
 
-// List all issues
-
-export const listAllIssues = (projects: IProject[]): IIssue[] => {
-  if (projects.length === 0) return [];
-  return projects[0].issues.concat(listAllIssues(projects.slice(1)));
-};
-
-// Find Project id
-
-export const foundProjectId = (
-  projects: IProject[],
-  issueId: string
-): string | null => {
-  const projectId = projects.find(
-    (project) =>
-      project.issues.findIndex((issue) => issue._id === issueId) !== -1
-  )?._id;
-  return projectId ? projectId : null;
-};
+export default sortAndFilterIssues;

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ValidationError } from "joi";
 import User from "./models/user";
 import Comment from "./models/comment";
 import Issue from "./models/issue";
@@ -14,6 +15,10 @@ import {
   userUsernameSchema,
 } from "./schema";
 
+interface IValidationError {
+  error: ValidationError;
+}
+
 // Validate Project Request
 
 export const validateProject = (
@@ -21,7 +26,9 @@ export const validateProject = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = projectSchema.validate(req.body);
+  const { error }: IValidationError = projectSchema.validate(
+    req.body
+  );
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -37,7 +44,7 @@ export const validateIssue = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = issueSchema.validate(req.body);
+  const { error }: IValidationError = issueSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -53,7 +60,7 @@ export const validateComment = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = commentSchema.validate(req.body);
+  const { error }: IValidationError = commentSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -69,7 +76,7 @@ export const isValidUsers = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = issueAssignedToSchema.validate(req.body);
+  const { error }: IValidationError = issueAssignedToSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     return res.status(400).json({ status: 400, message: msg });
@@ -97,7 +104,7 @@ export const isValidStatus = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = issueStatusSchema.validate(req.body);
+  const { error }: IValidationError = issueStatusSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -113,7 +120,7 @@ export const isValidUsername = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = userUsernameSchema.validate(req.body);
+  const { error }: IValidationError = userUsernameSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -129,7 +136,7 @@ export const isValidPassword = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = userPasswordSchema.validate(req.body);
+  const { error }: IValidationError = userPasswordSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -145,7 +152,7 @@ export const isValidRole = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = userRoleSchema.validate(req.body);
+  const { error }: IValidationError = userRoleSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -165,9 +172,9 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// Validates if the user is admin and comment author
+// Validates if the user is admin or comment author
 
-export const isAdminAndCommentAuthor = async (
+export const isAdminOrCommentAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -186,9 +193,9 @@ export const isAdminAndCommentAuthor = async (
   });
 };
 
-// Validates if the user is admin and issue author
+// Validates if the user is admin or issue author
 
-export const isAdminAndIssueAuthor = async (
+export const isAdminOrIssueAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -207,9 +214,9 @@ export const isAdminAndIssueAuthor = async (
   });
 };
 
-// Validates if the user is admin, issue author and assigned user
+// Validates if the user is admin, issue author or assigned user
 
-export const isAdminAndIssueAuthorAndAssignedUser = async (
+export const isAdminOrIssueAuthorOrAssignedUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -232,9 +239,9 @@ export const isAdminAndIssueAuthorAndAssignedUser = async (
   });
 };
 
-// Validates if the user is admin and is actual user
+// Validates if the user is admin or is actual user
 
-export const isAdminAndActualUser = async (
+export const isAdminOrActualUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -246,6 +253,24 @@ export const isAdminAndActualUser = async (
   }
   res.status(400).json({
     status: 400,
-    message: "You are not allowed update this user",
+    message: "You are not allowed to update this user",
+  });
+};
+
+// Validates if the user is admin and is not actual user
+
+export const isAdminAndNotActualUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  if (req.user!.role === "Administrator" && !user?._id!.equals(req.user!._id)) {
+    return next();
+  }
+  res.status(400).json({
+    status: 400,
+    message: "You are not allowed to update this user",
   });
 };

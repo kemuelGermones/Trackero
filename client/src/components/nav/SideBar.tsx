@@ -14,7 +14,7 @@ import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
 function SideBar() {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user.userId);
+  const { userRole } = useAppSelector((state) => state.user);
 
   const logoutHandler = () => {
     dispatch(logoutUser());
@@ -30,15 +30,14 @@ function SideBar() {
         <NavItem to="/issues" $isActive={location.pathname === "/issues"}>
           <BsExclamationTriangle /> Issues
         </NavItem>
-        <NavItem
-          to={`/users/${userId}`}
-          $isActive={location.pathname === `/users/${userId}`}
-        >
+        <NavItem to={"/profile"} $isActive={location.pathname === "/profile"}>
           <BsPerson /> Profile
         </NavItem>
-        <NavItem to="/users" $isActive={location.pathname === "/users"}>
-          <BsPeople /> Users
-        </NavItem>
+        {userRole === "Administrator" ? (
+          <NavItem to="/users" $isActive={location.pathname === "/users"}>
+            <BsPeople /> Users
+          </NavItem>
+        ) : null}
         <NavUnit onClick={logoutHandler}>
           <BsBoxArrowInLeft /> Logout
         </NavUnit>
