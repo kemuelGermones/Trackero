@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAppSelector } from "../store";
 import listAllIssues from "../lib/listAllIssues";
 import foundProjectId from "../lib/foundProjectId";
@@ -16,21 +16,20 @@ import IssueComment from "../components/issue/IssueComment";
 
 import { IIssue } from "../types/interface";
 
-type TIssueState = IIssue[] | null;
 type TCurrentIssueState = IIssue | null;
 type TCurrentProjectIssueId = string | null;
 
 function Issues() {
   const projects = useAppSelector((state) => state.project.projectsData);
-  const [allIssues, setAllIssues] = useState<TIssueState>(null);
   const [currentIssue, setCurrentIssue] = useState<TCurrentIssueState>(null);
   const [currentProjectIssueId, setCurrentProjectIssueId] =
     useState<TCurrentProjectIssueId>(null);
 
-  useEffect(() => {
+  const allIssues = useMemo(() => {
     if (projects) {
-      setAllIssues(listAllIssues(projects));
+      return listAllIssues(projects);
     }
+    return null;
   }, [projects]);
 
   useEffect(() => {

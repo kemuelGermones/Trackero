@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMemo } from "react";
 import { useAppSelector } from "../store";
 import { updateUserUsername, updateUserPassword } from "../store/user-action";
 
@@ -9,25 +8,15 @@ import Instruction from "../components/instruction/Instruction";
 import UserInfo from "../components/user/UserInfo";
 import UserInputUpdateForm from "../components/user/UserInputUpdateForm";
 
-import { IUser } from "../types/interface";
-
-type TUserState = IUser | null;
-
 function Profile() {
-  const [user, setUser] = useState<TUserState>(null);
   const userList = useAppSelector((state) => state.userList.usersData);
   const userId = useAppSelector((state) => state.user.userId);
-  const navigate = useNavigate();
 
-  useEffect(() => {
+  const user = useMemo(() => {
     if (userList) {
-      const foundUser = userList.find((user) => user._id === userId);
-      if (foundUser) {
-        setUser(foundUser);
-      } else {
-        navigate("/error");
-      }
+      return userList.find((user) => user._id === userId)!;
     }
+    return null;
   }, [userList]);
 
   return (

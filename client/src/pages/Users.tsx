@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAppSelector } from "../store";
 import { updateUserUsername, updateUserPassword } from "../store/user-action";
 
@@ -16,19 +16,18 @@ import UserInfo from "../components/user/UserInfo";
 
 import { IUser } from "../types/interface";
 
-type TAllUsersState = IUser[] | null;
 type TCurrentUserState = IUser | null;
 
 function Users() {
-  const [allUsers, setAllUsers] = useState<TAllUsersState>(null);
   const [currentUser, setCurrentUser] = useState<TCurrentUserState>(null);
   const userList = useAppSelector((state) => state.userList.usersData);
   const userId = useAppSelector((state) => state.user.userId);
 
-  useEffect(() => {
+  const allUsers = useMemo(() => {
     if (userList) {
-      setAllUsers(userList.filter((user) => user._id !== userId));
+      return userList.filter((user) => user._id !== userId);
     }
+    return null;
   }, [userList]);
 
   useEffect(() => {
@@ -46,12 +45,14 @@ function Users() {
   return (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
       <FirstSection>
-        <Instruction>
-          To view the user details in the table, locate the row containing it
-          and click on the corresponding cell with your mouse cursor.
-        </Instruction>
         {allUsers ? (
-          <UserTable usersData={allUsers} setCurrentUser={setCurrentUser} />
+          <>
+            <Instruction>
+              To view the user details in the table, locate the row containing
+              it and click on the corresponding cell with your mouse cursor.
+            </Instruction>
+            <UserTable usersData={allUsers} setCurrentUser={setCurrentUser} />
+          </>
         ) : null}
       </FirstSection>
       <SecondSection>
