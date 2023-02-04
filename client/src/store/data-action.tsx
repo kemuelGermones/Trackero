@@ -7,7 +7,7 @@ import { showLoading, hideLoading } from "./loading-slice";
 
 import { RootState, ThunkAction } from "./index";
 
-// Get projects data and issues data
+// Get Projects Data and Users Data
 
 export const getData = (
   token: string

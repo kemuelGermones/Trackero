@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 const secret = "mySecret";
 
-// Registers The User
+// Registers the User
 
 export const registerUser = async (req: Request, res: Response) => {
   const { email, username, password, role } = req.body;
@@ -35,7 +35,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-// Login The User
+// Login the User
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;

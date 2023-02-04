@@ -9,7 +9,6 @@ import { PositionCenter } from "../styles/utils/PositionCenter";
 import { Button } from "../styles/UI/Button";
 import Backdrop from "../styles/UI/Backdrop";
 
-
 import { IProject } from "../../types/interface";
 
 interface IProjectForm {

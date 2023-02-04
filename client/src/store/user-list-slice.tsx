@@ -22,7 +22,7 @@ const userListSlice = createSlice({
   name: "userList",
   initialState,
   reducers: {
-    // Save users list data
+    // Save Users list Data
 
     updateUsersData(state, action: PayloadAction<IUser[]>) {
       state.usersData = action.payload;
@@ -34,7 +34,7 @@ const userListSlice = createSlice({
       state.usersData = null;
     },
 
-    // Update user's username
+    // Update User's Username
 
     updateUserUsernameData(
       state,
@@ -48,7 +48,7 @@ const userListSlice = createSlice({
       }
     },
 
-    // Update user's role
+    // Update User's Role
 
     updateUserRoleData(state, action) {
       if (state.usersData) {

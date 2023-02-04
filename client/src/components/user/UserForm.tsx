@@ -23,7 +23,11 @@ function UserForm() {
     onChangeValueHandler: emailChange,
     validateValue: validateEmail,
     onResetValueHandler: resetEmail,
-  } = useValidation((str) => str.trim().length > 0, "");
+  } = useValidation(
+    (str) =>
+      str.trim().length > 0 && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(str),
+    ""
+  );
 
   const {
     value: password,

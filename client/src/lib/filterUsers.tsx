@@ -1,6 +1,6 @@
 import { IUser } from "../types/interface";
 
-// Filter users
+// Filter Users
 
 const filterUsers = (users: IUser[], category: string) => {
   // Filter by Developer

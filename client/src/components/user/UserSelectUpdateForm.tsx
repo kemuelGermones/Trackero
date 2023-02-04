@@ -15,7 +15,7 @@ function UserSelectUpdateForm({ userData }: IUserSelectUpdateForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
 
-  const { value, onChangeValueHandler, onResetValueHandler } =
+  const { value, onChangeValueHandler } =
     useValidation(null, userData.role);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -26,7 +26,6 @@ function UserSelectUpdateForm({ userData }: IUserSelectUpdateForm) {
     event.preventDefault();
     if (accessToken) {
       dispatch(updateUserRole(value, userData._id, accessToken));
-    //   onResetValueHandler();
     }
   };
 

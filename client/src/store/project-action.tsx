@@ -12,7 +12,7 @@ import { AnyAction } from "@reduxjs/toolkit";
 import { RootState, ThunkAction } from "./index";
 import { ICommentData, IProjectData } from "../types/interface";
 
-// Add project
+// Add Project
 
 export const addProject = (
   data: IProjectData,
@@ -41,7 +41,7 @@ export const addProject = (
   };
 };
 
-// Edit project
+// Edit Project
 
 export const editProject = (
   data: IProjectData,
@@ -71,7 +71,7 @@ export const editProject = (
   };
 };
 
-// Delete project
+// Delete Project
 
 export const deleteProject = (
   projectId: string,
@@ -101,7 +101,7 @@ export const deleteProject = (
   };
 };
 
-// Add comment to the project
+// Add Comment to the Project
 
 export const addProjectComment = (
   data: ICommentData,
@@ -131,7 +131,7 @@ export const addProjectComment = (
   };
 };
 
-// Delete project comment
+// Delete Project Comment
 
 export const deleteProjectComment = (
   projectId: string,

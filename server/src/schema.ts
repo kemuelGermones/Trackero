@@ -53,7 +53,9 @@ export const commentSchema = Joi.object({
 // Issue assignedTo Schema
 
 export const issueAssignedToSchema = Joi.object({
-  assignedTo: Joi.array().items(Joi.string().escapeHTML().required()).required(),
+  assignedTo: Joi.array()
+    .items(Joi.string().escapeHTML().required())
+    .required(),
 });
 
 // Issue status Schema

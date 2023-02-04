@@ -37,7 +37,7 @@ projectSchema.post("findOneAndDelete", async function (doc) {
   }
 });
 
-// Extends the find method to auto pupulate certain fields
+// Extends the find method to auto populate certain fields
 
 projectSchema.pre("find", function (next) {
   this.populate({

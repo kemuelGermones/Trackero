@@ -7,9 +7,9 @@ import { clearProjectsData, updateProjectsData } from "./project-slice";
 import { clearUsersData, updateUserUsernameData, updateUserRoleData } from "./user-list-slice";
 
 import { RootState, ThunkAction } from "./index";
-import { IUserData, IProject } from "../types/interface";
+import { IUserData } from "../types/interface";
 
-// Registers the user
+// Registers the User
 
 export const registerUser = (
   data: IUserData
@@ -40,7 +40,7 @@ export const registerUser = (
   };
 };
 
-// logins the user
+// logins the User
 
 export const loginUser = (
   email: string,
@@ -72,7 +72,7 @@ export const loginUser = (
   };
 };
 
-// Logouts the user
+// Logouts the User
 
 export const logoutUser = (): ThunkAction<
   void,
@@ -87,7 +87,7 @@ export const logoutUser = (): ThunkAction<
   };
 };
 
-// Update user's username
+// Update User's Username
 
 export const updateUserUsername = (
   value: string,
@@ -118,7 +118,7 @@ export const updateUserUsername = (
   };
 };
 
-// Update user's password
+// Update User's Password
 
 export const updateUserPassword = (
   value: string,
@@ -147,7 +147,7 @@ export const updateUserPassword = (
   };
 };
 
-//  Update user's role
+//  Update User's Role
 
 export const updateUserRole = (
   value: string,
