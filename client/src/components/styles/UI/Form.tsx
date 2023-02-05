@@ -17,11 +17,12 @@ export const Label = styled.label`
 
 export const Input = styled.input<IInputCustomProps>`
   width: 100%;
-  box-sizing: border-box;   
+  box-sizing: border-box;
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid ${props => props.$isInvalid ? "var(--danger)" : "var(--tertiary)"};
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
   font-family: "Poppins";
 
@@ -31,26 +32,26 @@ export const Input = styled.input<IInputCustomProps>`
 `;
 
 export const Select = styled.select<IInputCustomProps>`
-width: 100%;
-box-sizing: border-box;
-margin-bottom: 0.5rem;
-padding: 0.5rem 0.75rem;
-border-radius: 0.5rem;
-border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
-font-size: 1rem;
-font-family: "Poppins";
--webkit-appearance: none;
--moz-appearance: none;
-appearance:none;
-background: url("/arrow-down.png");
-background-repeat: no-repeat;
-background-size: 1rem;
-background-position: 96% center;
-background-color: white;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
+  font-size: 1rem;
+  font-family: "Poppins";
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("/arrow-down.png");
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  background-position: 96% center;
+  background-color: white;
 
-&:focus {
-  outline: none;
-}
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const TextArea = styled.textarea<IInputCustomProps>`
@@ -60,7 +61,8 @@ export const TextArea = styled.textarea<IInputCustomProps>`
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
   font-family: "Poppins";
 

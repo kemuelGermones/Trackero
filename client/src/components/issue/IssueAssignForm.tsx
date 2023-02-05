@@ -80,7 +80,7 @@ function IssueAssignForm({
 
   return (
     <>
-      <Backdrop onClick={hideForm} />
+      <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
         <TableContainer $width="25rem">
           <TableSubHead>

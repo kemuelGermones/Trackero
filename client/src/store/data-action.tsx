@@ -28,7 +28,12 @@ export const getData = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };

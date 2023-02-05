@@ -24,7 +24,10 @@ function SideBar() {
     <Nav>
       <NavBrand>Trackero</NavBrand>
       <NavMenu>
-        <NavItem to="/projects" $isActive={location.pathname === "/projects"}>
+        <NavItem
+          to="/projects"
+          $isActive={location.pathname.slice(0, 9) === "/projects"}
+        >
           <BsFolder /> Projects
         </NavItem>
         <NavItem to="/issues" $isActive={location.pathname === "/issues"}>

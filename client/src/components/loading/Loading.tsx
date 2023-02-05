@@ -2,8 +2,8 @@ import { Transition } from "react-transition-group";
 import { useAppSelector } from "../../store";
 
 import {
-  LoadingSpinner,
-  LoadingSpinnerContainer,
+  CircleLoadingSpinner,
+  CircleLoadingSpinnerContainer,
 } from "../styles/UI/LoadingSpinner";
 
 function Loading() {
@@ -11,9 +11,9 @@ function Loading() {
 
   return (
     <Transition mountOnEnter unmountOnExit in={show} timeout={400}>
-      <LoadingSpinnerContainer $show={show}>
-        <LoadingSpinner />
-      </LoadingSpinnerContainer>
+      <CircleLoadingSpinnerContainer $show={show}>
+        <CircleLoadingSpinner />
+      </CircleLoadingSpinnerContainer>
     </Transition>
   );
 }

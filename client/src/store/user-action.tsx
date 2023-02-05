@@ -4,7 +4,11 @@ import showNotification from "./notification-action";
 import { showLoading, hideLoading } from "./loading-slice";
 import { login, logout } from "./user-slice";
 import { clearProjectsData, updateProjectsData } from "./project-slice";
-import { clearUsersData, updateUserUsernameData, updateUserRoleData } from "./user-list-slice";
+import {
+  clearUsersData,
+  updateUserUsernameData,
+  updateUserRoleData,
+} from "./user-list-slice";
 
 import { RootState, ThunkAction } from "./index";
 import { IUserData } from "../types/interface";
@@ -34,7 +38,12 @@ export const registerUser = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -49,10 +58,13 @@ export const loginUser = (
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const postResponse = await axios.post("http://localhost:5000/users/login", {
-        email,
-        password,
-      });
+      const postResponse = await axios.post(
+        "http://localhost:5000/users/login",
+        {
+          email,
+          password,
+        }
+      );
       dispatch(
         login({
           userId: postResponse.data.id,
@@ -66,7 +78,12 @@ export const loginUser = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -112,7 +129,12 @@ export const updateUserUsername = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -141,7 +163,12 @@ export const updateUserPassword = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -171,7 +198,12 @@ export const updateUserRole = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };

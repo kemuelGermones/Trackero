@@ -43,7 +43,7 @@ function IssueStatusForm({
 
   return (
     <>
-      <Backdrop onClick={hideForm} />
+      <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
         <Card $width="25rem">
           <CardHeader>

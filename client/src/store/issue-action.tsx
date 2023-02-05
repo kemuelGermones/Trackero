@@ -39,7 +39,12 @@ export const addIssue = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -76,7 +81,12 @@ export const editIssue = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -105,7 +115,12 @@ export const deleteIssue = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -138,7 +153,12 @@ export const updateIssueStatus = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -171,7 +191,12 @@ export const updateIssueAssignedTo = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -201,7 +226,12 @@ export const addIssueComment = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -231,7 +261,12 @@ export const deleteIssueComment = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };

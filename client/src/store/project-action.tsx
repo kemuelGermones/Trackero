@@ -35,7 +35,12 @@ export const addProject = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -65,7 +70,12 @@ export const editProject = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+        dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -94,7 +104,12 @@ export const deleteProject = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+         dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
       return 400;
     }
@@ -125,7 +140,12 @@ export const addProjectComment = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+         dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
@@ -154,7 +174,12 @@ export const deleteProjectComment = (
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         dispatch(hideLoading());
-        dispatch(showNotification("error", error.response?.data.message));
+         dispatch(
+          showNotification(
+            "error",
+            error.response?.data.message || error.message
+          )
+        );
       }
     }
   };
