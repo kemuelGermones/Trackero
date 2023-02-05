@@ -15,9 +15,9 @@ import {
 } from "../styles/UI/Card";
 import { Form, TextArea, Label } from "../styles/UI/Form";
 import { Button, TrashButton } from "../styles/UI/Button";
+import TextLight from "../styles/utils/TextLight";
 
 import { IProject } from "../../types/interface";
-import TextLight from "../styles/utils/TextLight";
 
 interface IProjectComment {
   projectData: IProject;
