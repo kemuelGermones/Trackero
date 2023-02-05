@@ -46,7 +46,7 @@ npm install
 Run the command in the server directory:
 
 ```
-nodemon app.js
+npm run dev
 ```
 
 Then run the command in the client directory:
