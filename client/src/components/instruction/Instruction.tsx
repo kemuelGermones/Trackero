@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import React from "react";
 import { Card, CardBody, CardDescription } from "../styles/UI/Card";
 
 interface IInstruction {
-  children: ReactNode;
+  children: string;
 }
 
 function Instruction({ children }: IInstruction) {
@@ -15,4 +15,4 @@ function Instruction({ children }: IInstruction) {
   );
 }
 
-export default Instruction;
+export default React.memo(Instruction);
