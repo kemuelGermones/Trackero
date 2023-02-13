@@ -11,6 +11,11 @@ import passportConfig from "./config/passport";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import { Types } from "mongoose";
+import dotenv from "dotenv";
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 declare global {
   namespace Express {
@@ -30,7 +35,7 @@ const app = express();
 
 // Mongoose Connection
 
-const dbUrl = "mongodb://127.0.0.1:27017/bug";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/bug";
 connect(dbUrl);
 connection.on("error", console.error.bind(console, "connection error:"));
 connection.once("open", () => {
@@ -86,7 +91,7 @@ app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
 
 // listens for connections on the given path
 
-const port: number = 5000;
+const port: string | number = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log("Listening to port " + port);
 });

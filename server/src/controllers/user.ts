@@ -4,7 +4,7 @@ import Project from "../models/project";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const secret = "mySecret";
+const secret: string = process.env.SECRET || "mySecret";
 
 // Registers the User
 

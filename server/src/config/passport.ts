@@ -2,7 +2,7 @@ import { PassportStatic } from "passport";
 import User from "../models/user";
 import passportJwt from "passport-jwt";
 
-const secret = "mySecret";
+const secret: string = process.env.SECRET || "mySecret";
 const JwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
 
