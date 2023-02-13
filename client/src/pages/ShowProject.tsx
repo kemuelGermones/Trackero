@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/index";
 
@@ -54,6 +54,10 @@ function ShowProject() {
     }
   }, [project]);
 
+  const setCurrentIssueHandler = useCallback((issue: IIssue) => {
+    setCurrentIssue(issue);
+  }, []);
+
   return (
     <>
       <PageDashboardLayout $templateColumns="1fr 1.5fr">
@@ -77,7 +81,7 @@ function ShowProject() {
               <IssueTable
                 projectId={project._id}
                 issuesData={project.issues}
-                setCurrentIssue={setCurrentIssue}
+                setCurrentIssue={setCurrentIssueHandler}
                 issuesPerTable={5}
               />
               {currentIssue ? (

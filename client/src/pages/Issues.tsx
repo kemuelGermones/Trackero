@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useAppSelector } from "../store";
 import listAllIssues from "../lib/listAllIssues";
 import foundProjectId from "../lib/foundProjectId";
@@ -50,6 +50,10 @@ function Issues() {
     }
   }, [currentIssue]);
 
+  const setCurrentIssueHandler = useCallback((issue: IIssue) => {
+    setCurrentIssue(issue);
+  }, []);
+
   return (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
       <FirstSection>
@@ -62,7 +66,7 @@ function Issues() {
             </Instruction>
             <IssueTable
               issuesData={allIssues}
-              setCurrentIssue={setCurrentIssue}
+              setCurrentIssue={setCurrentIssueHandler}
               issuesPerTable={10}
             />
           </>
