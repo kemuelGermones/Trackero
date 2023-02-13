@@ -29,6 +29,7 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
   const [showStatusForm, setShowStatusForm] = useState(false);
   const [showAssignForm, setShowAssignForm] = useState(false);
   const dispatch = useAppDispatch();
+  const projects = useAppSelector(state => state.project.projectsData);
   const { accessToken, userId, userRole } = useAppSelector(
     (state) => state.user
   );
@@ -119,6 +120,12 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
         <CardBody>
           <CardDescription $hasLimit={false}>
             {issueData.description}
+          </CardDescription>
+        </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Project: </TextLight>
+            {projects!.find(project => project._id === projectId)!.title}
           </CardDescription>
         </CardBody>
         <CardBody>
