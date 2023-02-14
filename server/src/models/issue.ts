@@ -6,6 +6,11 @@ const issueSchema = new Schema({
   description: { type: String, required: true },
   importance: { type: String, required: true, enum: ["High", "Mid", "Low"] },
   dueDate: { type: Date, required: true },
+  assignedTo: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   author: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -15,12 +20,6 @@ const issueSchema = new Schema({
     enum: ["Pending", "Done", "In Progress"],
     default: "Pending",
   },
-  assignedTo: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
   comments: [
     {
       type: Schema.Types.ObjectId,

@@ -5,6 +5,13 @@ import Comment from "./comment";
 const projectSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
+  assignees: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  ],
   issues: [
     {
       type: Schema.Types.ObjectId,
@@ -41,25 +48,30 @@ projectSchema.post("findOneAndDelete", async function (doc) {
 
 projectSchema.pre("find", function (next) {
   this.populate({
-    path: "issues",
-    populate: [
-      {
-        path: "comments",
-        populate: { path: "author", select: "username _id role email" },
-      },
-      {
-        path: "author",
-        select: "username _id role email",
-      },
-      {
-        path: "assignedTo",
-        select: "username _id role email",
-      },
-    ],
-  }).populate({
-    path: "comments",
-    populate: { path: "author", select: "username _id role email" },
-  });
+    path: "assignees",
+    select: "username _id role email",
+  })
+    .populate({
+      path: "issues",
+      populate: [
+        {
+          path: "comments",
+          populate: { path: "author", select: "username _id role email" },
+        },
+        {
+          path: "author",
+          select: "username _id role email",
+        },
+        {
+          path: "assignedTo",
+          select: "username _id role email",
+        },
+      ],
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "author", select: "username _id role email" },
+    });
   next();
 });
 

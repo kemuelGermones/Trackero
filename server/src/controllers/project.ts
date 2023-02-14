@@ -98,13 +98,3 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   await issue!.save();
   res.status(200).json({ status: 200, message: "Updated the status" });
 };
-
-// Update Project Issue Assigned To
-
-export const updateIssueAssignedTo = async (req: Request, res: Response) => {
-  const { issueId } = req.params;
-  const issue = await Issue.findById(issueId);
-  issue!.assignedTo = req.body.assignedTo;
-  await issue!.save();
-  res.status(200).json({ status: 200, message: "Updated the assigned people" });
-};
