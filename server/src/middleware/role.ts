@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import Project from "../models/project";
 import User from "../models/user";
 import Comment from "../models/comment";
 import Issue from "../models/issue";
@@ -96,5 +97,23 @@ export const isNotActualUser = async (
     next();
   } else {
     throw new AppError("You are not allowed to update this user", 403);
+  }
+};
+
+// Validates if the user is a project assignee
+
+export const isAdminOrProjectAssignee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const project = await Project.findById(req.params.projectId);
+  const foundUser = project!.assignees.find((userId) =>
+    userId.equals(req.user!._id)
+  );
+  if (foundUser || req.user!.role === "Administrator") {
+    next();
+  } else {
+    throw new AppError("You are not a project assignee", 403);
   }
 };

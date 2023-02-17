@@ -15,6 +15,7 @@ import {
   isAdminOrCommentAuthor,
   isAdminOrIssueAuthor,
   isAdminOrIssueAuthorOrAssignedUser,
+  isAdminOrProjectAssignee,
 } from "../middleware/role";
 import {
   createProject,
@@ -85,6 +86,7 @@ router.delete(
 router.post(
   "/:projectId/issues",
   passport.authenticate("jwt", { session: false }),
+  wrapAsync(isAdminOrProjectAssignee),
   validateIssue,
   wrapAsync(validateProjectAssignee),
   wrapAsync(createIssue)

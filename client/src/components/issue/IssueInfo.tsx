@@ -19,7 +19,7 @@ import IssueStatusForm from "./IssueStatusForm";
 interface IIssueInfo {
   projectId: string;
   projectAssignees: IUser[];
-  projectTitle: string;
+  projectTitle?: string;
   issueData: IIssue;
 }
 
@@ -92,12 +92,14 @@ function IssueInfo({
             {issueData.description}
           </CardDescription>
         </CardBody>
-        <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Project: </TextLight>
-            {projectTitle}
-          </CardDescription>
-        </CardBody>
+        {projectTitle ? (
+          <CardBody>
+            <CardDescription $hasLimit={false}>
+              <TextLight>Project: </TextLight>
+              {projectTitle}
+            </CardDescription>
+          </CardBody>
+        ) : null}
         <CardBody>
           <CardDescription $hasLimit={false}>
             <TextLight>Author: </TextLight>

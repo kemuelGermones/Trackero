@@ -154,11 +154,11 @@ export const validateProjectAssignee = async (
   next: NextFunction
 ) => {
   const project = await Project.findById(req.params.projectId);
-  const foundUser = project!.assignees.findIndex((userId) =>
+  const foundUser = project!.assignees.find((userId) =>
     userId.equals(req.body.assignedTo)
   );
-  if (foundUser === -1) {
-    throw new AppError("User/s doesn't exist", 400);
+  if (foundUser) {
+    throw new AppError("User is not a project assignee", 400);
   }
   next();
 };
@@ -173,10 +173,10 @@ export const validateAssigneesHasIssues = async (
   const project = await Project.findById(req.params.projectId);
   for (let issueId of project!.issues) {
     const issue = await Issue.findById(issueId);
-    const foundIndex = req.body.assignees.findIndex((userId: string) =>
+    const foundUser = req.body.assignees.find((userId: string) =>
       issue!.assignedTo.equals(userId)
     );
-    if (foundIndex === -1) {
+    if (foundUser) {
       throw new AppError("A User has an assigned issue", 400);
     }
   }

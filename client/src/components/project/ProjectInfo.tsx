@@ -23,7 +23,9 @@ interface IProjectInfo {
 function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showIssueForm, setShowIssueForm] = useState(false);
-  const { accessToken, userRole } = useAppSelector((state) => state.user);
+  const { accessToken, userRole, userId } = useAppSelector(
+    (state) => state.user
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -72,7 +74,10 @@ function ProjectInfo({ projectData }: IProjectInfo) {
       <Card $marginBottom={true}>
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
-          <SmallButton onClick={showIssueFormHandler}>Add Issue</SmallButton>
+          {userRole === "Administrator" ||
+          projectData.assignees.find((user) => user._id === userId) ? (
+            <SmallButton onClick={showIssueFormHandler}>Add Issue</SmallButton>
+          ) : null}
         </CardHeader>
         <CardBody>
           <CardDescription $hasLimit={false}>

@@ -86,7 +86,6 @@ function ShowProject() {
                   <IssueInfo
                     projectId={project._id}
                     projectAssignees={project.assignees}
-                    projectTitle={project.title}
                     issueData={currentIssue}
                   />
                   <IssueComment
