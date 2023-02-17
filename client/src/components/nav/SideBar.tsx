@@ -1,15 +1,15 @@
+import {
+  BsBoxArrowInLeft,
+  BsExclamationTriangle,
+  BsFolder,
+  BsPeople,
+  BsPerson,
+} from "react-icons/bs";
 import { useLocation } from "react-router-dom";
+
 import { useAppDispatch, useAppSelector } from "../../store";
 import { logoutUser } from "../../store/user-action";
-import {
-  BsFolder,
-  BsExclamationTriangle,
-  BsPerson,
-  BsPeople,
-  BsBoxArrowInLeft,
-} from "react-icons/bs";
-
-import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
+import { Nav, NavBrand, NavItem, NavMenu, NavUnit } from "../styles/UI/Nav";
 
 function SideBar() {
   const location = useLocation();

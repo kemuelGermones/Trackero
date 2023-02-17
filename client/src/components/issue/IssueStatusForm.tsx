@@ -1,12 +1,19 @@
+import { useEffect } from "react";
+
+import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { updateIssueStatus } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
-
-import { Card, CardHeader, CardTitle, CardDivider } from "../styles/UI/Card";
-import { Form, Label, Select } from "../styles/UI/Form";
-import { PositionCenter } from "../styles/utils/PositionCenter";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
+import {
+  Card,
+  CardDivider,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../styles/UI/Card";
+import { Form, Label, Select } from "../styles/UI/Form";
+import { PositionCenter } from "../styles/utils/PositionCenter";
 
 interface IIssueStatusForm {
   hideForm: () => void;
@@ -23,6 +30,13 @@ function IssueStatusForm({
 }: IIssueStatusForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const { value: status, onChangeValueHandler: statusChange } = useValidation(
     null,
@@ -57,7 +71,9 @@ function IssueStatusForm({
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </Select>
-            <Button>Submit</Button>
+            <CardFooter $templateColumns="1fr">
+              <Button>Submit</Button>
+            </CardFooter>
           </Form>
         </Card>
       </PositionCenter>

@@ -10,6 +10,10 @@ interface ICustomCardDescriptionProp {
   $hasLimit: boolean;
 }
 
+interface ICustomCardFooterProp {
+  $templateColumns: string;
+}
+
 export const Card = styled.div<ICustomCardProp>`
   background: var(--secondary);
   border-radius: 0.5rem;
@@ -56,10 +60,11 @@ export const CardDivider = styled.hr`
   border: none;
 `;
 
-export const CardFooter = styled.div`
+export const CardFooter = styled.div<ICustomCardFooterProp>`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${(props) => props.$templateColumns};
   grid-column-gap: 1rem;
+  margin: 0.5rem 0;
 `;
 
 export const CardFooterText = styled.p`

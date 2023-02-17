@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 interface ITableContainerCustomProps {
   $width?: string;
 }
@@ -48,12 +49,9 @@ export const TableBody = styled.tbody`
 
 export const TableSubHead = styled.div`
   background-color: var(--secondary);
-  height: 2.5rem;
   box-sizing: border-box;
   padding: 0.5rem 1rem;
   display: flex;
-  justify-content: end;
-  align-items: center;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 `;
@@ -62,7 +60,7 @@ export const TablePagination = styled.div`
   background-color: var(--secondary);
   height: 2.5rem;
   box-sizing: border-box;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: center;
   border-bottom-left-radius: 0.5rem;

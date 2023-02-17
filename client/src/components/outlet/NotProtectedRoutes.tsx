@@ -1,4 +1,5 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+
 import { useAppSelector } from "../../store";
 
 function NotProtectedRoutes() {

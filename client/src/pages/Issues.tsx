@@ -1,28 +1,23 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
-import { useAppSelector } from "../store";
-import listAllIssues from "../lib/listAllIssues";
-import foundProjectId from "../lib/foundProjectId";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  PageDashboardLayout,
-  FirstSection,
-  SecondSection,
-} from "../components/styles/layout/PageDashboardLayout";
 import Instruction from "../components/instruction/Instruction";
-import IssueGraph from "../components/issue/IssueGraph";
-import IssueTable from "../components/issue/IssueTable";
-import IssueInfo from "../components/issue/IssueInfo";
 import IssueComment from "../components/issue/IssueComment";
-
-import { IIssue } from "../types/interface";
+import IssueGraph from "../components/issue/IssueGraph";
+import IssueInfo from "../components/issue/IssueInfo";
+import IssueTable from "../components/issue/IssueTable";
+import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
+import foundProject from "../lib/foundProject";
+import listAllIssues from "../lib/listAllIssues";
+import { useAppSelector } from "../store";
+import { IIssue, IProject } from "../types/interface";
 
 type TCurrentIssueState = IIssue | null;
-type TCurrentProjectIssueId = string | null;
+type TCurrentProjectIssueId = IProject | null;
 
 function Issues() {
   const projects = useAppSelector((state) => state.project.projectsData);
   const [currentIssue, setCurrentIssue] = useState<TCurrentIssueState>(null);
-  const [currentProjectIssueId, setCurrentProjectIssueId] =
+  const [currentProject, setCurrentProject] =
     useState<TCurrentProjectIssueId>(null);
 
   const allIssues = useMemo(() => {
@@ -46,7 +41,7 @@ function Issues() {
 
   useEffect(() => {
     if (currentIssue && projects) {
-      setCurrentProjectIssueId(foundProjectId(projects, currentIssue._id));
+      setCurrentProject(foundProject(projects, currentIssue._id));
     }
   }, [currentIssue]);
 
@@ -56,7 +51,7 @@ function Issues() {
 
   return (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
-      <FirstSection>
+      <div>
         {allIssues ? (
           <>
             <IssueGraph issuesData={allIssues} />
@@ -71,21 +66,23 @@ function Issues() {
             />
           </>
         ) : null}
-      </FirstSection>
-      <SecondSection>
-        {currentIssue && currentProjectIssueId ? (
+      </div>
+      <div>
+        {currentIssue && currentProject ? (
           <>
             <IssueInfo
-              projectId={currentProjectIssueId}
+              projectId={currentProject._id}
+              projectAssignees={currentProject.assignees}
+              projectTitle={currentProject.title}
               issueData={currentIssue}
             />
             <IssueComment
-              projectId={currentProjectIssueId}
-              issueData={currentIssue}
+              issueId={currentIssue._id}
+              issueComments={currentIssue.comments}
             />
           </>
         ) : null}
-      </SecondSection>
+      </div>
     </PageDashboardLayout>
   );
 }

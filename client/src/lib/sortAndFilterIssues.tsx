@@ -1,5 +1,5 @@
 import store from "../store";
-import { IIssue, IUser } from "../types/interface";
+import { IIssue } from "../types/interface";
 
 // Sort Issues
 
@@ -77,10 +77,7 @@ const sortAndFilterIssues = (issues: IIssue[], category: string) => {
 
   if (category === "Assigned Issues" && Array.isArray(issues)) {
     const userId = store.getState().user.userId;
-    return [...issues].filter(
-      (issue) =>
-        issue.assignedTo.findIndex((user: IUser) => user._id === userId) > -1
-    );
+    return [...issues].filter((issue) => issue.assignedTo._id === userId);
   }
 
   return issues;

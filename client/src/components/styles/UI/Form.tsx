@@ -70,3 +70,16 @@ export const TextArea = styled.textarea<IInputCustomProps>`
     outline: none;
   }
 `;
+
+export const Checkbox = styled.div<IInputCustomProps>`
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  height: 8rem;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  background-color: white;
+  margin-bottom: 0.5rem;
+`;

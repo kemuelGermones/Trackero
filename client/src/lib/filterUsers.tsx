@@ -3,6 +3,12 @@ import { IUser } from "../types/interface";
 // Filter Users
 
 const filterUsers = (users: IUser[], category: string) => {
+  // Show All Users
+
+  if (category === "All" ) {
+    return users;
+  }
+
   // Filter by Developer
 
   if (category === "Developer" && Array.isArray(users)) {

@@ -1,31 +1,22 @@
-import axios, { AxiosError } from "axios";
-
-import {
-  updateProjectsData,
-  editProjectIssue,
-  deleteProjectIssue,
-  deleteProjectIssueComment,
-  updateProjectIssueStatus,
-  updateProjectIssueAssignedTo,
-} from "./project-slice";
-import showNotification from "./notification-action";
-import { showLoading, hideLoading } from "./loading-slice";
-
-import { IIssueData, ICommentData, IUser } from "../types/interface";
 import { AnyAction } from "@reduxjs/toolkit";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
+
 import { RootState, ThunkAction } from ".";
+import { ICommentFormData, IIssueFormData } from "../types/interface";
+import { IProjectResponseData } from "./project-action";
+import { updateProjectsData } from "./project-slice";
 
 // Add Issue
 
 export const addIssue = (
-  data: IIssueData,
+  data: IIssueFormData,
   projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const postResponse = await axios({
+      const postResponse = await axios<IProjectResponseData>({
         method: "post",
         url: `http://localhost:5000/projects/${projectId}/issues`,
         data,
@@ -34,17 +25,10 @@ export const addIssue = (
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
+      toast.success(postResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -53,15 +37,15 @@ export const addIssue = (
 // Edit Issue
 
 export const editIssue = (
-  data: IIssueData,
+  data: IIssueFormData,
   projectId: string,
   issueId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
+    // dispatch(showLoading());
     try {
-      const putResponse = await axios({
+      const putResponse = await axios<IProjectResponseData>({
         method: "put",
         url: `http://localhost:5000/projects/${projectId}/issues/${issueId}`,
         data,
@@ -69,24 +53,11 @@ export const editIssue = (
           Authorization: token,
         },
       });
-      dispatch(
-        editProjectIssue({
-          ...data,
-          projectId,
-          issueId,
-        })
-      );
-      dispatch(hideLoading());
-      dispatch(showNotification("success", putResponse.data.message));
+      dispatch(updateProjectsData(putResponse.data.payload));
+      toast.success(putResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -100,27 +71,20 @@ export const deleteIssue = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
+    // dispatch(showLoading());
     try {
-      const deleteResponse = await axios({
+      const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
         url: `http://localhost:5000/projects/${projectId}/issues/${issueId}`,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(deleteProjectIssue({ projectId, issueId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", deleteResponse.data.message));
+      dispatch(updateProjectsData(deleteResponse.data.payload));
+      toast.success(deleteResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -135,9 +99,8 @@ export const updateIssueStatus = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const patchResponse = await axios({
+      const patchResponse = await axios<IProjectResponseData>({
         method: "patch",
         url: `http://localhost:5000/projects/${projectId}/issues/${issueId}/status`,
         data,
@@ -145,58 +108,11 @@ export const updateIssueStatus = (
           Authorization: token,
         },
       });
-      dispatch(
-        updateProjectIssueStatus({ status: data.status, projectId, issueId })
-      );
-      dispatch(hideLoading());
-      dispatch(showNotification("success", patchResponse.data.message));
+      dispatch(updateProjectsData(patchResponse.data.payload));
+      toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
-      }
-    }
-  };
-};
-
-// Update Issue Assigned To
-
-export const updateIssueAssignedTo = (
-  data: IUser[],
-  projectId: string,
-  issueId: string,
-  token: string
-): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
-    dispatch(showLoading());
-    try {
-      const patchResponse = await axios({
-        method: "patch",
-        url: `http://localhost:5000/projects/${projectId}/issues/${issueId}/assignedTo`,
-        data: { assignedTo: data.map((user) => user._id) },
-        headers: {
-          Authorization: token,
-        },
-      });
-      dispatch(
-        updateProjectIssueAssignedTo({ assignedTo: data, projectId, issueId })
-      );
-      dispatch(hideLoading());
-      dispatch(showNotification("success", patchResponse.data.message));
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -205,14 +121,14 @@ export const updateIssueAssignedTo = (
 // Add Issue Comment
 
 export const addIssueComment = (
-  data: ICommentData,
+  data: ICommentFormData,
   issueId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
+    // dispatch(showLoading());
     try {
-      const postResponse = await axios({
+      const postResponse = await axios<IProjectResponseData>({
         method: "post",
         url: `http://localhost:5000/issues/${issueId}/comments`,
         data: data,
@@ -221,17 +137,12 @@ export const addIssueComment = (
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
+      toast.success(postResponse.data.message);
+      // dispatch(hideLoading());
+      // dispatch(showNotification("success", postResponse.data.message));
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -240,33 +151,25 @@ export const addIssueComment = (
 // Delete Issue Comment
 
 export const deleteIssueComment = (
-  projectId: string,
   issueId: string,
   commentId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
+    // dispatch(showLoading());
     try {
-      const deleteResponse = await axios({
+      const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
         url: `http://localhost:5000/issues/${issueId}/comments/${commentId}`,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(deleteProjectIssueComment({ projectId, issueId, commentId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", deleteResponse.data.message));
+      dispatch(updateProjectsData(deleteResponse.data.payload));
+      toast.success(deleteResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };

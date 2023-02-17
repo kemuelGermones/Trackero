@@ -1,18 +1,18 @@
-import React, { useEffect, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { Suspense, useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import Fallback from "./components/fallback/Fallback";
+import IsAdmin from "./components/outlet/IsAdmin";
+import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
+import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
+import WithNav from "./components/outlet/WithNav";
+import WithoutNav from "./components/outlet/WithoutNav";
+import GlobalStyle from "./components/styles/base/GlobalStyle";
 import { useAppDispatch, useAppSelector } from "./store";
 import { getData } from "./store/data-action";
 import { logout } from "./store/user-slice";
-
-import GlobalStyle from "./components/styles/base/GlobalStyle";
-import Notification from "./components/notification/Notification";
-import Loading from "./components/loading/Loading";
-import WithoutNav from "./components/outlet/WithoutNav";
-import WithNav from "./components/outlet/WithNav";
-import ProtectedRoutes from "./components/outlet/ProtectedRoutes";
-import NotProtectedRoutes from "./components/outlet/NotProtectedRoutes";
-import IsAdmin from "./components/outlet/IsAdmin";
-import Fallback from "./components/fallback/Fallback";
 
 const Projects = React.lazy(() => import("./pages/Projects"));
 const Issues = React.lazy(() => import("./pages/Issues"));
@@ -55,8 +55,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Loading />
-      <Notification />
+      <ToastContainer position="bottom-left" />
       <Routes>
         <Route element={<NotProtectedRoutes />}>
           <Route element={<WithoutNav />}>

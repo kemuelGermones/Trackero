@@ -1,27 +1,27 @@
 import { Fragment } from "react";
+
+import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
-
+import { IComment } from "../../types/interface";
+import { Button, TrashButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
   CardDescription,
   CardDivider,
+  CardFooter,
   CardHeader,
 } from "../styles/UI/Card";
-import { Form, TextArea, Label } from "../styles/UI/Form";
-import { Button, TrashButton } from "../styles/UI/Button";
-
-import { IIssue } from "../../types/interface";
+import { Form, Label, TextArea } from "../styles/UI/Form";
 import TextLight from "../styles/utils/TextLight";
 
 interface IIssueComment {
-  projectId: string;
-  issueData: IIssue;
+  issueId: string;
+  issueComments: IComment[];
 }
 
-function IssueComment({ projectId, issueData }: IIssueComment) {
+function IssueComment({ issueId, issueComments }: IIssueComment) {
   const dispatch = useAppDispatch();
   const { accessToken, userId, userRole } = useAppSelector(
     (state) => state.user
@@ -45,14 +45,14 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
     event.preventDefault();
     const commentIsValid = validateComment();
     if (commentIsValid && accessToken) {
-      dispatch(addIssueComment({ comment }, issueData._id, accessToken));
-      commentReset();
+      dispatch(addIssueComment({ comment }, issueId, accessToken));
+      commentReset("");
     }
   };
 
-  const deleteIssueCommentHandler = (issueId: string, commentId: string) => {
+  const deleteIssueCommentHandler = (commentId: string) => {
     if (accessToken) {
-      dispatch(deleteIssueComment(projectId, issueId, commentId, accessToken));
+      dispatch(deleteIssueComment(issueId, commentId, accessToken));
     }
   };
 
@@ -66,12 +66,12 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
           $isInvalid={commentError}
           value={comment}
         />
-        <Button>Submit</Button>
+        <CardFooter $templateColumns="1fr">
+          <Button>Submit</Button>
+        </CardFooter>
       </Form>
-      <Label>
-        {issueData.comments.length === 0 ? "No Comments" : "Comments"}
-      </Label>
-      {issueData.comments.map((comment) => (
+      <Label>{issueComments.length === 0 ? "No Comments" : "Comments"}</Label>
+      {issueComments.map((comment) => (
         <Fragment key={comment._id}>
           <CardBody>
             <CardDescription $hasLimit={false}>
@@ -84,13 +84,9 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
             </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
-                onClick={deleteIssueCommentHandler.bind(
-                  null,
-                  issueData._id,
-                  comment._id
-                )}
+                onClick={deleteIssueCommentHandler.bind(null, comment._id)}
               />
-            ) : null}
+             ) : null} 
           </CardHeader>
           <CardDivider />
         </Fragment>

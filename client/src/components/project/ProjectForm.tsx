@@ -1,15 +1,21 @@
+import { Fragment, useEffect } from "react";
+
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
-import { addProject, editProject } from "../../store/project-action";
 import { useAppSelector } from "../../store";
-
-import { Form, Label, Input, TextArea } from "../styles/UI/Form";
-import { Card, CardTitle, CardDivider, CardHeader } from "../styles/UI/Card";
-import { PositionCenter } from "../styles/utils/PositionCenter";
-import { Button } from "../styles/UI/Button";
-import Backdrop from "../styles/UI/Backdrop";
-
+import { addProject, editProject } from "../../store/project-action";
 import { IProject } from "../../types/interface";
+import Backdrop from "../styles/UI/Backdrop";
+import { Button } from "../styles/UI/Button";
+import {
+  Card,
+  CardDivider,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../styles/UI/Card";
+import { Checkbox, Form, Input, Label, TextArea } from "../styles/UI/Form";
+import { PositionCenter } from "../styles/utils/PositionCenter";
 
 interface IProjectForm {
   hideForm: () => void;
@@ -19,6 +25,14 @@ interface IProjectForm {
 function ProjectForm({ hideForm, initialValues }: IProjectForm) {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
+  const users = useAppSelector((state) => state.userList.usersData);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const {
     value: title,
@@ -40,6 +54,16 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
     initialValues ? initialValues.description : ""
   );
 
+  const {
+    value: assignees,
+    valueError: assigneesError,
+    onChangeValueHandler: assigneesChange,
+    validateValue: validateAssignees,
+  } = useValidation<string[]>(
+    (arr) => arr.length > 0,
+    initialValues ? initialValues.assignees.map((user) => user._id) : []
+  );
+
   const onChangeTitleHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     titleChange(event.target.value);
   };
@@ -50,17 +74,46 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
     descriptionChange(event.target.value);
   };
 
+  const onChangeAssigneesHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.checked) {
+      assigneesChange([...assignees, event.target.value]);
+    } else {
+      assigneesChange(
+        assignees.filter((userId) => userId !== event.target.value)
+      );
+    }
+  };
+
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const titleIsValid = validateTitle();
     const descriptionIsValid = validateDescription();
-    if (titleIsValid && descriptionIsValid && !initialValues && accessToken) {
-      dispatch(addProject({ title, description }, accessToken));
+    const assigneesIsValid = validateAssignees();
+    if (
+      titleIsValid &&
+      descriptionIsValid &&
+      assigneesIsValid &&
+      !initialValues &&
+      accessToken
+    ) {
+      dispatch(addProject({ title, description, assignees }, accessToken));
       hideForm();
     }
-    if (titleIsValid && descriptionIsValid && initialValues && accessToken) {
+    if (
+      titleIsValid &&
+      descriptionIsValid &&
+      assigneesIsValid &&
+      initialValues &&
+      accessToken
+    ) {
       dispatch(
-        editProject({ title, description }, initialValues._id, accessToken)
+        editProject(
+          { title, description, assignees },
+          initialValues._id,
+          accessToken
+        )
       );
       hideForm();
     }
@@ -68,7 +121,7 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
 
   return (
     <>
-      <Backdrop onClick={hideForm} $hasBackground={true}/>
+      <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
         <Card $width="25rem">
           <CardHeader>
@@ -97,7 +150,29 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
               value={description}
               $isInvalid={descriptionError}
             />
-            <Button>Submit</Button>
+            {users ? (
+              <>
+                <Label>Assign Users</Label>
+                <Checkbox $isInvalid={assigneesError}>
+                  {users.map((user) => (
+                    <Fragment key={user._id}>
+                      <input
+                        type="checkbox"
+                        value={user._id}
+                        checked={assignees.includes(user._id)}
+                        onChange={onChangeAssigneesHandler}
+                      />
+                      &nbsp;
+                      {user.username}
+                      <br />
+                    </Fragment>
+                  ))}
+                </Checkbox>
+              </>
+            ) : null}
+            <CardFooter $templateColumns="1fr">
+              <Button>Submit</Button>
+            </CardFooter>
           </Form>
         </Card>
       </PositionCenter>

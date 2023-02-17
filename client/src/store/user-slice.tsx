@@ -1,16 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface IRecievedUserDataAction {
-  userId: string;
-  userRole: "Administrator" | "Developer";
-  token: string;
-  expiresIn: number;
-}
+import { IUserCredentials } from "../types/interface";
 
 interface IInitialStateUserSlice {
   login: boolean;
   userId: string | null;
-  userRole: "Administrator" | "Developer" | null;
+  userRole: string | null;
   accessToken: string | null;
   expiration: number | null;
 }
@@ -29,10 +24,10 @@ const userSlice = createSlice({
   reducers: {
     // Save User Credentials
 
-    login(state, action: PayloadAction<IRecievedUserDataAction>) {
+    login(state, action: PayloadAction<IUserCredentials>) {
       state.login = true;
-      state.userId = action.payload.userId;
-      state.userRole = action.payload.userRole;
+      state.userId = action.payload.id;
+      state.userRole = action.payload.role;
       state.accessToken = action.payload.token;
       state.expiration = action.payload.expiresIn * 1000 + new Date().getTime();
     },

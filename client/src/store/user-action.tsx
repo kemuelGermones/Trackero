@@ -1,49 +1,46 @@
-import axios, { AxiosError } from "axios";
 import { AnyAction } from "@reduxjs/toolkit";
-import showNotification from "./notification-action";
-import { showLoading, hideLoading } from "./loading-slice";
-import { login, logout } from "./user-slice";
-import { clearProjectsData, updateProjectsData } from "./project-slice";
-import {
-  clearUsersData,
-  updateUserUsernameData,
-  updateUserRoleData,
-} from "./user-list-slice";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
+import {
+  IResponseData,
+  IUser,
+  IUserCredentials,
+  IUserFormData,
+} from "../types/interface";
+import { IGetDataResponse } from "./data-action";
 import { RootState, ThunkAction } from "./index";
-import { IUserData } from "../types/interface";
+import { clearProjectsData, updateProjectsData } from "./project-slice";
+import { clearUsersData, updateUsersData } from "./user-list-slice";
+import { login, logout } from "./user-slice";
+
+interface IUserResponseData extends IResponseData {
+  payload: IUser[];
+}
 
 // Registers the User
 
 export const registerUser = (
-  data: IUserData
+  data: IUserFormData
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const postResponse = await axios.post(
+      const postResponse = await axios.post<IUserCredentials>(
         "http://localhost:5000/users/register",
         data
       );
       dispatch(
         login({
-          userId: postResponse.data.id,
-          userRole: postResponse.data.role,
+          id: postResponse.data.id,
+          role: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })
       );
-      dispatch(hideLoading());
-      dispatch(showNotification("success", "Successfully created an account"));
+      toast.success("Successfully created an account");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -56,9 +53,8 @@ export const loginUser = (
   password: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const postResponse = await axios.post(
+      const postResponse = await axios.post<IUserCredentials>(
         "http://localhost:5000/users/login",
         {
           email,
@@ -67,23 +63,16 @@ export const loginUser = (
       );
       dispatch(
         login({
-          userId: postResponse.data.id,
-          userRole: postResponse.data.role,
+          id: postResponse.data.id,
+          role: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
         })
       );
-      dispatch(hideLoading());
-      dispatch(showNotification("success", "Welcome back"));
+      toast.success("Welcome back");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -112,9 +101,8 @@ export const updateUserUsername = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const patchResponse = await axios({
+      const patchResponse = await axios<IGetDataResponse>({
         method: "patch",
         url: `http://localhost:5000/users/${userId}/username`,
         data: { username: value },
@@ -122,19 +110,12 @@ export const updateUserUsername = (
           Authorization: token,
         },
       });
-      dispatch(updateProjectsData(patchResponse.data.payload));
-      dispatch(updateUserUsernameData({ username: value, userId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", patchResponse.data.message));
+      dispatch(updateProjectsData(patchResponse.data.payload.projects));
+      dispatch(updateUsersData(patchResponse.data.payload.users));
+      toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -148,9 +129,8 @@ export const updateUserPassword = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const patchResponse = await axios({
+      const patchResponse = await axios<IResponseData>({
         method: "patch",
         url: `http://localhost:5000/users/${userId}/password`,
         data: { password: value },
@@ -158,17 +138,10 @@ export const updateUserPassword = (
           Authorization: token,
         },
       });
-      dispatch(hideLoading());
-      dispatch(showNotification("success", patchResponse.data.message));
+      toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -182,9 +155,8 @@ export const updateUserRole = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const patchResponse = await axios({
+      const patchResponse = await axios<IUserResponseData>({
         method: "patch",
         url: `http://localhost:5000/users/${userId}/role`,
         data: { role: value },
@@ -192,18 +164,11 @@ export const updateUserRole = (
           Authorization: token,
         },
       });
-      dispatch(updateUserRoleData({ role: value, userId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", patchResponse.data.message));
+      dispatch(updateUsersData(patchResponse.data.payload));
+      toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };

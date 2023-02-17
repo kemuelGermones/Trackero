@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { useAppDispatch } from "../../store";
-import useValidation from "../../hooks/useValidation";
-import { registerUser, loginUser } from "../../store/user-action";
 
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch } from "../../store";
+import { loginUser, registerUser } from "../../store/user-action";
+import { Button } from "../styles/UI/Button";
 import {
   Card,
-  CardTitle,
   CardDivider,
+  CardFooter,
   CardFooterText,
   CardHeader,
+  CardTitle,
 } from "../styles/UI/Card";
-import { Button } from "../styles/UI/Button";
-import { Form, Input, Select, Label } from "../styles/UI/Form";
+import { Form, Input, Label, Select } from "../styles/UI/Form";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -84,9 +85,9 @@ function UserForm() {
 
   const isLoginToggler = () => {
     setIsLogin((state) => !state);
-    resetEmail();
-    resetPassword();
-    resetUsername();
+    resetEmail("");
+    resetPassword("");
+    resetUsername("");
   };
 
   return (
@@ -132,7 +133,9 @@ function UserForm() {
             </Select>
           </>
         ) : null}
-        <Button>{isLogin ? "Login" : "Sign Up"}</Button>
+        <CardFooter $templateColumns="1fr">
+          <Button>{isLogin ? "Login" : "Sign Up"}</Button>
+        </CardFooter>
       </Form>
       <CardFooterText onClick={isLoginToggler}>
         {isLogin ? "Don't have an account?" : "Have an account?"}

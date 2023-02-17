@@ -68,13 +68,12 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   user!.username = req.body.username;
   await user!.save();
   const projects = await Project.find();
-  res
-    .status(200)
-    .json({
-      status: 200,
-      message: "Updated user's username",
-      payload: projects,
-    });
+  const users = await User.find();
+  res.status(200).json({
+    status: 200,
+    message: "Updated user's username",
+    payload: { projects, users },
+  });
 };
 
 // Update User Password
@@ -97,5 +96,8 @@ export const updateUserRole = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.role = req.body.role;
   await user!.save();
-  res.status(200).json({ status: 200, message: "Updated user's role" });
+  const users = await User.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Updated user's role", payload: users });
 };

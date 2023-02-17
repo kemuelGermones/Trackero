@@ -1,24 +1,43 @@
+import { useEffect } from "react";
+
+import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addIssue, editIssue } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
-
-import { PositionCenter } from "../styles/utils/PositionCenter";
-import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
-import { Form, Label, Input, TextArea, Select } from "../styles/UI/Form";
+import { IIssue, IUser } from "../../types/interface";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
-
-import { IIssue } from "../../types/interface";
+import {
+  Card,
+  CardDivider,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../styles/UI/Card";
+import { Form, Input, Label, Select, TextArea } from "../styles/UI/Form";
+import { PositionCenter } from "../styles/utils/PositionCenter";
 
 interface IIssueForm {
   projectId: string;
+  projectAssignees: IUser[];
   hideForm: () => void;
   initialValues?: IIssue;
 }
 
-function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
+function IssueForm({
+  projectId,
+  projectAssignees,
+  hideForm,
+  initialValues,
+}: IIssueForm) {
   const dispatch = useAppDispatch();
   const { accessToken } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const {
     value: title,
@@ -42,6 +61,12 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
 
   const { value: importance, onChangeValueHandler: importanceChange } =
     useValidation(null, initialValues ? initialValues.importance : "High");
+
+  const { value: assignedTo, onChangeValueHandler: assignedToChange } =
+    useValidation(
+      null,
+      initialValues ? initialValues.assignedTo._id : projectAssignees[0]._id
+    );
 
   const {
     value: dueDate,
@@ -69,6 +94,12 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
     importanceChange(event.target.value);
   };
 
+  const onChangeAssignedToHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    assignedToChange(event.target.value);
+  };
+
   const onChangeDueDateHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -92,6 +123,7 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
           {
             title,
             description,
+            assignedTo,
             importance,
             dueDate,
           },
@@ -113,6 +145,7 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
           {
             title,
             description,
+            assignedTo,
             importance,
             dueDate,
           },
@@ -165,6 +198,18 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
               <option value="Mid">Mid</option>
               <option value="Low">Low</option>
             </Select>
+            <Label htmlFor="assignedTo">Assign To</Label>
+            <Select
+              id="assignedTo"
+              onChange={onChangeAssignedToHandler}
+              value={assignedTo}
+            >
+              {projectAssignees.map((user) => (
+                <option value={user._id} key={user._id}>
+                  {user.username}
+                </option>
+              ))}
+            </Select>
             <Label htmlFor="dueDate">Due Date</Label>
             <Input
               id="dueDate"
@@ -173,7 +218,9 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
               value={dueDate}
               $isInvalid={dueDateError}
             />
-            <Button>Submit</Button>
+            <CardFooter $templateColumns="1fr">
+              <Button>Submit</Button>
+            </CardFooter>
           </Form>
         </Card>
       </PositionCenter>

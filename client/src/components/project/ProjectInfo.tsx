@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAppDispatch, useAppSelector } from "../../store";
 import { deleteProject } from "../../store/project-action";
-
+import { IProject } from "../../types/interface";
+import IssueForm from "../issue/IssueForm";
+import { Button, SmallButton } from "../styles/UI/Button";
 import {
   Card,
-  CardTitle,
+  CardBody,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardBody,
+  CardTitle,
 } from "../styles/UI/Card";
-import { Button } from "../styles/UI/Button";
 import ProjectForm from "./ProjectForm";
-
-import { IProject } from "../../types/interface";
 
 interface IProjectInfo {
   projectData: IProject;
@@ -22,18 +22,25 @@ interface IProjectInfo {
 
 function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showIssueForm, setShowIssueForm] = useState(false);
   const { accessToken, userRole } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const showProjectFormHandler = () => {
-    document.body.style.overflow = "hidden";
     setShowProjectForm(true);
   };
 
   const hideProjectFormHandler = () => {
     setShowProjectForm(false);
-    document.body.style.overflow = "unset";
+  };
+
+  const showIssueFormHandler = () => {
+    setShowIssueForm(true);
+  };
+
+  const hideIssueForm = () => {
+    setShowIssueForm(false);
   };
 
   const deleteProjectRequest = async () => {
@@ -55,9 +62,17 @@ function ProjectInfo({ projectData }: IProjectInfo) {
           hideForm={hideProjectFormHandler}
         />
       ) : null}
+      {showIssueForm ? (
+        <IssueForm
+          hideForm={hideIssueForm}
+          projectId={projectData._id}
+          projectAssignees={projectData.assignees}
+        />
+      ) : null}
       <Card $marginBottom={true}>
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
+          <SmallButton onClick={showIssueFormHandler}>Add Issue</SmallButton>
         </CardHeader>
         <CardBody>
           <CardDescription $hasLimit={false}>
@@ -65,7 +80,7 @@ function ProjectInfo({ projectData }: IProjectInfo) {
           </CardDescription>
         </CardBody>
         {userRole === "Administrator" ? (
-          <CardFooter>
+          <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showProjectFormHandler}>Edit</Button>
             <Button onClick={deleteProjectRequest}>Delete</Button>
           </CardFooter>

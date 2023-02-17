@@ -1,10 +1,10 @@
 import Backdrop from "../styles/UI/Backdrop";
-import { SquareLoadingSpinner } from "../styles/UI/LoadingSpinner";
+import { LoadingSpinner } from "../styles/UI/LoadingSpinner";
 
 function Fallback() {
   return (
     <Backdrop $hasBackground={false}>
-      <SquareLoadingSpinner />
+      <LoadingSpinner />
     </Backdrop>
   );
 }

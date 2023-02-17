@@ -1,4 +1,4 @@
-import { IProject, IIssue } from "../types/interface";
+import { IIssue, IProject } from "../types/interface";
 
 // list All Issues
 

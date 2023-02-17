@@ -85,7 +85,7 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 // Error Handler
 
 app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
-  const { message = "Something Went Wrong", status = 500 } = err;
+  const { status = 500, message = "Something Went Wrong" } = err;
   res.status(status).json({ status, message });
 });
 

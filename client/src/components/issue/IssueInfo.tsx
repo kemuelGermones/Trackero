@@ -1,73 +1,60 @@
 import { useState } from "react";
-import { BsPen, BsPlusLg } from "react-icons/bs";
+
 import { useAppDispatch, useAppSelector } from "../../store";
 import { deleteIssue } from "../../store/issue-action";
-
+import { IIssue, IUser } from "../../types/interface";
+import { Button, SmallButton } from "../styles/UI/Button";
 import {
   Card,
-  CardTitle,
+  CardBody,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardBody,
+  CardTitle,
 } from "../styles/UI/Card";
-import { Button, SmallButton } from "../styles/UI/Button";
-import IssueForm from "./IssueForm";
 import TextLight from "../styles/utils/TextLight";
+import IssueForm from "./IssueForm";
 import IssueStatusForm from "./IssueStatusForm";
-import IssueAssignForm from "./IssueAssignForm";
-
-import { IIssue } from "../../types/interface";
 
 interface IIssueInfo {
   projectId: string;
+  projectAssignees: IUser[];
+  projectTitle: string;
   issueData: IIssue;
 }
 
-function IssueInfo({ projectId, issueData }: IIssueInfo) {
+function IssueInfo({
+  projectId,
+  projectAssignees,
+  projectTitle,
+  issueData,
+}: IIssueInfo) {
   const [showEditIssueForm, setShowEditIssueForm] = useState(false);
   const [showStatusForm, setShowStatusForm] = useState(false);
-  const [showAssignForm, setShowAssignForm] = useState(false);
   const dispatch = useAppDispatch();
-  const projects = useAppSelector(state => state.project.projectsData);
   const { accessToken, userId, userRole } = useAppSelector(
     (state) => state.user
   );
-  const userList = useAppSelector((state) => state.userList.usersData);
 
   const showEditIssueFormHandler = () => {
     setShowEditIssueForm(true);
-    document.body.style.overflow = "hidden";
   };
 
   const hideEditIssueFormHandler = () => {
     setShowEditIssueForm(false);
-    document.body.style.overflow = "unset";
   };
 
   const showStatusIssueFormHandler = () => {
     setShowStatusForm(true);
-    document.body.style.overflow = "hidden";
   };
 
   const hideStatusIssueFormHandler = () => {
     setShowStatusForm(false);
-    document.body.style.overflow = "unset";
   };
 
-  const showAssignIssueFormHandler = () => {
-    setShowAssignForm(true);
-    document.body.style.overflow = "hidden";
-  };
-
-  const hideAssignIssueFormHandler = () => {
-    setShowAssignForm(false);
-    document.body.style.overflow = "unset";
-  };
-
-  const deleteIssueHandler = (projId: string, issueId: string) => {
+  const deleteIssueHandler = (issueId: string) => {
     if (accessToken) {
-      dispatch(deleteIssue(projId, issueId, accessToken));
+      dispatch(deleteIssue(projectId, issueId, accessToken));
     }
   };
 
@@ -75,8 +62,9 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
     <>
       {showEditIssueForm ? (
         <IssueForm
-          hideForm={hideEditIssueFormHandler}
           projectId={projectId}
+          projectAssignees={projectAssignees}
+          hideForm={hideEditIssueFormHandler}
           initialValues={issueData}
         />
       ) : null}
@@ -88,34 +76,16 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
           issueStatus={issueData.status}
         />
       ) : null}
-      {showAssignForm && userList ? (
-        <IssueAssignForm
-          hideForm={hideAssignIssueFormHandler}
-          users={userList}
-          initialAssignedUsers={issueData.assignedTo}
-          projectId={projectId}
-          issueId={issueData._id}
-        />
-      ) : null}
       <Card style={{ marginBottom: "1rem" }}>
         <CardHeader>
           <CardTitle>{issueData.title}</CardTitle>
-          <div style={{ display: "flex" }}>
-            {issueData.author._id === userId || userRole === "Administrator" ? (
-              <SmallButton onClick={showAssignIssueFormHandler}>
-                <BsPlusLg />
-              </SmallButton>
-            ) : null}
-            {issueData.author._id === userId ||
-            userRole === "Administrator" ||
-            issueData.assignedTo.findIndex(
-              (assignedUser) => assignedUser._id === userId
-            ) > -1 ? (
-              <SmallButton onClick={showStatusIssueFormHandler}>
-                <BsPen />
-              </SmallButton>
-            ) : null}
-          </div>
+          {issueData.author._id === userId ||
+          userRole === "Administrator" ||
+          issueData.assignedTo._id === userId ? (
+            <SmallButton onClick={showStatusIssueFormHandler}>
+              Update Status
+            </SmallButton>
+          ) : null}
         </CardHeader>
         <CardBody>
           <CardDescription $hasLimit={false}>
@@ -125,7 +95,7 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
         <CardBody>
           <CardDescription $hasLimit={false}>
             <TextLight>Project: </TextLight>
-            {projects!.find(project => project._id === projectId)!.title}
+            {projectTitle}
           </CardDescription>
         </CardBody>
         <CardBody>
@@ -137,9 +107,7 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
         <CardBody>
           <CardDescription $hasLimit={false}>
             <TextLight>Assigned to: </TextLight>
-            {issueData.assignedTo.length !== 0
-              ? issueData.assignedTo.map((user) => user.username).join(", ")
-              : "No one"}
+            {issueData.assignedTo.username}
           </CardDescription>
         </CardBody>
         <CardBody>
@@ -161,11 +129,9 @@ function IssueInfo({ projectId, issueData }: IIssueInfo) {
           </CardDescription>
         </CardBody>
         {issueData.author._id === userId || userRole === "Administrator" ? (
-          <CardFooter>
+          <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showEditIssueFormHandler}>Edit</Button>
-            <Button
-              onClick={deleteIssueHandler.bind(null, projectId, issueData._id)}
-            >
+            <Button onClick={deleteIssueHandler.bind(null, issueData._id)}>
               Delete
             </Button>
           </CardFooter>

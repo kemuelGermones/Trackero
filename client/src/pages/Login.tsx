@@ -1,10 +1,10 @@
 import {
-  LoginPageLayout,
-  HeroSection,
   FormSection,
-  HeroImg,
-  HeroTitle,
   HeroDescription,
+  HeroImg,
+  HeroSection,
+  HeroTitle,
+  LoginPageLayout,
 } from "../components/styles/layout/LoginPageLayout";
 import UserForm from "../components/user/UserForm";
 

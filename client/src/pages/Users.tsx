@@ -1,19 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
-import { useAppSelector } from "../store";
-import { updateUserUsername, updateUserPassword } from "../store/user-action";
+import { useEffect, useMemo, useState } from "react";
 
-import {
-  PageDashboardLayout,
-  FirstSection,
-  SecondSection,
-} from "../components/styles/layout/PageDashboardLayout";
 import Instruction from "../components/instruction/Instruction";
-import { Card, CardDivider } from "../components/styles/UI/Card";
-import UserInputUpdateForm from "../components/user/UserInputUpdateForm";
-import UserSelectUpdateForm from "../components/user/UserSelectUpdateForm";
-import UserTable from "../components/user/UserTable";
+import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
 import UserInfo from "../components/user/UserInfo";
-
+import UserTable from "../components/user/UserTable";
+import { useAppSelector } from "../store";
 import { IUser } from "../types/interface";
 
 type TCurrentUserState = IUser | null;
@@ -44,40 +35,20 @@ function Users() {
 
   return (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
-      <FirstSection>
+      <div>
+        <Instruction>
+          To view the user details in the table, locate the row containing it
+          and click on the corresponding cell with your mouse cursor.
+        </Instruction>
         {allUsers ? (
-          <>
-            <Instruction>
-              To view the user details in the table, locate the row containing
-              it and click on the corresponding cell with your mouse cursor.
-            </Instruction>
-            <UserTable usersData={allUsers} setCurrentUser={setCurrentUser} />
-          </>
+          <UserTable usersData={allUsers} setCurrentUser={setCurrentUser} />
         ) : null}
-      </FirstSection>
-      <SecondSection>
+      </div>
+      <div>
         {currentUser ? (
-          <Card $width="100%">
-            <UserInfo userData={currentUser} />
-            <CardDivider />
-            <UserSelectUpdateForm userData={currentUser} />
-            <CardDivider />
-            <UserInputUpdateForm
-              inputType="text"
-              name="username"
-              userId={currentUser._id}
-              submitFunction={updateUserUsername}
-            />
-            <CardDivider />
-            <UserInputUpdateForm
-              inputType="password"
-              name="password"
-              userId={currentUser._id}
-              submitFunction={updateUserPassword}
-            />
-          </Card>
+          <UserInfo userData={currentUser} key={currentUser._id} />
         ) : null}
-      </SecondSection>
+      </div>
     </PageDashboardLayout>
   );
 }

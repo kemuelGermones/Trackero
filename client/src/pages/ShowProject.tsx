@@ -1,20 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../store/index";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  PageDashboardLayout,
-  FirstSection,
-  SecondSection,
-} from "../components/styles/layout/PageDashboardLayout";
 import Instruction from "../components/instruction/Instruction";
-import ProjectInfo from "../components/project/ProjectInfo";
-import ProjectComment from "../components/project/ProjectComment";
-import IssueInfo from "../components/issue/IssueInfo";
 import IssueComment from "../components/issue/IssueComment";
 import IssueGraph from "../components/issue/IssueGraph";
+import IssueInfo from "../components/issue/IssueInfo";
 import IssueTable from "../components/issue/IssueTable";
-
+import ProjectComment from "../components/project/ProjectComment";
+import ProjectInfo from "../components/project/ProjectInfo";
+import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
+import { useAppSelector } from "../store/index";
 import { IIssue, IProject } from "../types/interface";
 
 type TProjectState = IProject | null;
@@ -61,15 +56,18 @@ function ShowProject() {
   return (
     <>
       <PageDashboardLayout $templateColumns="1fr 1.5fr">
-        <FirstSection>
+        <div>
           {project ? (
             <>
               <ProjectInfo projectData={project} />
-              <ProjectComment projectData={project} />
+              <ProjectComment
+                projectId={project._id}
+                projectComments={project.comments}
+              />
             </>
           ) : null}
-        </FirstSection>
-        <SecondSection>
+        </div>
+        <div>
           {project ? (
             <>
               <IssueGraph issuesData={project.issues} />
@@ -79,23 +77,27 @@ function ShowProject() {
                 mouse cursor.
               </Instruction>
               <IssueTable
-                projectId={project._id}
                 issuesData={project.issues}
                 setCurrentIssue={setCurrentIssueHandler}
                 issuesPerTable={5}
               />
               {currentIssue ? (
                 <>
-                  <IssueInfo projectId={project._id} issueData={currentIssue} />
-                  <IssueComment
+                  <IssueInfo
                     projectId={project._id}
+                    projectAssignees={project.assignees}
+                    projectTitle={project.title}
                     issueData={currentIssue}
+                  />
+                  <IssueComment
+                    issueId={currentIssue._id}
+                    issueComments={currentIssue.comments}
                   />
                 </>
               ) : null}
             </>
           ) : null}
-        </SecondSection>
+        </div>
       </PageDashboardLayout>
     </>
   );

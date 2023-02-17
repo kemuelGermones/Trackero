@@ -1,24 +1,28 @@
 // Project Interface
 
-export interface IProjectData {
+export interface IProjectFormData {
   title: string;
   description: string;
+  assignees: string[];
 }
 
-export interface IProject extends IProjectData {
+export interface IProject {
   _id: string;
   __v: number;
+  title: string;
+  description: string;
+  assignees: IUser[];
   comments: IComment[];
   issues: IIssue[];
 }
 
 // Comment Interface
 
-export interface ICommentData {
+export interface ICommentFormData {
   comment: string;
 }
 
-export interface IComment extends ICommentData {
+export interface IComment extends ICommentFormData {
   _id: string;
   __v: number;
   author: IUser;
@@ -26,25 +30,30 @@ export interface IComment extends ICommentData {
 
 // Issue Interface
 
-export interface IIssueData {
+export interface IIssueFormData {
   title: string;
   description: string;
   importance: string;
+  assignedTo: string;
   dueDate: string;
 }
 
-export interface IIssue extends IIssueData {
+export interface IIssue {
   _id: string;
   __v: number;
+  title: string;
+  description: string;
+  importance: string;
+  assignedTo: IUser;
+  dueDate: string;
   comments: IComment[];
   author: IUser;
-  assignedTo: IUser[];
   status: string;
 }
 
 // User interface
 
-export interface IUserData {
+export interface IUserFormData {
   email: string;
   username: string;
   password: string;
@@ -56,4 +65,18 @@ export interface IUser {
   username: string;
   role: string;
   email: string;
+}
+
+export interface IUserCredentials {
+  id: string;
+  role: string;
+  token: string;
+  expiresIn: number;
+}
+
+// Response Data
+
+export interface IResponseData {
+  status: number;
+  message: string;
 }

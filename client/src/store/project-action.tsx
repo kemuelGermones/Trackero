@@ -1,27 +1,29 @@
-import axios, { AxiosError } from "axios";
-import {
-  updateProjectsData,
-  editProjectData,
-  deleteProjectData,
-  deleteProjectCommentData,
-} from "./project-slice";
-import showNotification from "./notification-action";
-import { showLoading, hideLoading } from "./loading-slice";
-
 import { AnyAction } from "@reduxjs/toolkit";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
+
+import {
+  ICommentFormData,
+  IProject,
+  IProjectFormData,
+  IResponseData,
+} from "../types/interface";
 import { RootState, ThunkAction } from "./index";
-import { ICommentData, IProjectData } from "../types/interface";
+import { updateProjectsData } from "./project-slice";
+
+export interface IProjectResponseData extends IResponseData {
+  payload: IProject[];
+}
 
 // Add Project
 
 export const addProject = (
-  data: IProjectData,
+  data: IProjectFormData,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const postResponse = await axios({
+      const postResponse = await axios<IProjectResponseData>({
         method: "post",
         url: "http://localhost:5000/projects",
         data,
@@ -30,17 +32,10 @@ export const addProject = (
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
+      toast.success(postResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -49,14 +44,13 @@ export const addProject = (
 // Edit Project
 
 export const editProject = (
-  data: IProjectData,
+  data: IProjectFormData,
   projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const putResponse = await axios({
+      const putResponse = await axios<IProjectResponseData>({
         method: "put",
         url: `http://localhost:5000/projects/${projectId}`,
         data,
@@ -64,18 +58,11 @@ export const editProject = (
           Authorization: token,
         },
       });
-      dispatch(editProjectData({ ...data, projectId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", putResponse.data.message));
+      dispatch(updateProjectsData(putResponse.data.payload));
+      toast.success(putResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-        dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -88,28 +75,20 @@ export const deleteProject = (
   token: string
 ): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const deleteResponse = await axios({
+      const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
         url: `http://localhost:5000/projects/${projectId}`,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(deleteProjectData(projectId));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", deleteResponse.data.message));
+      dispatch(updateProjectsData(deleteResponse.data.payload));
+      toast.success(deleteResponse.data.message);
       return deleteResponse.data.status;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-         dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
       return 400;
     }
@@ -119,14 +98,13 @@ export const deleteProject = (
 // Add Comment to the Project
 
 export const addProjectComment = (
-  data: ICommentData,
+  data: ICommentFormData,
   projectId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const postResponse = await axios({
+      const postResponse = await axios<IProjectResponseData>({
         method: "post",
         url: `http://localhost:5000/projects/${projectId}/comments`,
         data,
@@ -135,17 +113,10 @@ export const addProjectComment = (
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", postResponse.data.message));
+      toast.success(postResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-         dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };
@@ -159,27 +130,19 @@ export const deleteProjectComment = (
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
-    dispatch(showLoading());
     try {
-      const deleteResponse = await axios({
+      const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
         url: `http://localhost:5000/projects/${projectId}/comments/${commentId}`,
         headers: {
           Authorization: token,
         },
       });
-      dispatch(deleteProjectCommentData({ projectId, commentId }));
-      dispatch(hideLoading());
-      dispatch(showNotification("success", deleteResponse.data.message));
+      dispatch(updateProjectsData(deleteResponse.data.payload));
+      toast.success(deleteResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        dispatch(hideLoading());
-         dispatch(
-          showNotification(
-            "error",
-            error.response?.data.message || error.message
-          )
-        );
+        toast.error(error.response?.data.message || error.message);
       }
     }
   };

@@ -8,7 +8,7 @@ import AppError from "../utils/AppError";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.user!.role !== "Administrator") {
-    throw new AppError("You are not an admin", 400);
+    throw new AppError("You are not an admin", 403);
   } else {
     next();
   }
@@ -28,7 +28,7 @@ export const isAdminOrCommentAuthor = async (
   ) {
     next();
   } else {
-    throw new AppError("You are not allowed to delete this comment", 400);
+    throw new AppError("You are not allowed to delete this comment", 403);
   }
 };
 
@@ -46,7 +46,7 @@ export const isAdminOrIssueAuthor = async (
   ) {
     next();
   } else {
-    throw new AppError("You are not allowed to edit/delete this issue", 400);
+    throw new AppError("You are not allowed to edit/delete this issue", 403);
   }
 };
 
@@ -65,7 +65,7 @@ export const isAdminOrIssueAuthorOrAssignedUser = async (
   ) {
     next();
   } else {
-    throw new AppError("You are not allowed to edit/delete this issue", 400);
+    throw new AppError("You are not allowed to update this issue", 403);
   }
 };
 
@@ -80,7 +80,7 @@ export const isAdminOrActualUser = async (
   if (req.user!.role === "Administrator" || user!._id!.equals(req.user!._id)) {
     next();
   } else {
-    throw new AppError("You are not allowed to update this user", 400);
+    throw new AppError("You are not allowed to update this user", 403);
   }
 };
 
@@ -95,6 +95,6 @@ export const isNotActualUser = async (
   if (!user!._id!.equals(req.user!._id)) {
     next();
   } else {
-    throw new AppError("You are not allowed to update this user", 400);
+    throw new AppError("You are not allowed to update this user", 403);
   }
 };

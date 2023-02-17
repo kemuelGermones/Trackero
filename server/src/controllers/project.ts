@@ -19,7 +19,10 @@ export const createProject = async (req: Request, res: Response) => {
 export const editProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   await Project.findByIdAndUpdate(projectId, req.body);
-  res.status(200).json({ status: 200, message: "Edited a project" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Edited a project", payload: projects });
 };
 
 // Delete project
@@ -27,7 +30,10 @@ export const editProject = async (req: Request, res: Response) => {
 export const deleteProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   await Project.findByIdAndDelete(projectId);
-  res.status(200).json({ status: 200, message: "Deleted a project" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Deleted a project", payload: projects });
 };
 
 // Create Comment
@@ -43,7 +49,7 @@ export const createComment = async (req: Request, res: Response) => {
   const projects = await Project.find();
   res
     .status(200)
-    .json({ status: 200, message: "Created a comment", payload: projects });
+    .json({ status: 200, message: "Posted a comment", payload: projects });
 };
 
 // Delete Comment
@@ -54,7 +60,10 @@ export const deleteComment = async (req: Request, res: Response) => {
     $pull: { comments: commentId },
   });
   await Comment.findByIdAndDelete(commentId);
-  res.status(200).json({ status: 200, message: "Deleted a comment" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Deleted a comment", payload: projects });
 };
 
 // Create Issue
@@ -68,7 +77,9 @@ export const createIssue = async (req: Request, res: Response) => {
   await issue.save();
   await project!.save();
   const projects = await Project.find();
-  res.status(200).json({ status: 200, message: "Created an issue", payload: projects });
+  res
+    .status(200)
+    .json({ status: 200, message: "Created an issue", payload: projects });
 };
 
 // Edit Issue
@@ -76,7 +87,10 @@ export const createIssue = async (req: Request, res: Response) => {
 export const editIssue = async (req: Request, res: Response) => {
   const { issueId } = req.params;
   await Issue.findByIdAndUpdate(issueId, req.body);
-  res.status(200).json({ status: 200, message: "Edited an issue" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Edited an issue", payload: projects });
 };
 
 // Delete Issue
@@ -85,7 +99,10 @@ export const deleteIssue = async (req: Request, res: Response) => {
   const { projectId, issueId } = req.params;
   await Project.findByIdAndUpdate(projectId, { $pull: { issues: issueId } });
   await Issue.findByIdAndDelete(issueId);
-  res.status(200).json({ status: 200, message: "Deleted an issue" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Deleted an issue", payload: projects });
 };
 
 // Update Issue Status
@@ -96,5 +113,8 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   const issue = await Issue.findById(issueId);
   issue!.status = status;
   await issue!.save();
-  res.status(200).json({ status: 200, message: "Updated the status" });
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Updated the issue status", payload: projects });
 };

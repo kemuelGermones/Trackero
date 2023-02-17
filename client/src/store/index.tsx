@@ -1,22 +1,20 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { Action, ThunkDispatch } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import {
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
+  persistReducer,
 } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 import projectReducer from "./project-slice";
-import notificationReducer from "./notification-slice";
-import loadingReducer from "./loading-slice";
-import userReducer from "./user-slice";
 import userListReducer from "./user-list-slice";
+import userReducer from "./user-slice";
 
 const persistConfig = {
   key: "root",
@@ -27,8 +25,6 @@ const persistConfig = {
 
 const reducer = combineReducers({
   project: projectReducer,
-  notification: notificationReducer,
-  loading: loadingReducer,
   user: userReducer,
   userList: userListReducer,
 });

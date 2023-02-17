@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../store";
 
-import ProjectsPageLayout from "../components/styles/layout/ProjectsPageLayout";
 import ProjectForm from "../components/project/ProjectForm";
+import { PlusButton } from "../components/styles/UI/Button";
 import {
   Card,
-  CardTitle,
-  CardHeader,
-  CardDescription,
   CardBody,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "../components/styles/UI/Card";
-import { PlusButton } from "../components/styles/UI/Button";
+import ProjectsPageLayout from "../components/styles/layout/ProjectsPageLayout";
+import { useAppSelector } from "../store";
 
 function Projects() {
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -21,12 +21,10 @@ function Projects() {
 
   const showProjectFormHandler = () => {
     setShowProjectForm(true);
-    document.body.style.overflow = "hidden";
   };
 
   const hideProjectFormHandler = () => {
     setShowProjectForm(false);
-    document.body.style.overflow = "unset";
   };
 
   return (
