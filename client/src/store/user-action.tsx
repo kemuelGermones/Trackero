@@ -12,7 +12,7 @@ import { IGetDataResponse } from "./data-action";
 import { RootState, ThunkAction } from "./index";
 import { clearProjectsData, updateProjectsData } from "./project-slice";
 import { clearUsersData, updateUsersData } from "./user-list-slice";
-import { login, logout } from "./user-slice";
+import { login, logout, updateUsername } from "./user-slice";
 
 interface IUserResponseData extends IResponseData {
   payload: IUser[];
@@ -32,6 +32,8 @@ export const registerUser = (
       dispatch(
         login({
           id: postResponse.data.id,
+          email: postResponse.data.email,
+          username: postResponse.data.username,
           role: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
@@ -64,6 +66,8 @@ export const loginUser = (
       dispatch(
         login({
           id: postResponse.data.id,
+          email: postResponse.data.email,
+          username: postResponse.data.username,
           role: postResponse.data.role,
           token: postResponse.data.token,
           expiresIn: postResponse.data.expiresIn,
@@ -100,7 +104,8 @@ export const updateUserUsername = (
   userId: string,
   token: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const patchResponse = await axios<IGetDataResponse>({
         method: "patch",
@@ -110,8 +115,13 @@ export const updateUserUsername = (
           Authorization: token,
         },
       });
+      if (userId === state.user.userId) {
+        dispatch(updateUsername(value));
+      } 
+      if (state.user.userRole === "Administrator") {
+        dispatch(updateUsersData(patchResponse.data.payload.users));
+      }
       dispatch(updateProjectsData(patchResponse.data.payload.projects));
-      dispatch(updateUsersData(patchResponse.data.payload.users));
       toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

@@ -1,20 +1,15 @@
-import { useMemo } from "react";
-
 import Instruction from "../components/instruction/Instruction";
 import { ProfilePageLayout } from "../components/styles/layout/ProfilePageLayout";
 import UserInfo from "../components/user/UserInfo";
 import { useAppSelector } from "../store";
 
 function Profile() {
-  const userList = useAppSelector((state) => state.userList.usersData);
-  const userId = useAppSelector((state) => state.user.userId);
-
-  const user = useMemo(() => {
-    if (userList) {
-      return userList.find((user) => user._id === userId)!;
-    }
-    return null;
-  }, [userList]);
+  const {
+    userId: _id,
+    userEmail: email,
+    userRole: role,
+    userUsername: username,
+  } = useAppSelector((state) => state.user);
 
   return (
     <ProfilePageLayout>
@@ -25,7 +20,9 @@ function Profile() {
         double check that the information you are entering is accurate and
         up-to-date. Thank you for your attention to this important matter.
       </Instruction>
-      {user ? <UserInfo userData={user} /> : null}
+      {_id && email && role && username ? (
+        <UserInfo userData={{ _id, email, role, username }} />
+      ) : null}
     </ProfilePageLayout>
   );
 }

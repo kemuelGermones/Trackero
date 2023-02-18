@@ -26,6 +26,8 @@ export const registerUser = async (req: Request, res: Response) => {
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
           id: findUser._id,
+          email: findUser.email,
+          username: findUser.username,
           role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,
@@ -51,6 +53,8 @@ export const loginUser = async (req: Request, res: Response) => {
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
           id: findUser._id,
+          email: findUser.email,
+          username: findUser.username,
           role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,

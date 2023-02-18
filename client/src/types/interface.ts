@@ -69,6 +69,8 @@ export interface IUser {
 
 export interface IUserCredentials {
   id: string;
+  email: string;
+  username: string;
   role: string;
   token: string;
   expiresIn: number;
