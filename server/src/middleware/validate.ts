@@ -157,7 +157,7 @@ export const validateProjectAssignee = async (
   const foundUser = project!.assignees.find((userId) =>
     userId.equals(req.body.assignedTo)
   );
-  if (foundUser) {
+  if (!foundUser) {
     throw new AppError("User is not a project assignee", 400);
   }
   next();
@@ -176,7 +176,7 @@ export const validateAssigneesHasIssues = async (
     const foundUser = req.body.assignees.find((userId: string) =>
       issue!.assignedTo.equals(userId)
     );
-    if (foundUser) {
+    if (!foundUser) {
       throw new AppError("A User has an assigned issue", 400);
     }
   }
