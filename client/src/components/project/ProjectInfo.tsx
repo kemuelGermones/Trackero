@@ -23,9 +23,7 @@ interface IProjectInfo {
 function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showIssueForm, setShowIssueForm] = useState(false);
-  const { accessToken, userRole, userId } = useAppSelector(
-    (state) => state.user
-  );
+  const { userRole, userId } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -46,13 +44,9 @@ function ProjectInfo({ projectData }: IProjectInfo) {
   };
 
   const deleteProjectRequest = async () => {
-    if (accessToken) {
-      const deleteStatus = await dispatch(
-        deleteProject(projectData._id, accessToken)
-      );
-      if (deleteStatus === 200) {
-        navigate("/projects");
-      }
+    const deleteStatus = await dispatch(deleteProject(projectData._id));
+    if (deleteStatus === 200) {
+      navigate("/projects");
     }
   };
 

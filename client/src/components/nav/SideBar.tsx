@@ -14,7 +14,7 @@ import { Nav, NavBrand, NavItem, NavMenu, NavUnit } from "../styles/UI/Nav";
 function SideBar() {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const { userRole } = useAppSelector((state) => state.user);
+  const userRole = useAppSelector((state) => state.user.userRole);
 
   const logoutHandler = () => {
     dispatch(logoutUser());

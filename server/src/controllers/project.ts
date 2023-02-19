@@ -3,6 +3,18 @@ import Project from "../models/project";
 import Comment from "../models/comment";
 import Issue from "../models/issue";
 
+// Show Projects
+
+export const showProjects = async (
+  req: Request,
+  res: Response,
+) => {
+  const projects = await Project.find();
+  res
+    .status(200)
+    .json({ status: 200, message: "Show all project", payload: projects });
+};
+
 // Create New Project
 
 export const createProject = async (req: Request, res: Response) => {
@@ -116,5 +128,9 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   const projects = await Project.find();
   res
     .status(200)
-    .json({ status: 200, message: "Updated the issue status", payload: projects });
+    .json({
+      status: 200,
+      message: "Updated the issue status",
+      payload: projects,
+    });
 };

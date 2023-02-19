@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const ErrorLayout = styled.div`
   height: 100vh;
-  width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -11,7 +10,7 @@ export const ErrorLayout = styled.div`
 `;
 
 export const ErrorLogo = styled.img`
-  width: 35rem;
+  width: 30rem;
 `;
 
 export const ErrorTitle = styled.h1`
@@ -22,5 +21,5 @@ export const ErrorTitle = styled.h1`
 export const ErrorDescription = styled.p`
   margin: 0;
   text-align: center;
-  padding: 0 20rem;
+  max-width: 40ch;
 `;

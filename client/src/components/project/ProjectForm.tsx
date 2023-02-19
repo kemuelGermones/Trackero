@@ -24,7 +24,6 @@ interface IProjectForm {
 
 function ProjectForm({ hideForm, initialValues }: IProjectForm) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
   const users = useAppSelector((state) => state.userList.usersData);
 
   useEffect(() => {
@@ -95,25 +94,19 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
       titleIsValid &&
       descriptionIsValid &&
       assigneesIsValid &&
-      !initialValues &&
-      accessToken
+      !initialValues
     ) {
-      dispatch(addProject({ title, description, assignees }, accessToken));
+      dispatch(addProject({ title, description, assignees }));
       hideForm();
     }
     if (
       titleIsValid &&
       descriptionIsValid &&
       assigneesIsValid &&
-      initialValues &&
-      accessToken
+      initialValues
     ) {
       dispatch(
-        editProject(
-          { title, description, assignees },
-          initialValues._id,
-          accessToken
-        )
+        editProject({ title, description, assignees }, initialValues._id)
       );
       hideForm();
     }

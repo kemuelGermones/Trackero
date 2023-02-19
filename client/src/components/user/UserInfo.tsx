@@ -27,7 +27,6 @@ interface IUserInfo {
 
 function UserInfo({ userData }: IUserInfo) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
   const location = useLocation();
 
   const {
@@ -69,30 +68,27 @@ function UserInfo({ userData }: IUserInfo) {
   const onSubmitUsernameHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isUsernameValid = validateUsername();
-    if (isUsernameValid && accessToken) {
-      dispatch(updateUserUsername(username, userData._id, accessToken));
+    if (isUsernameValid) {
+      dispatch(updateUserUsername(username, userData._id));
     }
   };
 
   const onSubmitPasswordHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isPasswordValid = validatePassword();
-    if (isPasswordValid && accessToken) {
-      console.log({ username, userId: userData._id, accessToken });
-      dispatch(updateUserPassword(password, userData._id, accessToken));
+    if (isPasswordValid) {
+      dispatch(updateUserPassword(password, userData._id));
       resetPassword("");
     }
   };
 
   const onSubmitRoleHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (accessToken) {
-      dispatch(updateUserRole(role, userData._id, accessToken));
-    }
+    dispatch(updateUserRole(role, userData._id));
   };
 
   return (
-    <Card $width="100%">
+    <Card>
       <CardHeader>
         <CardTitle>Profile</CardTitle>
       </CardHeader>

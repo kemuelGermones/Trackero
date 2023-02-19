@@ -26,9 +26,7 @@ interface IProjectComment {
 
 function ProjectComment({ projectId, projectComments }: IProjectComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId, userRole } = useAppSelector(
-    (state) => state.user
-  );
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const {
     value: comment,
@@ -39,9 +37,7 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
   } = useValidation((str) => str.trim().length > 0, "");
 
   const deleteProjectCommentRequest = (commentId: string) => {
-    if (accessToken) {
-      dispatch(deleteProjectComment(projectId, commentId, accessToken));
-    }
+    dispatch(deleteProjectComment(projectId, commentId));
   };
 
   const onChangeCommentHandler = (
@@ -53,8 +49,8 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && accessToken) {
-      dispatch(addProjectComment({ comment }, projectId, accessToken));
+    if (commentIsValid) {
+      dispatch(addProjectComment({ comment }, projectId));
       commentReset("");
     }
   };

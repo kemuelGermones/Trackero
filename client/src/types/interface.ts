@@ -67,11 +67,7 @@ export interface IUser {
   email: string;
 }
 
-export interface IUserCredentials {
-  id: string;
-  email: string;
-  username: string;
-  role: string;
+export interface IUserCredentials extends IUser {
   token: string;
   expiresIn: number;
 }

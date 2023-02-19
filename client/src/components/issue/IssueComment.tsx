@@ -23,9 +23,7 @@ interface IIssueComment {
 
 function IssueComment({ issueId, issueComments }: IIssueComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId, userRole } = useAppSelector(
-    (state) => state.user
-  );
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const {
     value: comment,
@@ -44,20 +42,18 @@ function IssueComment({ issueId, issueComments }: IIssueComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && accessToken) {
-      dispatch(addIssueComment({ comment }, issueId, accessToken));
+    if (commentIsValid) {
+      dispatch(addIssueComment({ comment }, issueId));
       commentReset("");
     }
   };
 
   const deleteIssueCommentHandler = (commentId: string) => {
-    if (accessToken) {
-      dispatch(deleteIssueComment(issueId, commentId, accessToken));
-    }
+    dispatch(deleteIssueComment(issueId, commentId));
   };
 
   return (
-    <Card style={{ marginBottom: "1rem" }}>
+    <Card>
       <Label>Leave a Comment</Label>
       <Form onSubmit={onSubmitComment}>
         <TextArea
@@ -86,7 +82,7 @@ function IssueComment({ issueId, issueComments }: IIssueComment) {
               <TrashButton
                 onClick={deleteIssueCommentHandler.bind(null, comment._id)}
               />
-             ) : null} 
+            ) : null}
           </CardHeader>
           <CardDivider />
         </Fragment>

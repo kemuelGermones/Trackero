@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function useValidation<T>(
   validation: ((str: T) => boolean) | null,

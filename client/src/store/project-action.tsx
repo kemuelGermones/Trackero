@@ -15,20 +15,49 @@ export interface IProjectResponseData extends IResponseData {
   payload: IProject[];
 }
 
+const URL = "http://localhost:5000";
+
+// Get Projects
+
+export const getProjects = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  AnyAction
+> => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    try {
+      const getResponse = await axios<IProjectResponseData>({
+        method: "get",
+        url: `${URL}/projects`,
+        headers: {
+          Authorization: state.user.accessToken,
+        },
+      });
+      dispatch(updateProjectsData(getResponse.data.payload));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message || error.message);
+      }
+    }
+  };
+};
+
 // Add Project
 
 export const addProject = (
-  data: IProjectFormData,
-  token: string
+  data: IProjectFormData
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const postResponse = await axios<IProjectResponseData>({
         method: "post",
-        url: "http://localhost:5000/projects",
+        url: `${URL}/projects`,
         data,
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
@@ -45,17 +74,17 @@ export const addProject = (
 
 export const editProject = (
   data: IProjectFormData,
-  projectId: string,
-  token: string
+  projectId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const putResponse = await axios<IProjectResponseData>({
         method: "put",
-        url: `http://localhost:5000/projects/${projectId}`,
+        url: `${URL}/projects/${projectId}`,
         data,
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateProjectsData(putResponse.data.payload));
@@ -71,16 +100,16 @@ export const editProject = (
 // Delete Project
 
 export const deleteProject = (
-  projectId: string,
-  token: string
+  projectId: string
 ): ThunkAction<Promise<number>, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
-        url: `http://localhost:5000/projects/${projectId}`,
+        url: `${URL}/projects/${projectId}`,
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateProjectsData(deleteResponse.data.payload));
@@ -99,17 +128,17 @@ export const deleteProject = (
 
 export const addProjectComment = (
   data: ICommentFormData,
-  projectId: string,
-  token: string
+  projectId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const postResponse = await axios<IProjectResponseData>({
         method: "post",
-        url: `http://localhost:5000/projects/${projectId}/comments`,
+        url: `${URL}/projects/${projectId}/comments`,
         data,
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateProjectsData(postResponse.data.payload));
@@ -126,16 +155,16 @@ export const addProjectComment = (
 
 export const deleteProjectComment = (
   projectId: string,
-  commentId: string,
-  token: string
+  commentId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const deleteResponse = await axios<IProjectResponseData>({
         method: "delete",
-        url: `http://localhost:5000/projects/${projectId}/comments/${commentId}`,
+        url: `${URL}/projects/${projectId}/comments/${commentId}`,
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateProjectsData(deleteResponse.data.payload));

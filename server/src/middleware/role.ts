@@ -100,7 +100,7 @@ export const isNotActualUser = async (
   }
 };
 
-// Validates if the user is a project assignee
+// Validates if the user is a admin or project assignee
 
 export const isAdminOrProjectAssignee = async (
   req: Request,

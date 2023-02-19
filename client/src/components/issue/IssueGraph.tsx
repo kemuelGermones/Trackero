@@ -1,4 +1,5 @@
 import "chart.js/auto";
+import React from "react";
 import { useMemo } from "react";
 import { Chart } from "react-chartjs-2";
 
@@ -82,4 +83,4 @@ function IssueGraph({ issuesData }: IIssueGraph) {
   );
 }
 
-export default IssueGraph;
+export default React.memo(IssueGraph);

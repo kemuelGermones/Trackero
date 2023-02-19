@@ -1,6 +1,7 @@
 import { Router } from "express";
 import wrapAsync from "../utils/wrapAsync";
 import {
+  showUsers,
   registerUser,
   loginUser,
   updateUserUsername,
@@ -20,6 +21,15 @@ import {
 import passport from "passport";
 
 const router = Router({ mergeParams: true });
+
+// Show Users
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  isAdmin,
+  wrapAsync(showUsers)
+);
 
 // Registers the User
 

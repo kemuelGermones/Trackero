@@ -8,6 +8,6 @@ export const IssueGraphLayout = styled.div`
 `;
 
 export const GraphBox = styled.div`
-  width: 245px;
+  max-width: 245px;
   margin: 0 auto;
 `;

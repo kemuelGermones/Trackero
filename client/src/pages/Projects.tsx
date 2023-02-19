@@ -34,11 +34,7 @@ function Projects() {
       ) : null}
       <ProjectsPageLayout>
         {userRole === "Administrator" && projects ? (
-          <Card
-            $center={true}
-            onClick={showProjectFormHandler}
-            style={{ height: "15rem" }}
-          >
+          <Card $center={true} $height="15rem" onClick={showProjectFormHandler}>
             <PlusButton />
             <CardTitle>Add Project</CardTitle>
           </Card>
@@ -47,8 +43,8 @@ function Projects() {
           ? projects.map((project) => (
               <Card
                 key={project._id}
+                $height="15rem"
                 onClick={() => navigate(`/projects/${project._id}`)}
-                style={{ height: "15rem" }}
               >
                 <CardHeader>
                   <CardTitle>{project.title}</CardTitle>

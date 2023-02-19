@@ -32,9 +32,7 @@ function IssueInfo({
   const [showEditIssueForm, setShowEditIssueForm] = useState(false);
   const [showStatusForm, setShowStatusForm] = useState(false);
   const dispatch = useAppDispatch();
-  const { accessToken, userId, userRole } = useAppSelector(
-    (state) => state.user
-  );
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const showEditIssueFormHandler = () => {
     setShowEditIssueForm(true);
@@ -53,9 +51,7 @@ function IssueInfo({
   };
 
   const deleteIssueHandler = (issueId: string) => {
-    if (accessToken) {
-      dispatch(deleteIssue(projectId, issueId, accessToken));
-    }
+    dispatch(deleteIssue(projectId, issueId));
   };
 
   return (

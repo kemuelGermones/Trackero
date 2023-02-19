@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+
 interface ICustomCardProp {
   $center?: boolean;
   $width?: string;
+  $height?: string;
   $marginBottom?: boolean;
 }
 
@@ -19,6 +21,7 @@ export const Card = styled.div<ICustomCardProp>`
   border-radius: 0.5rem;
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
   width: ${(props) => (props.$width ? props.$width : "")};
+  height: ${(props) => (props.$height ? props.$height : "")};
   box-sizing: border-box;
   padding: 1rem;
   display: flex;

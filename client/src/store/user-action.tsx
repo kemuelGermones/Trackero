@@ -8,15 +8,48 @@ import {
   IUserCredentials,
   IUserFormData,
 } from "../types/interface";
-import { IGetDataResponse } from "./data-action";
 import { RootState, ThunkAction } from "./index";
+import { IProjectResponseData } from "./project-action";
 import { clearProjectsData, updateProjectsData } from "./project-slice";
-import { clearUsersData, updateUsersData } from "./user-list-slice";
+import {
+  clearUsersData,
+  updateUserUsernameData,
+  updateUsersData,
+} from "./user-list-slice";
 import { login, logout, updateUsername } from "./user-slice";
 
 interface IUserResponseData extends IResponseData {
   payload: IUser[];
 }
+
+const URL = "http://localhost:5000";
+
+// Get Users
+
+export const getUsers = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  AnyAction
+> => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    try {
+      const getResponse = await axios<IUserResponseData>({
+        method: "get",
+        url: `${URL}/users`,
+        headers: {
+          Authorization: state.user.accessToken,
+        },
+      });
+      dispatch(updateUsersData(getResponse.data.payload));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message || error.message);
+      }
+    }
+  };
+};
 
 // Registers the User
 
@@ -26,19 +59,10 @@ export const registerUser = (
   return async (dispatch) => {
     try {
       const postResponse = await axios.post<IUserCredentials>(
-        "http://localhost:5000/users/register",
+        `${URL}/users/register`,
         data
       );
-      dispatch(
-        login({
-          id: postResponse.data.id,
-          email: postResponse.data.email,
-          username: postResponse.data.username,
-          role: postResponse.data.role,
-          token: postResponse.data.token,
-          expiresIn: postResponse.data.expiresIn,
-        })
-      );
+      dispatch(login({ ...postResponse.data }));
       toast.success("Successfully created an account");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -57,22 +81,13 @@ export const loginUser = (
   return async (dispatch) => {
     try {
       const postResponse = await axios.post<IUserCredentials>(
-        "http://localhost:5000/users/login",
+        `${URL}/users/login`,
         {
           email,
           password,
         }
       );
-      dispatch(
-        login({
-          id: postResponse.data.id,
-          email: postResponse.data.email,
-          username: postResponse.data.username,
-          role: postResponse.data.role,
-          token: postResponse.data.token,
-          expiresIn: postResponse.data.expiresIn,
-        })
-      );
+      dispatch(login({ ...postResponse.data }));
       toast.success("Welcome back");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -101,27 +116,29 @@ export const logoutUser = (): ThunkAction<
 
 export const updateUserUsername = (
   value: string,
-  userId: string,
-  token: string
+  userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
     try {
-      const patchResponse = await axios<IGetDataResponse>({
+      const patchResponse = await axios<IProjectResponseData>({
         method: "patch",
-        url: `http://localhost:5000/users/${userId}/username`,
+        url: `${URL}/users/${userId}/username`,
         data: { username: value },
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       if (userId === state.user.userId) {
         dispatch(updateUsername(value));
-      } 
-      if (state.user.userRole === "Administrator") {
-        dispatch(updateUsersData(patchResponse.data.payload.users));
       }
-      dispatch(updateProjectsData(patchResponse.data.payload.projects));
+      if (
+        state.user.userRole === "Administrator" &&
+        userId !== state.user.userId
+      ) {
+        dispatch(updateUserUsernameData({ userId, username: value }));
+      }
+      dispatch(updateProjectsData(patchResponse.data.payload));
       toast.success(patchResponse.data.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -135,17 +152,17 @@ export const updateUserUsername = (
 
 export const updateUserPassword = (
   value: string,
-  userId: string,
-  token: string
+  userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const patchResponse = await axios<IResponseData>({
         method: "patch",
-        url: `http://localhost:5000/users/${userId}/password`,
+        url: `${URL}/users/${userId}/password`,
         data: { password: value },
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       toast.success(patchResponse.data.message);
@@ -161,17 +178,17 @@ export const updateUserPassword = (
 
 export const updateUserRole = (
   value: string,
-  userId: string,
-  token: string
+  userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState();
     try {
       const patchResponse = await axios<IUserResponseData>({
         method: "patch",
-        url: `http://localhost:5000/users/${userId}/role`,
+        url: `${URL}/users/${userId}/role`,
         data: { role: value },
         headers: {
-          Authorization: token,
+          Authorization: state.user.accessToken,
         },
       });
       dispatch(updateUsersData(patchResponse.data.payload));

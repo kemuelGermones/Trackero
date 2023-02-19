@@ -30,18 +30,15 @@ function Issues() {
   useEffect(() => {
     if (allIssues && currentIssue) {
       setCurrentIssue((state) => {
-        if (state) {
-          const foundIssue = allIssues.find((issue) => issue._id === state._id);
-          return foundIssue ? foundIssue : null;
-        }
-        return state;
+        const foundIssue = allIssues.find((issue) => issue._id === state!._id);
+        return foundIssue ? foundIssue : null;
       });
     }
   }, [allIssues]);
 
   useEffect(() => {
-    if (currentIssue && projects) {
-      setCurrentProject(foundProject(projects, currentIssue._id));
+    if (currentIssue) {
+      setCurrentProject(foundProject(projects!, currentIssue._id));
     }
   }, [currentIssue]);
 

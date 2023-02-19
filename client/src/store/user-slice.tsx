@@ -30,7 +30,7 @@ const userSlice = createSlice({
 
     login(state, action: PayloadAction<IUserCredentials>) {
       state.login = true;
-      state.userId = action.payload.id;
+      state.userId = action.payload._id;
       state.userEmail = action.payload.email;
       state.userUsername = action.payload.username;
       state.userRole = action.payload.role;
@@ -50,7 +50,7 @@ const userSlice = createSlice({
       state.expiration = null;
     },
 
-    // Update User Username
+    // Update Your Username
 
     updateUsername(state, action: PayloadAction<string>) {
       state.userUsername = action.payload;

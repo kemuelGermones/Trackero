@@ -38,13 +38,10 @@ function ShowProject() {
   useEffect(() => {
     if (project && currentIssue) {
       setCurrentIssue((state) => {
-        if (state) {
-          const foundIssue = project.issues.find(
-            (issue) => issue._id === state._id
-          );
-          return foundIssue ? foundIssue : null;
-        }
-        return state;
+        const foundIssue = project.issues.find(
+          (issue) => issue._id === state!._id
+        );
+        return foundIssue ? foundIssue : null;
       });
     }
   }, [project]);

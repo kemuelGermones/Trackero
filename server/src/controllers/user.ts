@@ -6,6 +6,19 @@ import jwt from "jsonwebtoken";
 
 const secret: string = process.env.SECRET || "mySecret";
 
+// Show all users
+
+export const showUsers = async (req: Request, res: Response) => {
+  const users = (await User.find()).filter(
+    (user) => !user._id.equals(req.user!._id)
+  );
+  res.status(200).json({
+    status: 200,
+    message: "Show all users",
+    payload: users,
+  });
+};
+
 // Registers the User
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -25,7 +38,7 @@ export const registerUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          id: findUser._id,
+          _id: findUser._id,
           email: findUser.email,
           username: findUser.username,
           role: findUser.role,
@@ -52,7 +65,7 @@ export const loginUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          id: findUser._id,
+          _id: findUser._id,
           email: findUser.email,
           username: findUser.username,
           role: findUser.role,
@@ -72,11 +85,10 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   user!.username = req.body.username;
   await user!.save();
   const projects = await Project.find();
-  const users = await User.find();
   res.status(200).json({
     status: 200,
     message: "Updated user's username",
-    payload: { projects, users },
+    payload: projects,
   });
 };
 
@@ -100,7 +112,9 @@ export const updateUserRole = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.role = req.body.role;
   await user!.save();
-  const users = await User.find();
+  const users = (await User.find()).filter(
+    (user) => !user._id.equals(req.user!._id)
+  );
   res
     .status(200)
     .json({ status: 200, message: "Updated user's role", payload: users });

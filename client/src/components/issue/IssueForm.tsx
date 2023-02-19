@@ -30,7 +30,6 @@ function IssueForm({
   initialValues,
 }: IIssueForm) {
   const dispatch = useAppDispatch();
-  const { accessToken } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -115,8 +114,7 @@ function IssueForm({
       titleIsValid &&
       descriptionIsValid &&
       dueDateIsValid &&
-      !initialValues &&
-      accessToken
+      !initialValues
     ) {
       dispatch(
         addIssue(
@@ -127,19 +125,12 @@ function IssueForm({
             importance,
             dueDate,
           },
-          projectId,
-          accessToken
+          projectId
         )
       );
       hideForm();
     }
-    if (
-      titleIsValid &&
-      descriptionIsValid &&
-      dueDateIsValid &&
-      initialValues &&
-      accessToken
-    ) {
+    if (titleIsValid && descriptionIsValid && dueDateIsValid && initialValues) {
       dispatch(
         editIssue(
           {
@@ -150,8 +141,7 @@ function IssueForm({
             dueDate,
           },
           projectId,
-          initialValues._id,
-          accessToken
+          initialValues._id
         )
       );
       hideForm();

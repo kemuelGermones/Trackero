@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Instruction from "../components/instruction/Instruction";
 import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
@@ -12,26 +12,19 @@ type TCurrentUserState = IUser | null;
 function Users() {
   const [currentUser, setCurrentUser] = useState<TCurrentUserState>(null);
   const userList = useAppSelector((state) => state.userList.usersData);
-  const userId = useAppSelector((state) => state.user.userId);
-
-  const allUsers = useMemo(() => {
-    if (userList) {
-      return userList.filter((user) => user._id !== userId);
-    }
-    return null;
-  }, [userList]);
 
   useEffect(() => {
-    if (allUsers) {
+    if (userList && currentUser) {
       setCurrentUser((state) => {
-        if (state) {
-          const user = allUsers.find((user) => user._id === state._id);
-          return user ? user : null;
-        }
-        return state;
+        const user = userList.find((user) => user._id === state!._id);
+        return user ? user : null;
       });
     }
-  }, [allUsers]);
+  }, [userList]);
+
+  const setCurrentUserHandler = useCallback((user: IUser) => {
+    setCurrentUser(user);
+  }, []);
 
   return (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
@@ -40,8 +33,11 @@ function Users() {
           To view the user details in the table, locate the row containing it
           and click on the corresponding cell with your mouse cursor.
         </Instruction>
-        {allUsers ? (
-          <UserTable usersData={allUsers} setCurrentUser={setCurrentUser} />
+        {userList ? (
+          <UserTable
+            usersData={userList}
+            setCurrentUser={setCurrentUserHandler}
+          />
         ) : null}
       </div>
       <div>

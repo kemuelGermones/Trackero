@@ -29,7 +29,6 @@ function IssueStatusForm({
   issueStatus,
 }: IIssueStatusForm) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -49,9 +48,7 @@ function IssueStatusForm({
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (accessToken) {
-      dispatch(updateIssueStatus({ status }, projectId, issueId, accessToken));
-    }
+    dispatch(updateIssueStatus({ status }, projectId, issueId));
     hideForm();
   };
 

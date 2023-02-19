@@ -6,6 +6,11 @@ interface IUserListIniitalState {
   usersData: IUser[] | null;
 }
 
+interface IUpdateUserUsernameDataAction {
+  userId: string;
+  username: string;
+}
+
 const initialState: IUserListIniitalState = {
   usersData: null,
 };
@@ -25,9 +30,24 @@ const userListSlice = createSlice({
     clearUsersData(state) {
       state.usersData = null;
     },
+
+    // Update Users Username
+
+    updateUserUsernameData(
+      state,
+      action: PayloadAction<IUpdateUserUsernameDataAction>
+    ) {
+      if (state.usersData) {
+        const userIndex = state.usersData.findIndex(
+          (user) => user._id === action.payload.userId
+        );
+        state.usersData[userIndex].username = action.payload.username;
+      }
+    },
   },
 });
 
-export const { updateUsersData, clearUsersData } = userListSlice.actions;
+export const { updateUsersData, clearUsersData, updateUserUsernameData } =
+  userListSlice.actions;
 
 export default userListSlice.reducer;
