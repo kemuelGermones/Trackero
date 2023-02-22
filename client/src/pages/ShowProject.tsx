@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Instruction from "../components/instruction/Instruction";
+import Info from "../components/info/Info";
 import IssueComment from "../components/issue/IssueComment";
 import IssueGraph from "../components/issue/IssueGraph";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -10,30 +10,25 @@ import ProjectComment from "../components/project/ProjectComment";
 import ProjectInfo from "../components/project/ProjectInfo";
 import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
 import { useAppSelector } from "../store/index";
-import { IIssue, IProject } from "../types/interface";
+import { IIssue } from "../types/interface";
 
-type TProjectState = IProject | null;
 type TIssueState = IIssue | null;
 
 function ShowProject() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const projects = useAppSelector((state) => state.project.projectsData);
-  const [project, setProject] = useState<TProjectState>(null);
   const [currentIssue, setCurrentIssue] = useState<TIssueState>(null);
+  const projects = useAppSelector((state) => state.project.projectsData);
 
-  useEffect(() => {
+  const project = useMemo(() => {
     if (projects) {
-      const foundProject = projects.find(
-        (project) => project._id === projectId
-      );
-      if (foundProject) {
-        setProject(foundProject);
-      } else {
-        navigate("/error");
-      }
+      return projects.find((project) => project._id === projectId);
     }
   }, [projects]);
+
+  useEffect(() => {
+    if (projects && !project) navigate("/error");
+  }, [project]);
 
   useEffect(() => {
     if (project && currentIssue) {
@@ -50,53 +45,43 @@ function ShowProject() {
     setCurrentIssue(issue);
   }, []);
 
-  return (
-    <>
-      <PageDashboardLayout $templateColumns="1fr 1.5fr">
-        <div>
-          {project ? (
-            <>
-              <ProjectInfo projectData={project} />
-              <ProjectComment
-                projectId={project._id}
-                projectComments={project.comments}
-              />
-            </>
-          ) : null}
-        </div>
-        <div>
-          {project ? (
-            <>
-              <IssueGraph issuesData={project.issues} />
-              <Instruction>
-                To view the issue details in the table, locate the row
-                containing it and click on the corresponding cell with your
-                mouse cursor.
-              </Instruction>
-              <IssueTable
-                issuesData={project.issues}
-                setCurrentIssue={setCurrentIssueHandler}
-                issuesPerTable={5}
-              />
-              {currentIssue ? (
-                <>
-                  <IssueInfo
-                    projectId={project._id}
-                    projectAssignees={project.assignees}
-                    issueData={currentIssue}
-                  />
-                  <IssueComment
-                    issueId={currentIssue._id}
-                    issueComments={currentIssue.comments}
-                  />
-                </>
-              ) : null}
-            </>
-          ) : null}
-        </div>
-      </PageDashboardLayout>
-    </>
-  );
+  return project ? (
+    <PageDashboardLayout $templateColumns="1fr 1.5fr">
+      <div>
+        <ProjectInfo projectData={project} />
+        <ProjectComment
+          projectId={project._id}
+          projectComments={project.comments}
+        />
+      </div>
+      <div>
+        <IssueGraph issuesData={project.issues} />
+        <Info>
+          To view the issue details in the table, locate the row containing it
+          and click on the corresponding cell with your mouse cursor.
+        </Info>
+        <IssueTable
+          issuesData={project.issues}
+          setCurrentIssue={setCurrentIssueHandler}
+          issuesPerTable={5}
+        />
+        {currentIssue ? (
+          <>
+            <IssueInfo
+              projectId={project._id}
+              projectAssignees={project.assignees}
+              issueData={currentIssue}
+            />
+            <IssueComment
+              projectId={project._id}
+              issueId={currentIssue._id}
+              issueComments={currentIssue.comments}
+            />
+          </>
+        ) : null}
+      </div>
+    </PageDashboardLayout>
+  ) : null;
 }
 
 export default ShowProject;

@@ -4,69 +4,41 @@ import { toast } from "react-toastify";
 
 import {
   IResponseData,
-  IUser,
   IUserCredentials,
   IUserFormData,
 } from "../types/interface";
 import { RootState, ThunkAction } from "./index";
-import { IProjectResponseData } from "./project-action";
-import { clearProjectsData, updateProjectsData } from "./project-slice";
-import {
-  clearUsersData,
-  updateUserUsernameData,
-  updateUsersData,
-} from "./user-list-slice";
-import { login, logout, updateUsername } from "./user-slice";
-
-interface IUserResponseData extends IResponseData {
-  payload: IUser[];
-}
+import { clearProjects, updateProjectsUsername } from "./project-slice";
+import { clearUsers, updateRole, updateUsername } from "./user-list-slice";
+import { login, logout, updateYourUsername } from "./user-slice";
 
 const URL = "http://localhost:5000";
 
-// Get Users
-
-export const getUsers = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  AnyAction
-> => {
-  return async (dispatch, getState) => {
-    const state = getState();
-    try {
-      const getResponse = await axios<IUserResponseData>({
-        method: "get",
-        url: `${URL}/users`,
-        headers: {
-          Authorization: state.user.accessToken,
-        },
-      });
-      dispatch(updateUsersData(getResponse.data.payload));
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
-      }
-    }
-  };
-};
-
 // Registers the User
 
-export const registerUser = (
+export const registerRequest = (
   data: IUserFormData
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
     try {
       const postResponse = await axios.post<IUserCredentials>(
         `${URL}/users/register`,
         data
       );
       dispatch(login({ ...postResponse.data }));
-      toast.success("Successfully created an account");
+      toast.dismiss(loadingToast);
+      toast.success("Successfully created an account", {
+        containerId: "notification",
+      });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
     }
   };
@@ -74,11 +46,14 @@ export const registerUser = (
 
 // logins the User
 
-export const loginUser = (
+export const loginRequest = (
   email: string,
   password: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
     try {
       const postResponse = await axios.post<IUserCredentials>(
         `${URL}/users/login`,
@@ -88,10 +63,14 @@ export const loginUser = (
         }
       );
       dispatch(login({ ...postResponse.data }));
-      toast.success("Welcome back");
+      toast.dismiss(loadingToast);
+      toast.success("Welcome back", { containerId: "notification" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
     }
   };
@@ -99,7 +78,7 @@ export const loginUser = (
 
 // Logouts the User
 
-export const logoutUser = (): ThunkAction<
+export const logoutRequest = (): ThunkAction<
   void,
   RootState,
   unknown,
@@ -107,42 +86,51 @@ export const logoutUser = (): ThunkAction<
 > => {
   return (dispatch) => {
     dispatch(logout());
-    dispatch(clearProjectsData());
-    dispatch(clearUsersData());
+    dispatch(clearProjects());
+    dispatch(clearUsers());
   };
 };
 
 // Update User's Username
 
-export const updateUserUsername = (
-  value: string,
+export const updateUsernameRequest = (
+  username: string,
   userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
     try {
-      const patchResponse = await axios<IProjectResponseData>({
+      const patchResponse = await axios<IResponseData>({
         method: "patch",
         url: `${URL}/users/${userId}/username`,
-        data: { username: value },
+        data: { username },
         headers: {
           Authorization: state.user.accessToken,
         },
       });
       if (userId === state.user.userId) {
-        dispatch(updateUsername(value));
+        dispatch(updateYourUsername(username));
       }
       if (
         state.user.userRole === "Administrator" &&
         userId !== state.user.userId
       ) {
-        dispatch(updateUserUsernameData({ userId, username: value }));
+        dispatch(updateUsername({ userId, username }));
       }
-      dispatch(updateProjectsData(patchResponse.data.payload));
-      toast.success(patchResponse.data.message);
+      dispatch(updateProjectsUsername({ userId, username }));
+      toast.dismiss(loadingToast);
+      toast.success(patchResponse.data.message, {
+        containerId: "notification",
+      });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
     }
   };
@@ -150,25 +138,34 @@ export const updateUserUsername = (
 
 // Update User's Password
 
-export const updateUserPassword = (
-  value: string,
+export const updatePasswordRequest = (
+  password: string,
   userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
     try {
       const patchResponse = await axios<IResponseData>({
         method: "patch",
         url: `${URL}/users/${userId}/password`,
-        data: { password: value },
+        data: { password },
         headers: {
           Authorization: state.user.accessToken,
         },
       });
-      toast.success(patchResponse.data.message);
+      toast.dismiss(loadingToast);
+      toast.success(patchResponse.data.message, {
+        containerId: "notification",
+      });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
     }
   };
@@ -176,26 +173,35 @@ export const updateUserPassword = (
 
 //  Update User's Role
 
-export const updateUserRole = (
-  value: string,
+export const updateRoleRequest = (
+  role: string,
   userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
     try {
-      const patchResponse = await axios<IUserResponseData>({
+      const patchResponse = await axios<IResponseData>({
         method: "patch",
         url: `${URL}/users/${userId}/role`,
-        data: { role: value },
+        data: { role },
         headers: {
           Authorization: state.user.accessToken,
         },
       });
-      dispatch(updateUsersData(patchResponse.data.payload));
-      toast.success(patchResponse.data.message);
+      dispatch(updateRole({ role, userId }));
+      toast.dismiss(loadingToast);
+      toast.success(patchResponse.data.message, {
+        containerId: "notification",
+      });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
     }
   };

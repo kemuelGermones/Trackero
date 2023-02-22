@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 import useValidation from "../../hooks/useValidation";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { addIssue, editIssue } from "../../store/issue-action";
+import { useAppDispatch } from "../../store";
+import { addIssueRequest, editIssueRequest } from "../../store/issue-action";
 import { IIssue, IUser } from "../../types/interface";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
@@ -64,7 +64,7 @@ function IssueForm({
   const { value: assignedTo, onChangeValueHandler: assignedToChange } =
     useValidation(
       null,
-      initialValues ? initialValues.assignedTo._id : projectAssignees[0]._id
+      initialValues ? initialValues.assignedTo : projectAssignees[0]
     );
 
   const {
@@ -96,7 +96,8 @@ function IssueForm({
   const onChangeAssignedToHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    assignedToChange(event.target.value);
+    const user: IUser = JSON.parse(event.target.value);
+    assignedToChange(user);
   };
 
   const onChangeDueDateHandler = (
@@ -117,7 +118,7 @@ function IssueForm({
       !initialValues
     ) {
       dispatch(
-        addIssue(
+        addIssueRequest(
           {
             title,
             description,
@@ -132,7 +133,7 @@ function IssueForm({
     }
     if (titleIsValid && descriptionIsValid && dueDateIsValid && initialValues) {
       dispatch(
-        editIssue(
+        editIssueRequest(
           {
             title,
             description,
@@ -192,10 +193,10 @@ function IssueForm({
             <Select
               id="assignedTo"
               onChange={onChangeAssignedToHandler}
-              value={assignedTo}
+              value={JSON.stringify(assignedTo)}
             >
               {projectAssignees.map((user) => (
-                <option value={user._id} key={user._id}>
+                <option value={JSON.stringify(user)} key={user._id}>
                   {user.username}
                 </option>
               ))}

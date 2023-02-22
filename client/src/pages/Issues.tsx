@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import Instruction from "../components/instruction/Instruction";
+import Info from "../components/info/Info";
 import IssueComment from "../components/issue/IssueComment";
 import IssueGraph from "../components/issue/IssueGraph";
 import IssueInfo from "../components/issue/IssueInfo";
@@ -24,7 +24,6 @@ function Issues() {
     if (projects) {
       return listAllIssues(projects);
     }
-    return null;
   }, [projects]);
 
   useEffect(() => {
@@ -46,23 +45,19 @@ function Issues() {
     setCurrentIssue(issue);
   }, []);
 
-  return (
+  return allIssues ? (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
       <div>
-        {allIssues ? (
-          <>
-            <IssueGraph issuesData={allIssues} />
-            <Instruction>
-              To view the issue details in the table, locate the row containing
-              it and click on the corresponding cell with your mouse cursor.
-            </Instruction>
-            <IssueTable
-              issuesData={allIssues}
-              setCurrentIssue={setCurrentIssueHandler}
-              issuesPerTable={10}
-            />
-          </>
-        ) : null}
+        <IssueGraph issuesData={allIssues} />
+        <Info>
+          To view the issue details in the table, locate the row containing it
+          and click on the corresponding cell with your mouse cursor.
+        </Info>
+        <IssueTable
+          issuesData={allIssues}
+          setCurrentIssue={setCurrentIssueHandler}
+          issuesPerTable={10}
+        />
       </div>
       <div>
         {currentIssue && currentProject ? (
@@ -74,6 +69,7 @@ function Issues() {
               issueData={currentIssue}
             />
             <IssueComment
+              projectId={currentProject._id}
               issueId={currentIssue._id}
               issueComments={currentIssue.comments}
             />
@@ -81,7 +77,7 @@ function Issues() {
         ) : null}
       </div>
     </PageDashboardLayout>
-  );
+  ) : null;
 }
 
 export default Issues;

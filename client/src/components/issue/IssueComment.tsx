@@ -2,7 +2,10 @@ import { Fragment } from "react";
 
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
+import {
+  addIssueCommentRequest,
+  deleteIssueCommentRequest,
+} from "../../store/issue-action";
 import { IComment } from "../../types/interface";
 import { Button, TrashButton } from "../styles/UI/Button";
 import {
@@ -17,11 +20,12 @@ import { Form, Label, TextArea } from "../styles/UI/Form";
 import TextLight from "../styles/utils/TextLight";
 
 interface IIssueComment {
+  projectId: string;
   issueId: string;
   issueComments: IComment[];
 }
 
-function IssueComment({ issueId, issueComments }: IIssueComment) {
+function IssueComment({ projectId, issueId, issueComments }: IIssueComment) {
   const dispatch = useAppDispatch();
   const { userId, userRole } = useAppSelector((state) => state.user);
 
@@ -43,13 +47,13 @@ function IssueComment({ issueId, issueComments }: IIssueComment) {
     event.preventDefault();
     const commentIsValid = validateComment();
     if (commentIsValid) {
-      dispatch(addIssueComment({ comment }, issueId));
+      dispatch(addIssueCommentRequest(comment, issueId));
       commentReset("");
     }
   };
 
-  const deleteIssueCommentHandler = (commentId: string) => {
-    dispatch(deleteIssueComment(issueId, commentId));
+  const deleteIssueCommentRequestHandler = (commentId: string) => {
+    dispatch(deleteIssueCommentRequest(projectId, issueId, commentId));
   };
 
   return (
@@ -80,7 +84,10 @@ function IssueComment({ issueId, issueComments }: IIssueComment) {
             </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
-                onClick={deleteIssueCommentHandler.bind(null, comment._id)}
+                onClick={deleteIssueCommentRequestHandler.bind(
+                  null,
+                  comment._id
+                )}
               />
             ) : null}
           </CardHeader>

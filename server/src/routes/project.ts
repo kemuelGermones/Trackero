@@ -22,8 +22,8 @@ import {
   createProject,
   editProject,
   deleteProject,
-  createComment,
-  deleteComment,
+  createProjectComment,
+  deleteProjectComment,
   createIssue,
   editIssue,
   deleteIssue,
@@ -78,7 +78,7 @@ router.post(
   "/:projectId/comments",
   passport.authenticate("jwt", { session: false }),
   validateComment,
-  wrapAsync(createComment)
+  wrapAsync(createProjectComment)
 );
 
 // Delete Project Comment
@@ -87,7 +87,7 @@ router.delete(
   "/:projectId/comments/:commentId",
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrCommentAuthor),
-  wrapAsync(deleteComment)
+  wrapAsync(deleteProjectComment)
 );
 
 // Create Project Issue

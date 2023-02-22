@@ -3,8 +3,8 @@ import { Fragment } from "react";
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
-  addProjectComment,
-  deleteProjectComment,
+  addProjectCommentRequest,
+  deleteProjectCommentRequest,
 } from "../../store/project-action";
 import { IComment } from "../../types/interface";
 import { Button, TrashButton } from "../styles/UI/Button";
@@ -36,8 +36,8 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
     validateValue: validateComment,
   } = useValidation((str) => str.trim().length > 0, "");
 
-  const deleteProjectCommentRequest = (commentId: string) => {
-    dispatch(deleteProjectComment(projectId, commentId));
+  const deleteProjectCommentRequestHandler = (commentId: string) => {
+    dispatch(deleteProjectCommentRequest(projectId, commentId));
   };
 
   const onChangeCommentHandler = (
@@ -50,7 +50,7 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
     event.preventDefault();
     const commentIsValid = validateComment();
     if (commentIsValid) {
-      dispatch(addProjectComment({ comment }, projectId));
+      dispatch(addProjectCommentRequest(comment, projectId));
       commentReset("");
     }
   };
@@ -85,7 +85,10 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
             </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
-                onClick={deleteProjectCommentRequest.bind(null, comment._id)}
+                onClick={deleteProjectCommentRequestHandler.bind(
+                  null,
+                  comment._id
+                )}
               />
             ) : null}
           </CardHeader>

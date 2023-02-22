@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import Project from "../models/project";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -9,14 +8,8 @@ const secret: string = process.env.SECRET || "mySecret";
 // Show all users
 
 export const showUsers = async (req: Request, res: Response) => {
-  const users = (await User.find()).filter(
-    (user) => !user._id.equals(req.user!._id)
-  );
-  res.status(200).json({
-    status: 200,
-    message: "Show all users",
-    payload: users,
-  });
+  const users = await User.find();
+  res.status(200).send(users);
 };
 
 // Registers the User
@@ -84,11 +77,9 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.username = req.body.username;
   await user!.save();
-  const projects = await Project.find();
   res.status(200).json({
     status: 200,
     message: "Updated user's username",
-    payload: projects,
   });
 };
 
@@ -112,10 +103,5 @@ export const updateUserRole = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.role = req.body.role;
   await user!.save();
-  const users = (await User.find()).filter(
-    (user) => !user._id.equals(req.user!._id)
-  );
-  res
-    .status(200)
-    .json({ status: 200, message: "Updated user's role", payload: users });
+  res.status(200).json({ status: 200, message: "Updated user's role" });
 };

@@ -27,7 +27,7 @@ function Projects() {
     setShowProjectForm(false);
   };
 
-  return (
+  return projects ? (
     <>
       {showProjectForm ? (
         <ProjectForm hideForm={hideProjectFormHandler} />
@@ -39,27 +39,25 @@ function Projects() {
             <CardTitle>Add Project</CardTitle>
           </Card>
         ) : null}
-        {projects
-          ? projects.map((project) => (
-              <Card
-                key={project._id}
-                $height="15rem"
-                onClick={() => navigate(`/projects/${project._id}`)}
-              >
-                <CardHeader>
-                  <CardTitle>{project.title}</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <CardDescription $hasLimit={true}>
-                    {project.description}
-                  </CardDescription>
-                </CardBody>
-              </Card>
-            ))
-          : null}
+        {projects.map((project) => (
+          <Card
+            key={project._id}
+            $height="15rem"
+            onClick={() => navigate(`/projects/${project._id}`)}
+          >
+            <CardHeader>
+              <CardTitle>{project.title}</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <CardDescription $hasLimit={true}>
+                {project.description}
+              </CardDescription>
+            </CardBody>
+          </Card>
+        ))}
       </ProjectsPageLayout>
     </>
-  );
+  ) : null;
 }
 
 export default Projects;

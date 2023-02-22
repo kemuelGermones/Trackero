@@ -3,29 +3,31 @@
 export interface IProjectFormData {
   title: string;
   description: string;
-  assignees: string[];
+  assignees: IUser[];
 }
 
-export interface IProject {
+export interface IProject extends IProjectFormData {
   _id: string;
   __v: number;
-  title: string;
-  description: string;
-  assignees: IUser[];
   comments: IComment[];
   issues: IIssue[];
 }
 
-// Comment Interface
-
-export interface ICommentFormData {
-  comment: string;
+export interface IProjectId {
+  projectId: string;
 }
 
-export interface IComment extends ICommentFormData {
+// Comment Interface
+
+export interface IComment {
   _id: string;
   __v: number;
+  comment: string;
   author: IUser;
+}
+
+export interface ICommentId {
+  commentId: string;
 }
 
 // Issue Interface
@@ -34,21 +36,20 @@ export interface IIssueFormData {
   title: string;
   description: string;
   importance: string;
-  assignedTo: string;
+  assignedTo: IUser;
   dueDate: string;
 }
 
-export interface IIssue {
+export interface IIssue extends IIssueFormData {
   _id: string;
   __v: number;
-  title: string;
-  description: string;
-  importance: string;
-  assignedTo: IUser;
-  dueDate: string;
   comments: IComment[];
   author: IUser;
   status: string;
+}
+
+export interface IIssueId {
+  issueId: string;
 }
 
 // User interface
@@ -72,9 +73,17 @@ export interface IUserCredentials extends IUser {
   expiresIn: number;
 }
 
+export interface IUserId {
+  userId: string;
+}
+
 // Response Data
 
 export interface IResponseData {
   status: number;
   message: string;
+}
+
+export interface IProjectResponseData extends IResponseData {
+  payload: IProject[];
 }

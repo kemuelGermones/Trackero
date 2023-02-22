@@ -23,7 +23,17 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <ToastContainer position="bottom-left" />
+      <ToastContainer
+        enableMultiContainer
+        containerId={"loading"}
+        position="top-center"
+      />
+      <ToastContainer
+        enableMultiContainer
+        containerId={"notification"}
+        position="bottom-left"
+        autoClose={3000}
+      />
       <Routes>
         <Route element={<NotProtectedRoutes />}>
           <Route element={<WithoutNav />}>

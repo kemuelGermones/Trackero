@@ -3,8 +3,11 @@ import { Fragment, useEffect } from "react";
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
 import { useAppSelector } from "../../store";
-import { addProject, editProject } from "../../store/project-action";
-import { IProject } from "../../types/interface";
+import {
+  addProjectRequest,
+  editProjectRequest,
+} from "../../store/project-action";
+import { IProject, IUser } from "../../types/interface";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
 import {
@@ -58,9 +61,9 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
     valueError: assigneesError,
     onChangeValueHandler: assigneesChange,
     validateValue: validateAssignees,
-  } = useValidation<string[]>(
+  } = useValidation<IUser[]>(
     (arr) => arr.length > 0,
-    initialValues ? initialValues.assignees.map((user) => user._id) : []
+    initialValues ? initialValues.assignees : []
   );
 
   const onChangeTitleHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,11 +79,12 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
   const onChangeAssigneesHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const user: IUser = JSON.parse(event.target.value);
     if (event.target.checked) {
-      assigneesChange([...assignees, event.target.value]);
+      assigneesChange([...assignees, user]);
     } else {
       assigneesChange(
-        assignees.filter((userId) => userId !== event.target.value)
+        assignees.filter((assignee) => assignee._id !== user._id)
       );
     }
   };
@@ -96,7 +100,7 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
       assigneesIsValid &&
       !initialValues
     ) {
-      dispatch(addProject({ title, description, assignees }));
+      dispatch(addProjectRequest({ title, description, assignees }));
       hideForm();
     }
     if (
@@ -106,7 +110,7 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
       initialValues
     ) {
       dispatch(
-        editProject({ title, description, assignees }, initialValues._id)
+        editProjectRequest({ title, description, assignees }, initialValues._id)
       );
       hideForm();
     }
@@ -151,8 +155,12 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
                     <Fragment key={user._id}>
                       <input
                         type="checkbox"
-                        value={user._id}
-                        checked={assignees.includes(user._id)}
+                        value={JSON.stringify(user)}
+                        checked={
+                          !!assignees.find(
+                            (assignee) => assignee._id === user._id
+                          )
+                        }
                         onChange={onChangeAssigneesHandler}
                       />
                       &nbsp;

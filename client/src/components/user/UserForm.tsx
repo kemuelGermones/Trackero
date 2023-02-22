@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
-import { loginUser, registerUser } from "../../store/user-action";
+import { loginRequest, registerRequest } from "../../store/user-action";
 import { Button } from "../styles/UI/Button";
 import {
   Card,
@@ -77,9 +77,9 @@ function UserForm() {
     const isPasswordValid = validatePassword();
     const isUsernameValid = validateUsername();
     if (!isLogin && isEmailValid && isPasswordValid && isUsernameValid) {
-      dispatch(registerUser({ email, username, password, role }));
+      dispatch(registerRequest({ email, username, password, role }));
     } else if (isLogin && isEmailValid && isPasswordValid) {
-      dispatch(loginUser(email, password));
+      dispatch(loginRequest(email, password));
     }
   };
 
@@ -97,7 +97,7 @@ function UserForm() {
       </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
-        <Label htmlFor="email">Your Email</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
           id="email"
           type="email"
@@ -106,7 +106,7 @@ function UserForm() {
           onChange={onChangeEmailHandler}
           $isInvalid={emailError}
         />
-        <Label htmlFor="password">Your Password</Label>
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           type="password"
@@ -117,7 +117,7 @@ function UserForm() {
         />
         {!isLogin ? (
           <>
-            <Label htmlFor="username">Your Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
@@ -126,7 +126,7 @@ function UserForm() {
               onChange={onChangeUsernameHandler}
               $isInvalid={usernameError}
             />
-            <Label htmlFor="role">Your Role</Label>
+            <Label htmlFor="role">Role</Label>
             <Select onChange={onChangeRoleHandler} value={role}>
               <option value="Developer">Developer</option>
               <option value="Administrator">Administrator</option>

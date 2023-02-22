@@ -11,8 +11,8 @@ function Error() {
       <ErrorLogo src="/Error.png" alt="404" />
       <ErrorTitle>Page not found</ErrorTitle>
       <ErrorDescription>
-        We're sorry, the page you requested could not be found.
-        Please go back to the homepage.
+        We're sorry, the page you requested could not be found. Please go back
+        to the homepage.
       </ErrorDescription>
     </ErrorLayout>
   );

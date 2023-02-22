@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { IUserCredentials } from "../types/interface";
 
-interface IInitialStateUserSlice {
+interface IUserSliceState {
   login: boolean;
   userId: string | null;
   userEmail: string | null;
@@ -12,7 +12,7 @@ interface IInitialStateUserSlice {
   expiration: number | null;
 }
 
-const initialState: IInitialStateUserSlice = {
+const initialState: IUserSliceState = {
   login: false,
   userId: null,
   userEmail: null,
@@ -52,12 +52,12 @@ const userSlice = createSlice({
 
     // Update Your Username
 
-    updateUsername(state, action: PayloadAction<string>) {
+    updateYourUsername(state, action: PayloadAction<string>) {
       state.userUsername = action.payload;
     },
   },
 });
 
-export const { login, logout, updateUsername } = userSlice.actions;
+export const { login, logout, updateYourUsername } = userSlice.actions;
 
 export default userSlice.reducer;

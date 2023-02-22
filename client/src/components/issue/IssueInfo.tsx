@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../store";
-import { deleteIssue } from "../../store/issue-action";
+import { deleteIssueRequest } from "../../store/issue-action";
 import { IIssue, IUser } from "../../types/interface";
 import { Button, SmallButton } from "../styles/UI/Button";
 import {
@@ -50,8 +50,8 @@ function IssueInfo({
     setShowStatusForm(false);
   };
 
-  const deleteIssueHandler = (issueId: string) => {
-    dispatch(deleteIssue(projectId, issueId));
+  const deleteIssueRequestHandler = (issueId: string) => {
+    dispatch(deleteIssueRequest(projectId, issueId));
   };
 
   return (
@@ -129,7 +129,7 @@ function IssueInfo({
         {issueData.author._id === userId || userRole === "Administrator" ? (
           <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showEditIssueFormHandler}>Edit</Button>
-            <Button onClick={deleteIssueHandler.bind(null, issueData._id)}>
+            <Button onClick={deleteIssueRequestHandler.bind(null, issueData._id)}>
               Delete
             </Button>
           </CardFooter>

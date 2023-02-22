@@ -8,7 +8,7 @@ import {
 import { useLocation } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../store";
-import { logoutUser } from "../../store/user-action";
+import { logoutRequest } from "../../store/user-action";
 import { Nav, NavBrand, NavItem, NavMenu, NavUnit } from "../styles/UI/Nav";
 
 function SideBar() {
@@ -17,7 +17,7 @@ function SideBar() {
   const userRole = useAppSelector((state) => state.user.userRole);
 
   const logoutHandler = () => {
-    dispatch(logoutUser());
+    dispatch(logoutRequest());
   };
 
   return (

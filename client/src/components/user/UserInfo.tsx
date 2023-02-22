@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 
 import useValidation from "../../hooks/useValidation";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch } from "../../store";
 import {
-  updateUserPassword,
-  updateUserRole,
-  updateUserUsername,
+  updatePasswordRequest,
+  updateRoleRequest,
+  updateUsernameRequest,
 } from "../../store/user-action";
 import { IUser } from "../../types/interface";
 import { Button } from "../styles/UI/Button";
@@ -69,7 +69,7 @@ function UserInfo({ userData }: IUserInfo) {
     event.preventDefault();
     const isUsernameValid = validateUsername();
     if (isUsernameValid) {
-      dispatch(updateUserUsername(username, userData._id));
+      dispatch(updateUsernameRequest(username, userData._id));
     }
   };
 
@@ -77,14 +77,14 @@ function UserInfo({ userData }: IUserInfo) {
     event.preventDefault();
     const isPasswordValid = validatePassword();
     if (isPasswordValid) {
-      dispatch(updateUserPassword(password, userData._id));
+      dispatch(updatePasswordRequest(password, userData._id));
       resetPassword("");
     }
   };
 
   const onSubmitRoleHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(updateUserRole(role, userData._id));
+    dispatch(updateRoleRequest(role, userData._id));
   };
 
   return (

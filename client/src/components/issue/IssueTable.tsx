@@ -31,9 +31,9 @@ function IssueTable({
   }, [issuesData, sortCategory]);
 
   const currentIssues = useMemo(() => {
-    const lastIssuetIndex = currentTablePage * issuesPerTable;
-    const firstIssueIndex = lastIssuetIndex - issuesPerTable;
-    return issues.slice(firstIssueIndex, lastIssuetIndex);
+    const lastIssueIndex = currentTablePage * issuesPerTable;
+    const firstIssueIndex = lastIssueIndex - issuesPerTable;
+    return issues.slice(firstIssueIndex, lastIssueIndex);
   }, [currentTablePage, issues]);
 
   const pages = useMemo(() => {

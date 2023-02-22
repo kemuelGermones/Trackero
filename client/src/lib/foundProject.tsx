@@ -1,6 +1,6 @@
 import { IProject } from "../types/interface";
 
-// Find Project Id
+// Find Project
 
 const foundProject = (
   projects: IProject[],

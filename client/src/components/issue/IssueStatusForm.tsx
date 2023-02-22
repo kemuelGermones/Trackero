@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 import useValidation from "../../hooks/useValidation";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { updateIssueStatus } from "../../store/issue-action";
+import { useAppDispatch } from "../../store";
+import { updateIssueStatusRequest } from "../../store/issue-action";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
 import {
@@ -48,7 +48,7 @@ function IssueStatusForm({
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(updateIssueStatus({ status }, projectId, issueId));
+    dispatch(updateIssueStatusRequest(status, projectId, issueId));
     hideForm();
   };
 

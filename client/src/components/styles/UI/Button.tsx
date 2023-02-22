@@ -13,7 +13,7 @@ export const Button = styled.button`
   border: none;
   background-color: var(--tertiary);
   color: white;
-  font-family: "Poppins";
+  font-family: var(--main-font);
   font-size: 1rem;
   outline: none;
 
@@ -30,7 +30,7 @@ export const SmallButton = styled.button`
   background-color: var(--tertiary);
   color: white;
   font-size: 0.75rem;
-  font-family: "Poppins";
+  font-family: var(--main-font);
   outline: none;
 
   &:hover {
@@ -77,7 +77,7 @@ export const DropdownButton = styled.select`
   background-color: var(--tertiary);
   color: white;
   font-size: 0.75rem
-  font-family: "Poppins";
+  font-family: var(--main-font);
   outline: none;
 `;
 

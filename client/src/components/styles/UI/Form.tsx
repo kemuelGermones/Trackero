@@ -24,7 +24,7 @@ export const Input = styled.input<IInputCustomProps>`
   border: 1px solid
     ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
-  font-family: "Poppins";
+  font-family: var(--main-font);
 
   &:focus {
     outline: none;
@@ -39,7 +39,7 @@ export const Select = styled.select<IInputCustomProps>`
   border-radius: 0.5rem;
   border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
   font-size: 1rem;
-  font-family: "Poppins";
+  font-family: var(--main-font);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -64,7 +64,7 @@ export const TextArea = styled.textarea<IInputCustomProps>`
   border: 1px solid
     ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
-  font-family: "Poppins";
+  font-family: var(--main-font);
 
   &:focus {
     outline: none;

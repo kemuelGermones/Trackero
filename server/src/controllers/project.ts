@@ -5,14 +5,9 @@ import Issue from "../models/issue";
 
 // Show Projects
 
-export const showProjects = async (
-  req: Request,
-  res: Response,
-) => {
+export const showProjects = async (req: Request, res: Response) => {
   const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Show all project", payload: projects });
+  res.status(200).send(projects);
 };
 
 // Create New Project
@@ -31,10 +26,7 @@ export const createProject = async (req: Request, res: Response) => {
 export const editProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   await Project.findByIdAndUpdate(projectId, req.body);
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Edited a project", payload: projects });
+  res.status(200).json({ status: 200, message: "Edited a project" });
 };
 
 // Delete project
@@ -42,15 +34,12 @@ export const editProject = async (req: Request, res: Response) => {
 export const deleteProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   await Project.findByIdAndDelete(projectId);
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Deleted a project", payload: projects });
+  res.status(200).json({ status: 200, message: "Deleted a project" });
 };
 
 // Create Comment
 
-export const createComment = async (req: Request, res: Response) => {
+export const createProjectComment = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   const project = await Project.findById(projectId);
   const comment = new Comment(req.body);
@@ -66,16 +55,13 @@ export const createComment = async (req: Request, res: Response) => {
 
 // Delete Comment
 
-export const deleteComment = async (req: Request, res: Response) => {
+export const deleteProjectComment = async (req: Request, res: Response) => {
   const { projectId, commentId } = req.params;
   await Project.findByIdAndUpdate(projectId, {
     $pull: { comments: commentId },
   });
   await Comment.findByIdAndDelete(commentId);
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Deleted a comment", payload: projects });
+  res.status(200).json({ status: 200, message: "Deleted a comment" });
 };
 
 // Create Issue
@@ -99,10 +85,7 @@ export const createIssue = async (req: Request, res: Response) => {
 export const editIssue = async (req: Request, res: Response) => {
   const { issueId } = req.params;
   await Issue.findByIdAndUpdate(issueId, req.body);
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Edited an issue", payload: projects });
+  res.status(200).json({ status: 200, message: "Edited an issue" });
 };
 
 // Delete Issue
@@ -111,10 +94,7 @@ export const deleteIssue = async (req: Request, res: Response) => {
   const { projectId, issueId } = req.params;
   await Project.findByIdAndUpdate(projectId, { $pull: { issues: issueId } });
   await Issue.findByIdAndDelete(issueId);
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Deleted an issue", payload: projects });
+  res.status(200).json({ status: 200, message: "Deleted an issue" });
 };
 
 // Update Issue Status
@@ -125,12 +105,8 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   const issue = await Issue.findById(issueId);
   issue!.status = status;
   await issue!.save();
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({
-      status: 200,
-      message: "Updated the issue status",
-      payload: projects,
-    });
+  res.status(200).json({
+    status: 200,
+    message: "Updated the issue status",
+  });
 };

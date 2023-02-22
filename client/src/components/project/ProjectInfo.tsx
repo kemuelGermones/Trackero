@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../store";
-import { deleteProject } from "../../store/project-action";
+import { deleteProjectRequest } from "../../store/project-action";
 import { IProject } from "../../types/interface";
 import IssueForm from "../issue/IssueForm";
 import { Button, SmallButton } from "../styles/UI/Button";
@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../styles/UI/Card";
+import TextLight from "../styles/utils/TextLight";
 import ProjectForm from "./ProjectForm";
 
 interface IProjectInfo {
@@ -43,8 +44,8 @@ function ProjectInfo({ projectData }: IProjectInfo) {
     setShowIssueForm(false);
   };
 
-  const deleteProjectRequest = async () => {
-    const deleteStatus = await dispatch(deleteProject(projectData._id));
+  const deleteProjectRequestHandler = async () => {
+    const deleteStatus = await dispatch(deleteProjectRequest(projectData._id));
     if (deleteStatus === 200) {
       navigate("/projects");
     }
@@ -78,10 +79,16 @@ function ProjectInfo({ projectData }: IProjectInfo) {
             {projectData.description}
           </CardDescription>
         </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Assignees: </TextLight>
+            {projectData.assignees.map(assignee => assignee.username).join(", ")}
+          </CardDescription>
+        </CardBody>
         {userRole === "Administrator" ? (
           <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showProjectFormHandler}>Edit</Button>
-            <Button onClick={deleteProjectRequest}>Delete</Button>
+            <Button onClick={deleteProjectRequestHandler}>Delete</Button>
           </CardFooter>
         ) : null}
       </Card>

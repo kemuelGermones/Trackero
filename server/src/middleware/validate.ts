@@ -177,7 +177,10 @@ export const validateAssigneesHasIssues = async (
       issue!.assignedTo.equals(userId)
     );
     if (!foundUser) {
-      throw new AppError("A User has an assigned issue", 400);
+      throw new AppError(
+        "Cannot remove a user that has a assigned issue",
+        400
+      );
     }
   }
   next();
