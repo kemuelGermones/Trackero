@@ -6,7 +6,7 @@ interface IUserListSliceState {
   usersData: IUser[] | null;
 }
 
-interface IUpdateUsername extends IUserId {
+export interface IUpdateUsername extends IUserId {
   username: string;
 }
 

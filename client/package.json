@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
-    "@types/react-transition-group": "^4.4.5",
     "axios": "^1.2.0",
     "chart.js": "^4.1.1",
     "react": "^18.2.0",
@@ -28,6 +27,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@types/react-transition-group": "^4.4.5",
     "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "^2.2.0",
     "prettier": "^2.8.4",

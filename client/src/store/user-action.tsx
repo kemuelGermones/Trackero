@@ -91,9 +91,9 @@ export const logoutRequest = (): ThunkAction<
   };
 };
 
-// Update User's Username
+// Update Your Username
 
-export const updateUsernameRequest = (
+export const updateYourUsernameRequest = (
   username: string,
   userId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
@@ -111,15 +111,44 @@ export const updateUsernameRequest = (
           Authorization: state.user.accessToken,
         },
       });
-      if (userId === state.user.userId) {
-        dispatch(updateYourUsername(username));
+      dispatch(updateYourUsername(username));
+      dispatch(updateProjectsUsername({ userId, username }));
+      toast.dismiss(loadingToast);
+      toast.success(patchResponse.data.message, {
+        containerId: "notification",
+      });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.dismiss(loadingToast);
+        toast.error(error.response?.data.message || error.message, {
+          containerId: "notification",
+        });
       }
-      if (
-        state.user.userRole === "Administrator" &&
-        userId !== state.user.userId
-      ) {
-        dispatch(updateUsername({ userId, username }));
-      }
+    }
+  };
+};
+
+// Update User's Username
+
+export const updateUserUsernameRequest = (
+  username: string,
+  userId: string
+): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const loadingToast = toast.loading("Loading...", {
+      containerId: "loading",
+    });
+    try {
+      const patchResponse = await axios<IResponseData>({
+        method: "patch",
+        url: `${URL}/users/${userId}/username`,
+        data: { username },
+        headers: {
+          Authorization: state.user.accessToken,
+        },
+      });
+      dispatch(updateUsername({ userId, username }));
       dispatch(updateProjectsUsername({ userId, username }));
       toast.dismiss(loadingToast);
       toast.success(patchResponse.data.message, {

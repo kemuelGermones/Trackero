@@ -8,8 +8,8 @@ import {
   IProject,
   IProjectFormData,
   IProjectId,
-  IUserId,
 } from "../types/interface";
+import { IUpdateUsername } from "./user-list-slice";
 
 interface IProjectSliceState {
   projectsData: IProject[] | null;
@@ -28,10 +28,6 @@ interface IUpdateIssueStatus extends IProjectId, IIssueId {
 }
 
 interface IDeleteIssueComment extends IProjectId, IIssueId, ICommentId {}
-
-interface IUpdateProjectsUsername extends IUserId {
-  username: string;
-}
 
 const initialState: IProjectSliceState = {
   projectsData: null,
@@ -145,12 +141,9 @@ const projectSlice = createSlice({
 
     // Update Projects Data Username
 
-    updateProjectsUsername(
-      state,
-      action: PayloadAction<IUpdateProjectsUsername>
-    ) {
+    updateProjectsUsername(state, action: PayloadAction<IUpdateUsername>) {
       updateDataUsername(
-        state.projectsData,
+        state.projectsData!,
         action.payload.userId,
         action.payload.username
       );

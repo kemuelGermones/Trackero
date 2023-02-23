@@ -5,7 +5,8 @@ import { useAppDispatch } from "../../store";
 import {
   updatePasswordRequest,
   updateRoleRequest,
-  updateUsernameRequest,
+  updateUserUsernameRequest,
+  updateYourUsernameRequest,
 } from "../../store/user-action";
 import { IUser } from "../../types/interface";
 import { Button } from "../styles/UI/Button";
@@ -68,8 +69,11 @@ function UserInfo({ userData }: IUserInfo) {
   const onSubmitUsernameHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isUsernameValid = validateUsername();
-    if (isUsernameValid) {
-      dispatch(updateUsernameRequest(username, userData._id));
+    if (isUsernameValid && location.pathname === "/profile") {
+      dispatch(updateYourUsernameRequest(username, userData._id));
+    }
+    if (isUsernameValid && location.pathname === "/users") {
+      dispatch(updateUserUsernameRequest(username, userData._id));
     }
   };
 

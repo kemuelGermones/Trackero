@@ -129,7 +129,9 @@ function IssueInfo({
         {issueData.author._id === userId || userRole === "Administrator" ? (
           <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showEditIssueFormHandler}>Edit</Button>
-            <Button onClick={deleteIssueRequestHandler.bind(null, issueData._id)}>
+            <Button
+              onClick={deleteIssueRequestHandler.bind(null, issueData._id)}
+            >
               Delete
             </Button>
           </CardFooter>

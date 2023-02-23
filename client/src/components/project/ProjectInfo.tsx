@@ -82,7 +82,9 @@ function ProjectInfo({ projectData }: IProjectInfo) {
         <CardBody>
           <CardDescription $hasLimit={false}>
             <TextLight>Assignees: </TextLight>
-            {projectData.assignees.map(assignee => assignee.username).join(", ")}
+            {projectData.assignees
+              .map((assignee) => assignee.username)
+              .join(", ")}
           </CardDescription>
         </CardBody>
         {userRole === "Administrator" ? (

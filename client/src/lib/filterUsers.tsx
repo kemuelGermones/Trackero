@@ -5,7 +5,7 @@ import { IUser } from "../types/interface";
 const filterUsers = (users: IUser[], category: string) => {
   // Show All Users
 
-  if (category === "All" ) {
+  if (category === "All") {
     return users;
   }
 

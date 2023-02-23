@@ -6,7 +6,7 @@ The ultimate issue tracking app for all your project management needs. With Trac
 
 In Progress
 
-![Issue Tracker Application](https://res.cloudinary.com/de9dxfdav/image/upload/v1675587436/Project%20Promotion/Screenshot_2023-02-05_165432_trealp.jpg)
+![Issue Tracker Application](https://res.cloudinary.com/de9dxfdav/image/upload/v1677069643/Project%20Promotion/Screenshot_2023-02-22_203738_eyqjyh.jpg)
 
 ### Description
 
