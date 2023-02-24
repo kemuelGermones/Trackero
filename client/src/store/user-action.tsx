@@ -12,7 +12,7 @@ import { clearProjects, updateProjectsUsername } from "./project-slice";
 import { clearUsers, updateRole, updateUsername } from "./user-list-slice";
 import { login, logout, updateYourUsername } from "./user-slice";
 
-const URL = "http://localhost:5000";
+const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // Registers the User
 

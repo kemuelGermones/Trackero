@@ -17,7 +17,7 @@ import {
 } from "./project-slice";
 import { updateUsers } from "./user-list-slice";
 
-const URL = "http://localhost:5000";
+const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // Get Data
 
