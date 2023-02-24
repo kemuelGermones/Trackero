@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { deleteProject } from "../../store/project-action";
 
+import { useAppDispatch, useAppSelector } from "../../store";
+import { deleteProjectRequest } from "../../store/project-action";
+import { IProject } from "../../types/interface";
+import IssueForm from "../issue/IssueForm";
+import { Button, SmallButton } from "../styles/UI/Button";
 import {
   Card,
-  CardTitle,
+  CardBody,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardBody,
+  CardTitle,
 } from "../styles/UI/Card";
-import { Button } from "../styles/UI/Button";
+import TextLight from "../styles/utils/TextLight";
 import ProjectForm from "./ProjectForm";
-
-import { IProject } from "../../types/interface";
 
 interface IProjectInfo {
   projectData: IProject;
@@ -22,28 +23,31 @@ interface IProjectInfo {
 
 function ProjectInfo({ projectData }: IProjectInfo) {
   const [showProjectForm, setShowProjectForm] = useState(false);
-  const { accessToken, userRole } = useAppSelector((state) => state.user);
+  const [showIssueForm, setShowIssueForm] = useState(false);
+  const { userRole, userId } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const showProjectFormHandler = () => {
-    document.body.style.overflow = "hidden";
     setShowProjectForm(true);
   };
 
   const hideProjectFormHandler = () => {
     setShowProjectForm(false);
-    document.body.style.overflow = "unset";
   };
 
-  const deleteProjectRequest = async () => {
-    if (accessToken) {
-      const deleteStatus = await dispatch(
-        deleteProject(projectData._id, accessToken)
-      );
-      if (deleteStatus === 200) {
-        navigate("/projects");
-      }
+  const showIssueFormHandler = () => {
+    setShowIssueForm(true);
+  };
+
+  const hideIssueForm = () => {
+    setShowIssueForm(false);
+  };
+
+  const deleteProjectRequestHandler = async () => {
+    const deleteStatus = await dispatch(deleteProjectRequest(projectData._id));
+    if (deleteStatus === 200) {
+      navigate("/projects");
     }
   };
 
@@ -55,19 +59,38 @@ function ProjectInfo({ projectData }: IProjectInfo) {
           hideForm={hideProjectFormHandler}
         />
       ) : null}
+      {showIssueForm ? (
+        <IssueForm
+          hideForm={hideIssueForm}
+          projectId={projectData._id}
+          projectAssignees={projectData.assignees}
+        />
+      ) : null}
       <Card $marginBottom={true}>
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
+          {userRole === "Administrator" ||
+          projectData.assignees.find((user) => user._id === userId) ? (
+            <SmallButton onClick={showIssueFormHandler}>Add Issue</SmallButton>
+          ) : null}
         </CardHeader>
         <CardBody>
           <CardDescription $hasLimit={false}>
             {projectData.description}
           </CardDescription>
         </CardBody>
+        <CardBody>
+          <CardDescription $hasLimit={false}>
+            <TextLight>Assignees: </TextLight>
+            {projectData.assignees
+              .map((assignee) => assignee.username)
+              .join(", ")}
+          </CardDescription>
+        </CardBody>
         {userRole === "Administrator" ? (
-          <CardFooter>
+          <CardFooter $templateColumns="1fr 1fr">
             <Button onClick={showProjectFormHandler}>Edit</Button>
-            <Button onClick={deleteProjectRequest}>Delete</Button>
+            <Button onClick={deleteProjectRequestHandler}>Delete</Button>
           </CardFooter>
         ) : null}
       </Card>

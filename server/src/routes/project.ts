@@ -5,27 +5,40 @@ import {
   validateProject,
   validateComment,
   validateIssue,
-  isValidUsers,
-  isValidStatus,
+  validateStatus,
+  validateAssignees,
+  validateProjectAssignee,
+  validateAssigneesHasIssues,
+} from "../middleware/validate";
+import {
   isAdmin,
   isAdminOrCommentAuthor,
   isAdminOrIssueAuthor,
-  isAdminOrIssueAuthorOrAssignedUser
-} from "../middleware";
+  isAdminOrIssueAuthorOrAssignedUser,
+  isAdminOrProjectAssignee,
+} from "../middleware/role";
 import {
+  showProjects,
   createProject,
   editProject,
   deleteProject,
-  createComment,
-  deleteComment,
+  createProjectComment,
+  deleteProjectComment,
   createIssue,
   editIssue,
   deleteIssue,
   updateIssueStatus,
-  updateIssueAssignedTo,
 } from "../controllers/project";
 
 const router = Router({ mergeParams: true });
+
+// Show Projects
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  wrapAsync(showProjects)
+);
 
 // Create Project
 
@@ -34,6 +47,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   validateProject,
+  wrapAsync(validateAssignees),
   wrapAsync(createProject)
 );
 
@@ -44,6 +58,8 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   validateProject,
+  wrapAsync(validateAssignees),
+  wrapAsync(validateAssigneesHasIssues),
   wrapAsync(editProject)
 );
 
@@ -62,7 +78,7 @@ router.post(
   "/:projectId/comments",
   passport.authenticate("jwt", { session: false }),
   validateComment,
-  wrapAsync(createComment)
+  wrapAsync(createProjectComment)
 );
 
 // Delete Project Comment
@@ -70,8 +86,8 @@ router.post(
 router.delete(
   "/:projectId/comments/:commentId",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrCommentAuthor,
-  wrapAsync(deleteComment)
+  wrapAsync(isAdminOrCommentAuthor),
+  wrapAsync(deleteProjectComment)
 );
 
 // Create Project Issue
@@ -79,7 +95,9 @@ router.delete(
 router.post(
   "/:projectId/issues",
   passport.authenticate("jwt", { session: false }),
+  wrapAsync(isAdminOrProjectAssignee),
   validateIssue,
+  wrapAsync(validateProjectAssignee),
   wrapAsync(createIssue)
 );
 
@@ -88,8 +106,9 @@ router.post(
 router.put(
   "/:projectId/issues/:issueId",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrIssueAuthor,
+  wrapAsync(isAdminOrIssueAuthor),
   validateIssue,
+  wrapAsync(validateProjectAssignee),
   wrapAsync(editIssue)
 );
 
@@ -98,7 +117,7 @@ router.put(
 router.delete(
   "/:projectId/issues/:issueId",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrIssueAuthor,
+  wrapAsync(isAdminOrIssueAuthor),
   wrapAsync(deleteIssue)
 );
 
@@ -107,19 +126,9 @@ router.delete(
 router.patch(
   "/:projectId/issues/:issueId/status",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrIssueAuthorOrAssignedUser,
-  isValidStatus,
+  wrapAsync(isAdminOrIssueAuthorOrAssignedUser),
+  validateStatus,
   wrapAsync(updateIssueStatus)
-);
-
-// Update Project Issue Assigned To
-
-router.patch(
-  "/:projectId/issues/:issueId/assignedTo",
-  passport.authenticate("jwt", { session: false }),
-  isAdminOrIssueAuthor,
-  isValidUsers,
-  wrapAsync(updateIssueAssignedTo)
 );
 
 export default router;

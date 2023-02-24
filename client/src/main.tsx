@@ -1,10 +1,11 @@
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { BrowserRouter } from "react-router-dom";
 import { persistStore } from "redux-persist";
-import store from "./store/index";
+import { PersistGate } from "redux-persist/integration/react";
+
 import App from "./App";
+import store from "./store/index";
 
 let persistor = persistStore(store);
 

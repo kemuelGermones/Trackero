@@ -1,89 +1,83 @@
-import { useEffect, useState, useMemo } from "react";
-import { useAppSelector } from "../store";
-import listAllIssues from "../lib/listAllIssues";
-import foundProjectId from "../lib/foundProjectId";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  PageDashboardLayout,
-  FirstSection,
-  SecondSection,
-} from "../components/styles/layout/PageDashboardLayout";
-import Instruction from "../components/instruction/Instruction";
-import IssueGraph from "../components/issue/IssueGraph";
-import IssueTable from "../components/issue/IssueTable";
-import IssueInfo from "../components/issue/IssueInfo";
+import Info from "../components/info/Info";
 import IssueComment from "../components/issue/IssueComment";
-
-import { IIssue } from "../types/interface";
+import IssueGraph from "../components/issue/IssueGraph";
+import IssueInfo from "../components/issue/IssueInfo";
+import IssueTable from "../components/issue/IssueTable";
+import { PageDashboardLayout } from "../components/styles/layout/PageDashboardLayout";
+import foundProject from "../lib/foundProject";
+import listAllIssues from "../lib/listAllIssues";
+import { useAppSelector } from "../store";
+import { IIssue, IProject } from "../types/interface";
 
 type TCurrentIssueState = IIssue | null;
-type TCurrentProjectIssueId = string | null;
+type TCurrentProjectIssueId = IProject | null;
 
 function Issues() {
   const projects = useAppSelector((state) => state.project.projectsData);
   const [currentIssue, setCurrentIssue] = useState<TCurrentIssueState>(null);
-  const [currentProjectIssueId, setCurrentProjectIssueId] =
+  const [currentProject, setCurrentProject] =
     useState<TCurrentProjectIssueId>(null);
 
   const allIssues = useMemo(() => {
     if (projects) {
       return listAllIssues(projects);
     }
-    return null;
   }, [projects]);
 
   useEffect(() => {
     if (allIssues && currentIssue) {
       setCurrentIssue((state) => {
-        if (state) {
-          const foundIssue = allIssues.find((issue) => issue._id === state._id);
-          return foundIssue ? foundIssue : null;
-        }
-        return state;
+        const foundIssue = allIssues.find((issue) => issue._id === state!._id);
+        return foundIssue ? foundIssue : null;
       });
     }
   }, [allIssues]);
 
   useEffect(() => {
-    if (currentIssue && projects) {
-      setCurrentProjectIssueId(foundProjectId(projects, currentIssue._id));
+    if (currentIssue) {
+      setCurrentProject(foundProject(projects!, currentIssue._id));
     }
   }, [currentIssue]);
 
-  return (
+  const setCurrentIssueHandler = useCallback((issue: IIssue) => {
+    setCurrentIssue(issue);
+  }, []);
+
+  return allIssues ? (
     <PageDashboardLayout $templateColumns="1.5fr 1fr">
-      <FirstSection>
-        {allIssues ? (
-          <>
-            <IssueGraph issuesData={allIssues} />
-            <Instruction>
-              To view the issue details in the table, locate the row containing
-              it and click on the corresponding cell with your mouse cursor.
-            </Instruction>
-            <IssueTable
-              issuesData={allIssues}
-              setCurrentIssue={setCurrentIssue}
-              issuesPerTable={10}
-            />
-          </>
-        ) : null}
-      </FirstSection>
-      <SecondSection>
-        {currentIssue && currentProjectIssueId ? (
+      <div>
+        <IssueGraph issuesData={allIssues} />
+        <Info>
+          To view the issue details in the table, locate the row containing it
+          and click on the corresponding cell with your mouse cursor.
+        </Info>
+        <IssueTable
+          issuesData={allIssues}
+          setCurrentIssue={setCurrentIssueHandler}
+          issuesPerTable={10}
+        />
+      </div>
+      <div>
+        {currentIssue && currentProject ? (
           <>
             <IssueInfo
-              projectId={currentProjectIssueId}
+              projectId={currentProject._id}
+              projectAssignees={currentProject.assignees}
+              projectTitle={currentProject.title}
               issueData={currentIssue}
             />
             <IssueComment
-              projectId={currentProjectIssueId}
-              issueData={currentIssue}
+              projectId={currentProject._id}
+              issueId={currentIssue._id}
+              issueComments={currentIssue.comments}
             />
           </>
         ) : null}
-      </SecondSection>
+      </div>
     </PageDashboardLayout>
-  );
+  ) : null;
 }
 
 export default Issues;

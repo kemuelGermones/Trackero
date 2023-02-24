@@ -5,11 +5,9 @@ export const LoginPageLayout = styled.main`
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-areas: "hero form";
 `;
 
 export const HeroSection = styled.section`
-  grid-area: hero;
   background-color: var(--tertiary);
   display: flex;
   flex-direction: column;
@@ -18,7 +16,7 @@ export const HeroSection = styled.section`
 `;
 
 export const HeroImg = styled.img`
-  width: 35rem;
+  width: 30rem;
 `;
 
 export const HeroTitle = styled.h1`
@@ -30,12 +28,11 @@ export const HeroTitle = styled.h1`
 export const HeroDescription = styled.p`
   color: var(--secondary);
   text-align: center;
-  padding: 0 5rem;
   margin: 0;
+  max-width: 60ch;
 `;
 
 export const FormSection = styled.section`
-  grid-area: form;
   display: flex;
   justify-content: center;
   align-items: center;

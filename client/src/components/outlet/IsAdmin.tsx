@@ -1,8 +1,9 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+
 import { useAppSelector } from "../../store";
 
 function IsAdmin() {
-  const userRole = useAppSelector((state) => state.user.userRole);
+  const { userRole } = useAppSelector((state) => state.user);
 
   return userRole === "Administrator" ? <Outlet /> : <Navigate to="/error" />;
 }

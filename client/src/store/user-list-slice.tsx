@@ -1,20 +1,20 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { IUser } from "../types/interface";
+import { IUser, IUserId } from "../types/interface";
 
-interface IUserId {
-  userId: string;
-}
-
-interface IUpdateUserUsernameDataAction extends IUserId {
-  username: string;
-}
-
-interface IUserListIniitalState {
+interface IUserListSliceState {
   usersData: IUser[] | null;
 }
 
-const initialState: IUserListIniitalState = {
+export interface IUpdateUsername extends IUserId {
+  username: string;
+}
+
+interface IUpdateRole extends IUserId {
+  role: string;
+}
+
+const initialState: IUserListSliceState = {
   usersData: null,
 };
 
@@ -24,48 +24,37 @@ const userListSlice = createSlice({
   reducers: {
     // Save Users list Data
 
-    updateUsersData(state, action: PayloadAction<IUser[]>) {
+    updateUsers(state, action: PayloadAction<IUser[]>) {
       state.usersData = action.payload;
     },
 
     // Clear users list data
 
-    clearUsersData(state) {
+    clearUsers(state) {
       state.usersData = null;
     },
 
     // Update User's Username
 
-    updateUserUsernameData(
-      state,
-      action: PayloadAction<IUpdateUserUsernameDataAction>
-    ) {
-      if (state.usersData) {
-        const foundUserIndex = state.usersData.findIndex(
-          (user) => user._id === action.payload.userId
-        );
-        state.usersData[foundUserIndex].username = action.payload.username;
-      }
+    updateUsername(state, action: PayloadAction<IUpdateUsername>) {
+      const userIndex = state.usersData!.findIndex(
+        (user) => user._id === action.payload.userId
+      );
+      state.usersData![userIndex].username = action.payload.username;
     },
 
     // Update User's Role
 
-    updateUserRoleData(state, action) {
-      if (state.usersData) {
-        const foundUserIndex = state.usersData.findIndex(
-          (user) => user._id === action.payload.userId
-        );
-        state.usersData[foundUserIndex].role = action.payload.role;
-      }
+    updateRole(state, action: PayloadAction<IUpdateRole>) {
+      const userIndex = state.usersData!.findIndex(
+        (user) => user._id === action.payload.userId
+      );
+      state.usersData![userIndex].role = action.payload.role;
     },
   },
 });
 
-export const {
-  updateUsersData,
-  clearUsersData,
-  updateUserUsernameData,
-  updateUserRoleData,
-} = userListSlice.actions;
+export const { updateUsers, clearUsers, updateUsername, updateRole } =
+  userListSlice.actions;
 
 export default userListSlice.reducer;

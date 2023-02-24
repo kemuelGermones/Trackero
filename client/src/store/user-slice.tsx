@@ -1,23 +1,22 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface IRecievedUserDataAction {
-  userId: string;
-  userRole: "Administrator" | "Developer";
-  token: string;
-  expiresIn: number;
-}
+import { IUserCredentials } from "../types/interface";
 
-interface IInitialStateUserSlice {
+interface IUserSliceState {
   login: boolean;
   userId: string | null;
-  userRole: "Administrator" | "Developer" | null;
+  userEmail: string | null;
+  userUsername: string | null;
+  userRole: string | null;
   accessToken: string | null;
   expiration: number | null;
 }
 
-const initialState: IInitialStateUserSlice = {
+const initialState: IUserSliceState = {
   login: false,
   userId: null,
+  userEmail: null,
+  userUsername: null,
   userRole: null,
   accessToken: null,
   expiration: null,
@@ -29,10 +28,12 @@ const userSlice = createSlice({
   reducers: {
     // Save User Credentials
 
-    login(state, action: PayloadAction<IRecievedUserDataAction>) {
+    login(state, action: PayloadAction<IUserCredentials>) {
       state.login = true;
-      state.userId = action.payload.userId;
-      state.userRole = action.payload.userRole;
+      state.userId = action.payload._id;
+      state.userEmail = action.payload.email;
+      state.userUsername = action.payload.username;
+      state.userRole = action.payload.role;
       state.accessToken = action.payload.token;
       state.expiration = action.payload.expiresIn * 1000 + new Date().getTime();
     },
@@ -42,13 +43,21 @@ const userSlice = createSlice({
     logout(state) {
       state.login = false;
       state.userId = null;
+      state.userEmail = null;
+      state.userUsername = null;
       state.userRole = null;
       state.accessToken = null;
       state.expiration = null;
     },
+
+    // Update Your Username
+
+    updateYourUsername(state, action: PayloadAction<string>) {
+      state.userUsername = action.payload;
+    },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateYourUsername } = userSlice.actions;
 
 export default userSlice.reducer;

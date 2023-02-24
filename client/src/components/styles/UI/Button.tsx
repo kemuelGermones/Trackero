@@ -1,5 +1,5 @@
+import { BsPlusLg, BsTrash } from "react-icons/bs";
 import styled from "styled-components";
-import { BsTrash, BsPlusLg } from "react-icons/bs";
 
 interface IPaginationCustomProps {
   $isActive: boolean;
@@ -13,9 +13,8 @@ export const Button = styled.button`
   border: none;
   background-color: var(--tertiary);
   color: white;
-  font-family: "Poppins";
+  font-family: var(--main-font);
   font-size: 1rem;
-  margin: 0.5rem 0;
   outline: none;
 
   &:hover {
@@ -24,17 +23,14 @@ export const Button = styled.button`
 `;
 
 export const SmallButton = styled.button`
-  padding: 0.2rem 0.75rem;
+  padding: 0.3rem 0.5rem;
   box-sizing: border-box;
   border-radius: 0.5rem;
   border: none;
   background-color: var(--tertiary);
   color: white;
   font-size: 0.75rem;
-  margin-left: 0.5rem;
-  font-family: "Poppins";
-  display: flex;
-  align-items: center;
+  font-family: var(--main-font);
   outline: none;
 
   &:hover {
@@ -66,24 +62,23 @@ export const TrashButton = styled(BsTrash)`
 `;
 
 export const DropdownButton = styled.select`
-    margin-left: 0.5rem;
-    padding: 0.3rem 0.5rem;
-    width: 11.5rem;
-    box-sizing: border-box;
-    border-radius: 0.5rem;
-    border: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url("/white-arrow-down.png");
-    background-repeat: no-repeat;
-    background-size: 0.6rem;
-    background-position: 93% center;
-    background-color: var(--tertiary);
-    color: white;
-    font-size: 0.75rem
-    font-family: "Poppins";
-    outline: none;
+  padding: 0.3rem 0.5rem;
+  width: 11.5rem;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("/white-arrow-down.png");
+  background-repeat: no-repeat;
+  background-size: 0.6rem;
+  background-position: 93% center;
+  background-color: var(--tertiary);
+  color: white;
+  font-size: 0.75rem
+  font-family: var(--main-font);
+  outline: none;
 `;
 
 export const PlusButton = styled(BsPlusLg)`

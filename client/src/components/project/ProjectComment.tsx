@@ -1,33 +1,32 @@
 import { Fragment } from "react";
+
+import useValidation from "../../hooks/useValidation";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
-  deleteProjectComment,
-  addProjectComment,
+  addProjectCommentRequest,
+  deleteProjectCommentRequest,
 } from "../../store/project-action";
-import useValidation from "../../hooks/useValidation";
-
+import { IComment } from "../../types/interface";
+import { Button, TrashButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
   CardDescription,
   CardDivider,
+  CardFooter,
   CardHeader,
 } from "../styles/UI/Card";
-import { Form, TextArea, Label } from "../styles/UI/Form";
-import { Button, TrashButton } from "../styles/UI/Button";
-
-import { IProject } from "../../types/interface";
+import { Form, Label, TextArea } from "../styles/UI/Form";
 import TextLight from "../styles/utils/TextLight";
 
 interface IProjectComment {
-  projectData: IProject;
+  projectId: string;
+  projectComments: IComment[];
 }
 
-function ProjectComment({ projectData }: IProjectComment) {
+function ProjectComment({ projectId, projectComments }: IProjectComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId, userRole } = useAppSelector(
-    (state) => state.user
-  );
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const {
     value: comment,
@@ -37,13 +36,8 @@ function ProjectComment({ projectData }: IProjectComment) {
     validateValue: validateComment,
   } = useValidation((str) => str.trim().length > 0, "");
 
-  const deleteProjectCommentRequest = (
-    projectId: string,
-    commentId: string
-  ) => {
-    if (accessToken) {
-      dispatch(deleteProjectComment(projectId, commentId, accessToken));
-    }
+  const deleteProjectCommentRequestHandler = (commentId: string) => {
+    dispatch(deleteProjectCommentRequest(projectId, commentId));
   };
 
   const onChangeCommentHandler = (
@@ -55,9 +49,9 @@ function ProjectComment({ projectData }: IProjectComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && accessToken) {
-      dispatch(addProjectComment({ comment }, projectData._id, accessToken));
-      commentReset();
+    if (commentIsValid) {
+      dispatch(addProjectCommentRequest(comment, projectId));
+      commentReset("");
     }
   };
 
@@ -72,12 +66,12 @@ function ProjectComment({ projectData }: IProjectComment) {
           value={comment}
           $isInvalid={commentError}
         />
-        <Button>Submit</Button>
+        <CardFooter $templateColumns="1fr">
+          <Button>Submit</Button>
+        </CardFooter>
       </Form>
-      <Label>
-        {projectData.comments.length === 0 ? "No Comments" : "Comments"}
-      </Label>
-      {projectData.comments.map((comment) => (
+      <Label>{projectComments.length === 0 ? "No Comments" : "Comments"}</Label>
+      {projectComments.map((comment) => (
         <Fragment key={comment._id}>
           <CardBody>
             <CardDescription $hasLimit={false}>
@@ -91,9 +85,8 @@ function ProjectComment({ projectData }: IProjectComment) {
             </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
-                onClick={deleteProjectCommentRequest.bind(
+                onClick={deleteProjectCommentRequestHandler.bind(
                   null,
-                  projectData._id,
                   comment._id
                 )}
               />

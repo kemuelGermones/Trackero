@@ -1,30 +1,33 @@
-import { useLocation } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { logoutUser } from "../../store/user-action";
 import {
-  BsFolder,
-  BsExclamationTriangle,
-  BsPerson,
-  BsPeople,
   BsBoxArrowInLeft,
+  BsExclamationTriangle,
+  BsFolder,
+  BsPeople,
+  BsPerson,
 } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
 
-import { Nav, NavBrand, NavMenu, NavItem, NavUnit } from "../styles/UI/Nav";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { logoutRequest } from "../../store/user-action";
+import { Nav, NavBrand, NavItem, NavMenu, NavUnit } from "../styles/UI/Nav";
 
 function SideBar() {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const { userRole } = useAppSelector((state) => state.user);
+  const userRole = useAppSelector((state) => state.user.userRole);
 
   const logoutHandler = () => {
-    dispatch(logoutUser());
+    dispatch(logoutRequest());
   };
 
   return (
     <Nav>
       <NavBrand>Trackero</NavBrand>
       <NavMenu>
-        <NavItem to="/projects" $isActive={location.pathname === "/projects"}>
+        <NavItem
+          to="/projects"
+          $isActive={location.pathname.slice(0, 9) === "/projects"}
+        >
           <BsFolder /> Projects
         </NavItem>
         <NavItem to="/issues" $isActive={location.pathname === "/issues"}>

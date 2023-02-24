@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function useValidation<T>(
   validation: ((str: T) => boolean) | null,
@@ -7,17 +7,13 @@ function useValidation<T>(
   const [value, setValue] = useState(defaultValue);
   const [valueError, setValueError] = useState(false);
 
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
-
-  const onChangeValueHandler = (text: T) => {
-    setValue(text);
+  const onChangeValueHandler = (data: T) => {
+    setValue(data);
     setValueError(false);
   };
 
-  const onResetValueHandler = () => {
-    setValue(defaultValue);
+  const onResetValueHandler = (data: T) => {
+    setValue(data);
     setValueError(false);
   };
 

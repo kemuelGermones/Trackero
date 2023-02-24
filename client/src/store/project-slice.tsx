@@ -1,35 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { IProject } from "../types/interface";
-import { IIssueData, IProjectData } from "../types/interface";
+import updateDataUsername from "../lib/updateDataUsername";
+import {
+  ICommentId,
+  IIssueFormData,
+  IIssueId,
+  IProject,
+  IProjectFormData,
+  IProjectId,
+} from "../types/interface";
+import { IUpdateUsername } from "./user-list-slice";
 
-interface IDataId {
-  projectId: string;
-  issueId: string;
-}
-
-interface IDataState {
+interface IProjectSliceState {
   projectsData: IProject[] | null;
 }
 
-interface IEditProjectAction extends IProjectData {
-  projectId: string;
+interface IEditProject extends IProjectId, IProjectFormData {}
+
+interface IDeleteProjectComment extends IProjectId, ICommentId {}
+
+interface IEditIssue extends IProjectId, IIssueId, IIssueFormData {}
+
+interface IDeleteIssue extends IProjectId, IIssueId {}
+
+interface IUpdateIssueStatus extends IProjectId, IIssueId {
+  status: string;
 }
 
-interface IDeleteProjectCommentAction {
-  projectId: string;
-  commentId: string;
-}
+interface IDeleteIssueComment extends IProjectId, IIssueId, ICommentId {}
 
-interface IDeleteProjectIssueCommentAction extends IDataId {
-  commentId: string;
-}
-
-type TEditIssueDataAction = IDataId & IIssueData;
-
-type TUpdateIssueStatusAction = IDataId & { status: string };
-
-const initialState: IDataState = {
+const initialState: IProjectSliceState = {
   projectsData: null,
 };
 
@@ -37,163 +37,131 @@ const projectSlice = createSlice({
   name: "project",
   initialState,
   reducers: {
-    // Save Project Data
+    // Save Projects Data
 
-    updateProjectsData(state, action: PayloadAction<IProject[]>) {
+    updateProjects(state, action: PayloadAction<IProject[]>) {
       state.projectsData = action.payload;
     },
 
-    // Clear Project Data
+    // Clear Projects Data
 
-    clearProjectsData(state) {
+    clearProjects(state) {
       state.projectsData = null;
     },
 
     // Edit Project
 
-    editProjectData(state, action: PayloadAction<IEditProjectAction>) {
-      if (state.projectsData) {
-        const index = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
-        );
-        state.projectsData[index].title = action.payload.title;
-        state.projectsData[index].description = action.payload.description;
-      }
+    editProject(state, action: PayloadAction<IEditProject>) {
+      const index = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      state.projectsData![index].title = action.payload.title;
+      state.projectsData![index].description = action.payload.description;
+      state.projectsData![index].assignees = action.payload.assignees;
     },
 
     // Delete Project
 
-    deleteProjectData(state, action: PayloadAction<string>) {
-      if (state.projectsData) {
-        state.projectsData = state.projectsData.filter(
-          (project) => project._id !== action.payload
-        );
-      }
+    deleteProject(state, action: PayloadAction<string>) {
+      state.projectsData = state.projectsData!.filter(
+        (project) => project._id !== action.payload
+      );
     },
 
     // Delete Project Comment
 
-    deleteProjectCommentData(
-      state,
-      action: PayloadAction<IDeleteProjectCommentAction>
-    ) {
-      if (state.projectsData) {
-        const index = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
-        );
-        state.projectsData[index].comments = state.projectsData[
-          index
-        ].comments.filter(
-          (comment) => comment._id !== action.payload.commentId
-        );
-      }
+    deleteProjectComment(state, action: PayloadAction<IDeleteProjectComment>) {
+      const index = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      state.projectsData![index].comments = state.projectsData![
+        index
+      ].comments.filter((comment) => comment._id !== action.payload.commentId);
     },
 
     // Edit Project Issue
 
-    editProjectIssue(state, action: PayloadAction<TEditIssueDataAction>) {
-      if (state.projectsData) {
-        const foundProjectIndex = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
-        );
-        const foundIssueIndex = state.projectsData[
-          foundProjectIndex
-        ].issues.findIndex((issue) => issue._id === action.payload.issueId);
-        state.projectsData[foundProjectIndex].issues[foundIssueIndex].title =
-          action.payload.title;
-        state.projectsData[foundProjectIndex].issues[
-          foundIssueIndex
-        ].description = action.payload.description;
-        state.projectsData[foundProjectIndex].issues[
-          foundIssueIndex
-        ].importance = action.payload.importance;
-        state.projectsData[foundProjectIndex].issues[foundIssueIndex].dueDate =
-          action.payload.dueDate;
-      }
+    editIssue(state, action: PayloadAction<IEditIssue>) {
+      const projectIndex = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      const issueIndex = state.projectsData![projectIndex].issues.findIndex(
+        (issue) => issue._id === action.payload.issueId
+      );
+      state.projectsData![projectIndex].issues[issueIndex].title =
+        action.payload.title;
+      state.projectsData![projectIndex].issues[issueIndex].description =
+        action.payload.description;
+      state.projectsData![projectIndex].issues[issueIndex].importance =
+        action.payload.importance;
+      state.projectsData![projectIndex].issues[issueIndex].assignedTo =
+        action.payload.assignedTo;
+      state.projectsData![projectIndex].issues[issueIndex].dueDate =
+        action.payload.dueDate;
     },
 
     // Delete Project Issue
 
-    deleteProjectIssue(state, action: PayloadAction<IDataId>) {
-      if (state.projectsData) {
-        const foundProjectIndex = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
-        );
-        state.projectsData[foundProjectIndex].issues = state.projectsData[
-          foundProjectIndex
-        ].issues.filter((issue) => issue._id !== action.payload.issueId);
-      }
+    deleteIssue(state, action: PayloadAction<IDeleteIssue>) {
+      const projectIndex = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      state.projectsData![projectIndex].issues = state.projectsData![
+        projectIndex
+      ].issues.filter((issue) => issue._id !== action.payload.issueId);
     },
 
-    //  Update Project Issue Status
+    // Update Project Issue Status
 
-    updateProjectIssueStatus(
-      state,
-      action: PayloadAction<TUpdateIssueStatusAction>
-    ) {
-      if (state.projectsData) {
-        const foundProjectIndex = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
-        );
-        const foundIssueIndex = state.projectsData[
-          foundProjectIndex
-        ].issues.findIndex((issue) => issue._id === action.payload.issueId);
-        state.projectsData[foundProjectIndex].issues[foundIssueIndex].status =
-          action.payload.status;
-      }
-    },
-
-    //Update Project Issue Assigned Users
-
-    updateProjectIssueAssignedTo(state, action) {
-      if (state.projectsData) {
-        const foundProjectIndex = state.projectsData.findIndex(
-          (state) => state._id === action.payload.projectId
-        );
-        const foundIssueIndex = state.projectsData[
-          foundProjectIndex
-        ].issues.findIndex((issue) => issue._id === action.payload.issueId);
-        state.projectsData[foundProjectIndex].issues[
-          foundIssueIndex
-        ].assignedTo = action.payload.assignedTo;
-      }
+    updateIssueStatus(state, action: PayloadAction<IUpdateIssueStatus>) {
+      const projectIndex = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      const issueIndex = state.projectsData![projectIndex].issues.findIndex(
+        (issue) => issue._id === action.payload.issueId
+      );
+      state.projectsData![projectIndex].issues[issueIndex].status =
+        action.payload.status;
     },
 
     // Delete Project Issue Comment
 
-    deleteProjectIssueComment(
-      state,
-      action: PayloadAction<IDeleteProjectIssueCommentAction>
-    ) {
-      if (state.projectsData) {
-        const foundProjectIndex = state.projectsData.findIndex(
-          (project) => project._id === action.payload.projectId
+    deleteIssueComment(state, action: PayloadAction<IDeleteIssueComment>) {
+      const projectIndex = state.projectsData!.findIndex(
+        (project) => project._id === action.payload.projectId
+      );
+      const issueIndex = state.projectsData![projectIndex].issues.findIndex(
+        (issue) => issue._id === action.payload.issueId
+      );
+      state.projectsData![projectIndex].issues[issueIndex].comments =
+        state.projectsData![projectIndex].issues[issueIndex].comments.filter(
+          (comment) => comment._id !== action.payload.commentId
         );
-        const foundIssueIndex = state.projectsData[
-          foundProjectIndex
-        ].issues.findIndex((issue) => issue._id === action.payload.issueId);
-        state.projectsData[foundProjectIndex].issues[foundIssueIndex].comments =
-          state.projectsData[foundProjectIndex].issues[
-            foundIssueIndex
-          ].comments.filter(
-            (comment) => comment._id !== action.payload.commentId
-          );
-      }
+    },
+
+    // Update Projects Data Username
+
+    updateProjectsUsername(state, action: PayloadAction<IUpdateUsername>) {
+      updateDataUsername(
+        state.projectsData!,
+        action.payload.userId,
+        action.payload.username
+      );
     },
   },
 });
 
 export const {
-  updateProjectsData,
-  clearProjectsData,
-  editProjectData,
-  deleteProjectData,
-  updateProjectIssueStatus,
-  updateProjectIssueAssignedTo,
-  deleteProjectCommentData,
-  editProjectIssue,
-  deleteProjectIssue,
-  deleteProjectIssueComment,
+  updateProjects,
+  clearProjects,
+  deleteProject,
+  editProject,
+  deleteProjectComment,
+  editIssue,
+  deleteIssue,
+  updateIssueStatus,
+  deleteIssueComment,
+  updateProjectsUsername,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

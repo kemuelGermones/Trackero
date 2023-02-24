@@ -3,7 +3,6 @@ import { connect, connection } from "mongoose";
 import projectRoute from "./routes/project";
 import issueRoute from "./routes/issue";
 import userRoute from "./routes/user";
-import dataRoute from "./routes/data";
 import AppError from "./utils/AppError";
 import cors from "cors";
 import passport from "passport";
@@ -11,6 +10,11 @@ import passportConfig from "./config/passport";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import { Types } from "mongoose";
+import dotenv from "dotenv";
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 declare global {
   namespace Express {
@@ -30,7 +34,7 @@ const app = express();
 
 // Mongoose Connection
 
-const dbUrl = "mongodb://127.0.0.1:27017/bug";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/bug";
 connect(dbUrl);
 connection.on("error", console.error.bind(console, "connection error:"));
 connection.once("open", () => {
@@ -66,7 +70,6 @@ passportConfig(passport);
 
 // Routes
 
-app.use("/", dataRoute);
 app.use("/users", userRoute);
 app.use("/projects", projectRoute);
 app.use("/issues", issueRoute);
@@ -80,13 +83,13 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 // Error Handler
 
 app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
-  const { message = "Something Went Wrong", status = 500 } = err;
+  const { status = 500, message = "Something Went Wrong" } = err;
   res.status(status).json({ status, message });
 });
 
 // listens for connections on the given path
 
-const port: number = 5000;
+const port: string | number = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log("Listening to port " + port);
 });

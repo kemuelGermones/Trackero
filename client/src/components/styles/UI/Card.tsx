@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+
 interface ICustomCardProp {
   $center?: boolean;
   $width?: string;
+  $height?: string;
   $marginBottom?: boolean;
 }
 
@@ -10,11 +12,16 @@ interface ICustomCardDescriptionProp {
   $hasLimit: boolean;
 }
 
+interface ICustomCardFooterProp {
+  $templateColumns: string;
+}
+
 export const Card = styled.div<ICustomCardProp>`
   background: var(--secondary);
   border-radius: 0.5rem;
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
   width: ${(props) => (props.$width ? props.$width : "")};
+  height: ${(props) => (props.$height ? props.$height : "")};
   box-sizing: border-box;
   padding: 1rem;
   display: flex;
@@ -56,10 +63,11 @@ export const CardDivider = styled.hr`
   border: none;
 `;
 
-export const CardFooter = styled.div`
+export const CardFooter = styled.div<ICustomCardFooterProp>`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${(props) => props.$templateColumns};
   grid-column-gap: 1rem;
+  margin: 0.5rem 0;
 `;
 
 export const CardFooterText = styled.p`

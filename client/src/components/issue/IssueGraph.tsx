@@ -1,11 +1,11 @@
+import "chart.js/auto";
+import React from "react";
 import { useMemo } from "react";
 import { Chart } from "react-chartjs-2";
-import "chart.js/auto";
-
-import { IssueGraphLayout, GraphBox } from "../styles/layout/IssueGraphLayout";
-import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
 
 import { IIssue } from "../../types/interface";
+import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
+import { GraphBox, IssueGraphLayout } from "../styles/layout/IssueGraphLayout";
 
 interface IIssueGraph {
   issuesData: IIssue[];
@@ -83,4 +83,4 @@ function IssueGraph({ issuesData }: IIssueGraph) {
   );
 }
 
-export default IssueGraph;
+export default React.memo(IssueGraph);

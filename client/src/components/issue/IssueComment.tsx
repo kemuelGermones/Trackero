@@ -1,31 +1,33 @@
 import { Fragment } from "react";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { addIssueComment, deleteIssueComment } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
 
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch, useAppSelector } from "../../store";
+import {
+  addIssueCommentRequest,
+  deleteIssueCommentRequest,
+} from "../../store/issue-action";
+import { IComment } from "../../types/interface";
+import { Button, TrashButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
   CardDescription,
   CardDivider,
+  CardFooter,
   CardHeader,
 } from "../styles/UI/Card";
-import { Form, TextArea, Label } from "../styles/UI/Form";
-import { Button, TrashButton } from "../styles/UI/Button";
-
-import { IIssue } from "../../types/interface";
+import { Form, Label, TextArea } from "../styles/UI/Form";
 import TextLight from "../styles/utils/TextLight";
 
 interface IIssueComment {
   projectId: string;
-  issueData: IIssue;
+  issueId: string;
+  issueComments: IComment[];
 }
 
-function IssueComment({ projectId, issueData }: IIssueComment) {
+function IssueComment({ projectId, issueId, issueComments }: IIssueComment) {
   const dispatch = useAppDispatch();
-  const { accessToken, userId, userRole } = useAppSelector(
-    (state) => state.user
-  );
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const {
     value: comment,
@@ -44,20 +46,18 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
   const onSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentIsValid = validateComment();
-    if (commentIsValid && accessToken) {
-      dispatch(addIssueComment({ comment }, issueData._id, accessToken));
-      commentReset();
+    if (commentIsValid) {
+      dispatch(addIssueCommentRequest(comment, issueId));
+      commentReset("");
     }
   };
 
-  const deleteIssueCommentHandler = (issueId: string, commentId: string) => {
-    if (accessToken) {
-      dispatch(deleteIssueComment(projectId, issueId, commentId, accessToken));
-    }
+  const deleteIssueCommentRequestHandler = (commentId: string) => {
+    dispatch(deleteIssueCommentRequest(projectId, issueId, commentId));
   };
 
   return (
-    <Card style={{ marginBottom: "1rem" }}>
+    <Card>
       <Label>Leave a Comment</Label>
       <Form onSubmit={onSubmitComment}>
         <TextArea
@@ -66,12 +66,12 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
           $isInvalid={commentError}
           value={comment}
         />
-        <Button>Submit</Button>
+        <CardFooter $templateColumns="1fr">
+          <Button>Submit</Button>
+        </CardFooter>
       </Form>
-      <Label>
-        {issueData.comments.length === 0 ? "No Comments" : "Comments"}
-      </Label>
-      {issueData.comments.map((comment) => (
+      <Label>{issueComments.length === 0 ? "No Comments" : "Comments"}</Label>
+      {issueComments.map((comment) => (
         <Fragment key={comment._id}>
           <CardBody>
             <CardDescription $hasLimit={false}>
@@ -84,9 +84,8 @@ function IssueComment({ projectId, issueData }: IIssueComment) {
             </CardDescription>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
-                onClick={deleteIssueCommentHandler.bind(
+                onClick={deleteIssueCommentRequestHandler.bind(
                   null,
-                  issueData._id,
                   comment._id
                 )}
               />

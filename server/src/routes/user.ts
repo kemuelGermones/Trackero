@@ -1,6 +1,7 @@
 import { Router } from "express";
 import wrapAsync from "../utils/wrapAsync";
 import {
+  showUsers,
   registerUser,
   loginUser,
   updateUserUsername,
@@ -8,15 +9,27 @@ import {
   updateUserRole,
 } from "../controllers/user";
 import {
-  isValidPassword,
-  isValidUsername,
-  isValidRole,
+  validatePassword,
+  validateUsername,
+  validateRole,
+} from "../middleware/validate";
+import {
+  isAdmin,
   isAdminOrActualUser,
-  isAdminAndNotActualUser
-} from "../middleware";
+  isNotActualUser,
+} from "../middleware/role";
 import passport from "passport";
 
 const router = Router({ mergeParams: true });
+
+// Show Users
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  isAdmin,
+  wrapAsync(showUsers)
+);
 
 // Registers the User
 
@@ -31,8 +44,8 @@ router.post("/login", wrapAsync(loginUser));
 router.patch(
   "/:userId/username",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrActualUser,
-  isValidUsername,
+  wrapAsync(isAdminOrActualUser),
+  validateUsername,
   wrapAsync(updateUserUsername)
 );
 
@@ -41,8 +54,8 @@ router.patch(
 router.patch(
   "/:userId/password",
   passport.authenticate("jwt", { session: false }),
-  isAdminOrActualUser,
-  isValidPassword,
+  wrapAsync(isAdminOrActualUser),
+  validatePassword,
   wrapAsync(updateUserPassword)
 );
 
@@ -51,8 +64,9 @@ router.patch(
 router.patch(
   "/:userId/role",
   passport.authenticate("jwt", { session: false }),
-  isAdminAndNotActualUser,
-  isValidRole,
+  isAdmin,
+  wrapAsync(isNotActualUser),
+  validateRole,
   wrapAsync(updateUserRole)
 );
 

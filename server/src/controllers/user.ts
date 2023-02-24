@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import Project from "../models/project";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const secret = "mySecret";
+const secret: string = process.env.SECRET || "mySecret";
+
+// Show all users
+
+export const showUsers = async (req: Request, res: Response) => {
+  const users = await User.find();
+  res.status(200).send(users);
+};
 
 // Registers the User
 
@@ -25,7 +31,9 @@ export const registerUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          id: findUser._id,
+          _id: findUser._id,
+          email: findUser.email,
+          username: findUser.username,
           role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,
@@ -50,7 +58,9 @@ export const loginUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          id: findUser._id,
+          _id: findUser._id,
+          email: findUser.email,
+          username: findUser.username,
           role: findUser.role,
           expiresIn: 3600,
           token: "Bearer " + token,
@@ -67,14 +77,10 @@ export const updateUserUsername = async (req: Request, res: Response) => {
   const user = await User.findById(userId);
   user!.username = req.body.username;
   await user!.save();
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({
-      status: 200,
-      message: "Updated user's username",
-      payload: projects,
-    });
+  res.status(200).json({
+    status: 200,
+    message: "Updated user's username",
+  });
 };
 
 // Update User Password

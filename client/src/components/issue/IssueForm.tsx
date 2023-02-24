@@ -1,24 +1,42 @@
-import { useAppDispatch, useAppSelector } from "../../store";
-import { addIssue, editIssue } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
+import { useEffect } from "react";
 
-import { PositionCenter } from "../styles/utils/PositionCenter";
-import { Card, CardDivider, CardHeader, CardTitle } from "../styles/UI/Card";
-import { Form, Label, Input, TextArea, Select } from "../styles/UI/Form";
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch } from "../../store";
+import { addIssueRequest, editIssueRequest } from "../../store/issue-action";
+import { IIssue, IUser } from "../../types/interface";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
-
-import { IIssue } from "../../types/interface";
+import {
+  Card,
+  CardDivider,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../styles/UI/Card";
+import { Form, Input, Label, Select, TextArea } from "../styles/UI/Form";
+import { PositionCenter } from "../styles/utils/PositionCenter";
 
 interface IIssueForm {
   projectId: string;
+  projectAssignees: IUser[];
   hideForm: () => void;
   initialValues?: IIssue;
 }
 
-function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
+function IssueForm({
+  projectId,
+  projectAssignees,
+  hideForm,
+  initialValues,
+}: IIssueForm) {
   const dispatch = useAppDispatch();
-  const { accessToken } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const {
     value: title,
@@ -42,6 +60,12 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
 
   const { value: importance, onChangeValueHandler: importanceChange } =
     useValidation(null, initialValues ? initialValues.importance : "High");
+
+  const { value: assignedTo, onChangeValueHandler: assignedToChange } =
+    useValidation(
+      null,
+      initialValues ? initialValues.assignedTo : projectAssignees[0]
+    );
 
   const {
     value: dueDate,
@@ -69,6 +93,13 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
     importanceChange(event.target.value);
   };
 
+  const onChangeAssignedToHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const user: IUser = JSON.parse(event.target.value);
+    assignedToChange(user);
+  };
+
   const onChangeDueDateHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -84,41 +115,34 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
       titleIsValid &&
       descriptionIsValid &&
       dueDateIsValid &&
-      !initialValues &&
-      accessToken
+      !initialValues
     ) {
       dispatch(
-        addIssue(
+        addIssueRequest(
           {
             title,
             description,
+            assignedTo,
             importance,
             dueDate,
           },
-          projectId,
-          accessToken
+          projectId
         )
       );
       hideForm();
     }
-    if (
-      titleIsValid &&
-      descriptionIsValid &&
-      dueDateIsValid &&
-      initialValues &&
-      accessToken
-    ) {
+    if (titleIsValid && descriptionIsValid && dueDateIsValid && initialValues) {
       dispatch(
-        editIssue(
+        editIssueRequest(
           {
             title,
             description,
+            assignedTo,
             importance,
             dueDate,
           },
           projectId,
-          initialValues._id,
-          accessToken
+          initialValues._id
         )
       );
       hideForm();
@@ -127,7 +151,7 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
 
   return (
     <>
-      <Backdrop onClick={hideForm} />
+      <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
         <Card $width="25rem">
           <CardHeader>
@@ -165,6 +189,18 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
               <option value="Mid">Mid</option>
               <option value="Low">Low</option>
             </Select>
+            <Label htmlFor="assignedTo">Assign To</Label>
+            <Select
+              id="assignedTo"
+              onChange={onChangeAssignedToHandler}
+              value={JSON.stringify(assignedTo)}
+            >
+              {projectAssignees.map((user) => (
+                <option value={JSON.stringify(user)} key={user._id}>
+                  {user.username}
+                </option>
+              ))}
+            </Select>
             <Label htmlFor="dueDate">Due Date</Label>
             <Input
               id="dueDate"
@@ -173,7 +209,9 @@ function IssueForm({ hideForm, projectId, initialValues }: IIssueForm) {
               value={dueDate}
               $isInvalid={dueDateError}
             />
-            <Button>Submit</Button>
+            <CardFooter $templateColumns="1fr">
+              <Button>Submit</Button>
+            </CardFooter>
           </Form>
         </Card>
       </PositionCenter>

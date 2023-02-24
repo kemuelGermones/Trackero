@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { useAppDispatch } from "../../store";
-import useValidation from "../../hooks/useValidation";
-import { registerUser, loginUser } from "../../store/user-action";
 
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch } from "../../store";
+import { loginRequest, registerRequest } from "../../store/user-action";
+import { Button } from "../styles/UI/Button";
 import {
   Card,
-  CardTitle,
   CardDivider,
+  CardFooter,
   CardFooterText,
   CardHeader,
+  CardTitle,
 } from "../styles/UI/Card";
-import { Button } from "../styles/UI/Button";
-import { Form, Input, Select, Label } from "../styles/UI/Form";
+import { Form, Input, Label, Select } from "../styles/UI/Form";
 
 function UserForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -76,17 +77,17 @@ function UserForm() {
     const isPasswordValid = validatePassword();
     const isUsernameValid = validateUsername();
     if (!isLogin && isEmailValid && isPasswordValid && isUsernameValid) {
-      dispatch(registerUser({ email, username, password, role }));
+      dispatch(registerRequest({ email, username, password, role }));
     } else if (isLogin && isEmailValid && isPasswordValid) {
-      dispatch(loginUser(email, password));
+      dispatch(loginRequest(email, password));
     }
   };
 
   const isLoginToggler = () => {
     setIsLogin((state) => !state);
-    resetEmail();
-    resetPassword();
-    resetUsername();
+    resetEmail("");
+    resetPassword("");
+    resetUsername("");
   };
 
   return (
@@ -96,7 +97,7 @@ function UserForm() {
       </CardHeader>
       <CardDivider />
       <Form onSubmit={onSubmitHandler}>
-        <Label htmlFor="email">Your Email</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
           id="email"
           type="email"
@@ -105,7 +106,7 @@ function UserForm() {
           onChange={onChangeEmailHandler}
           $isInvalid={emailError}
         />
-        <Label htmlFor="password">Your Password</Label>
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           type="password"
@@ -116,7 +117,7 @@ function UserForm() {
         />
         {!isLogin ? (
           <>
-            <Label htmlFor="username">Your Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
@@ -125,14 +126,16 @@ function UserForm() {
               onChange={onChangeUsernameHandler}
               $isInvalid={usernameError}
             />
-            <Label htmlFor="role">Your Role</Label>
+            <Label htmlFor="role">Role</Label>
             <Select onChange={onChangeRoleHandler} value={role}>
               <option value="Developer">Developer</option>
               <option value="Administrator">Administrator</option>
             </Select>
           </>
         ) : null}
-        <Button>{isLogin ? "Login" : "Sign Up"}</Button>
+        <CardFooter $templateColumns="1fr">
+          <Button>{isLogin ? "Login" : "Sign Up"}</Button>
+        </CardFooter>
       </Form>
       <CardFooterText onClick={isLoginToggler}>
         {isLogin ? "Don't have an account?" : "Have an account?"}

@@ -1,8 +1,8 @@
 import {
-  ErrorLayout,
-  ErrorTitle,
   ErrorDescription,
+  ErrorLayout,
   ErrorLogo,
+  ErrorTitle,
 } from "../components/styles/layout/ErrorPageLayout";
 
 function Error() {

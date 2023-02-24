@@ -1,12 +1,19 @@
-import { useAppDispatch, useAppSelector } from "../../store";
-import { updateIssueStatus } from "../../store/issue-action";
-import useValidation from "../../hooks/useValidation";
+import { useEffect } from "react";
 
-import { Card, CardHeader, CardTitle, CardDivider } from "../styles/UI/Card";
-import { Form, Label, Select } from "../styles/UI/Form";
-import { PositionCenter } from "../styles/utils/PositionCenter";
+import useValidation from "../../hooks/useValidation";
+import { useAppDispatch } from "../../store";
+import { updateIssueStatusRequest } from "../../store/issue-action";
 import Backdrop from "../styles/UI/Backdrop";
 import { Button } from "../styles/UI/Button";
+import {
+  Card,
+  CardDivider,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../styles/UI/Card";
+import { Form, Label, Select } from "../styles/UI/Form";
+import { PositionCenter } from "../styles/utils/PositionCenter";
 
 interface IIssueStatusForm {
   hideForm: () => void;
@@ -22,7 +29,13 @@ function IssueStatusForm({
   issueStatus,
 }: IIssueStatusForm) {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.user.accessToken);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const { value: status, onChangeValueHandler: statusChange } = useValidation(
     null,
@@ -35,15 +48,13 @@ function IssueStatusForm({
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (accessToken) {
-      dispatch(updateIssueStatus({ status }, projectId, issueId, accessToken));
-    }
+    dispatch(updateIssueStatusRequest(status, projectId, issueId));
     hideForm();
   };
 
   return (
     <>
-      <Backdrop onClick={hideForm} />
+      <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
         <Card $width="25rem">
           <CardHeader>
@@ -57,7 +68,9 @@ function IssueStatusForm({
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </Select>
-            <Button>Submit</Button>
+            <CardFooter $templateColumns="1fr">
+              <Button>Submit</Button>
+            </CardFooter>
           </Form>
         </Card>
       </PositionCenter>

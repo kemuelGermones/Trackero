@@ -7,4 +7,11 @@ const userSchema = new Schema({
   role: { type: String, required: true, enum: ["Administrator", "Developer"] },
 });
 
+// Extends the find method to auto select certain fields
+
+userSchema.pre("find", function (next) {
+  this.select("_id username role email");
+  next();
+});
+
 export default model("User", userSchema);

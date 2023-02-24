@@ -33,6 +33,10 @@ const Joi = BaseJoi.extend(extension);
 export const projectSchema = Joi.object({
   title: Joi.string().escapeHTML().required(),
   description: Joi.string().escapeHTML().required(),
+  assignees: Joi.array()
+    .items(Joi.string().escapeHTML().required())
+    .unique((a: string, b: string) => a === b)
+    .required(),
 });
 
 // Issue Schema
@@ -41,6 +45,7 @@ export const issueSchema = Joi.object({
   title: Joi.string().escapeHTML().required(),
   description: Joi.string().escapeHTML().required(),
   importance: Joi.string().valid("High", "Mid", "Low").required(),
+  assignedTo: Joi.string().escapeHTML().required(),
   dueDate: Joi.date().greater("now").required(),
 });
 
@@ -48,14 +53,6 @@ export const issueSchema = Joi.object({
 
 export const commentSchema = Joi.object({
   comment: Joi.string().escapeHTML().required(),
-});
-
-// Issue assignedTo Schema
-
-export const issueAssignedToSchema = Joi.object({
-  assignedTo: Joi.array()
-    .items(Joi.string().escapeHTML().required())
-    .required(),
 });
 
 // Issue status Schema

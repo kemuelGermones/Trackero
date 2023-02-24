@@ -1,17 +1,16 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
+
 import filterUsers from "../../lib/filterUsers";
-
-import {
-  TableContainer,
-  TableSubHead,
-  Table,
-  TableHeader,
-  TableBody,
-  TablePagination,
-} from "../styles/UI/Table";
-import { DropdownButton, PaginationButton } from "../styles/UI/Button";
-
 import { IUser } from "../../types/interface";
+import { DropdownButton, PaginationButton } from "../styles/UI/Button";
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHeader,
+  TablePagination,
+  TableSubHead,
+} from "../styles/UI/Table";
 
 interface IUserTable {
   usersData: IUser[];
@@ -19,7 +18,7 @@ interface IUserTable {
 }
 
 function UserTable({ usersData, setCurrentUser }: IUserTable) {
-  const [filterCategory, setFilterCategory] = useState("Developer");
+  const [filterCategory, setFilterCategory] = useState("All");
   const [currentTablePage, setCurrentTablePage] = useState(1);
 
   const users = useMemo(() => {
@@ -48,6 +47,7 @@ function UserTable({ usersData, setCurrentUser }: IUserTable) {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setFilterCategory(event.target.value);
+    setCurrentTablePage(1);
   };
 
   return (
@@ -57,6 +57,7 @@ function UserTable({ usersData, setCurrentUser }: IUserTable) {
           onChange={changeFilterCategoryHandler}
           value={filterCategory}
         >
+          <option value="All">All Users</option>
           <option value="Developer">Filter by Developer</option>
           <option value="Administrator">Filter by Administrator</option>
         </DropdownButton>
@@ -76,7 +77,7 @@ function UserTable({ usersData, setCurrentUser }: IUserTable) {
             </tr>
           ) : (
             currentUsers.map((user) => (
-              <tr key={user._id} onClick={setCurrentUser.bind(null, user)} >
+              <tr key={user._id} onClick={setCurrentUser.bind(null, user)}>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>{user.role}</td>
@@ -86,15 +87,17 @@ function UserTable({ usersData, setCurrentUser }: IUserTable) {
         </TableBody>
       </Table>
       <TablePagination>
-        {pages.map((page, index) => (
-          <PaginationButton
-            key={index}
-            onClick={changeTablePageHandler.bind(null, page)}
-            $isActive={page === currentTablePage}
-          >
-            {page}
-          </PaginationButton>
-        ))}
+        {pages.length > 1
+          ? pages.map((page, index) => (
+              <PaginationButton
+                key={index}
+                onClick={changeTablePageHandler.bind(null, page)}
+                $isActive={page === currentTablePage}
+              >
+                {page}
+              </PaginationButton>
+            ))
+          : null}
       </TablePagination>
     </TableContainer>
   );

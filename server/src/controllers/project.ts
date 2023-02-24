@@ -3,6 +3,13 @@ import Project from "../models/project";
 import Comment from "../models/comment";
 import Issue from "../models/issue";
 
+// Show Projects
+
+export const showProjects = async (req: Request, res: Response) => {
+  const projects = await Project.find();
+  res.status(200).send(projects);
+};
+
 // Create New Project
 
 export const createProject = async (req: Request, res: Response) => {
@@ -32,7 +39,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 // Create Comment
 
-export const createComment = async (req: Request, res: Response) => {
+export const createProjectComment = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   const project = await Project.findById(projectId);
   const comment = new Comment(req.body);
@@ -43,12 +50,12 @@ export const createComment = async (req: Request, res: Response) => {
   const projects = await Project.find();
   res
     .status(200)
-    .json({ status: 200, message: "Created a comment", payload: projects });
+    .json({ status: 200, message: "Posted a comment", payload: projects });
 };
 
 // Delete Comment
 
-export const deleteComment = async (req: Request, res: Response) => {
+export const deleteProjectComment = async (req: Request, res: Response) => {
   const { projectId, commentId } = req.params;
   await Project.findByIdAndUpdate(projectId, {
     $pull: { comments: commentId },
@@ -68,7 +75,9 @@ export const createIssue = async (req: Request, res: Response) => {
   await issue.save();
   await project!.save();
   const projects = await Project.find();
-  res.status(200).json({ status: 200, message: "Created an issue", payload: projects });
+  res
+    .status(200)
+    .json({ status: 200, message: "Created an issue", payload: projects });
 };
 
 // Edit Issue
@@ -96,15 +105,8 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
   const issue = await Issue.findById(issueId);
   issue!.status = status;
   await issue!.save();
-  res.status(200).json({ status: 200, message: "Updated the status" });
-};
-
-// Update Project Issue Assigned To
-
-export const updateIssueAssignedTo = async (req: Request, res: Response) => {
-  const { issueId } = req.params;
-  const issue = await Issue.findById(issueId);
-  issue!.assignedTo = req.body.assignedTo;
-  await issue!.save();
-  res.status(200).json({ status: 200, message: "Updated the assigned people" });
+  res.status(200).json({
+    status: 200,
+    message: "Updated the issue status",
+  });
 };
