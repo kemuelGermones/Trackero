@@ -2,7 +2,7 @@
 
 The ultimate issue tracking app for all your project management needs. With Trackero, you can easily track, prioritize and resolve issues, bugs and tasks in one central location.
 
-### Demo
+### [Demo](https://trackero-client.vercel.app/)
 
 In Progress
 
@@ -11,7 +11,7 @@ In Progress
 ### Description
 
 This is a project management tool built with TypeScript, React.js, Express.js, Node.js and MongoDB.
-It is intended to use as a internal tool within a organization that allows users to easily track, 
+It is intended to use as a internal tool within a organization that allows users to easily track,
 prioritize and resolve issues, bugs and tasks in a specific project.
 
 ### Requirements
@@ -23,7 +23,7 @@ prioritize and resolve issues, bugs and tasks in a specific project.
 
 ### Usage
 
-Make sure TypeScript is installed.
+Navigate to the URL provided above to visit the live demo. Alternatively, if you want to host the web app locally on your computer, make sure TypeScript is installed and follow the instructions below.
 
 Clone it
 
@@ -52,7 +52,11 @@ npm run dev
 Then run the command in the client directory:
 
 ```
-npm run dev 
+npm run dev
 ```
 
 Open the url provided by the terminal and enjoy!
+
+### Future Plans
+
+- Make it responsive 
