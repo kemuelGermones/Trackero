@@ -7,7 +7,9 @@ import Issue from "../models/issue";
 
 export const showProjects = async (req: Request, res: Response) => {
   const projects = await Project.find();
-  res.status(200).send(projects);
+  res
+    .status(200)
+    .send({ status: 200, message: "Fetched projects", payload: projects });
 };
 
 // Create New Project

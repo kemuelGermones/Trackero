@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import ReactDOM from "react-dom";
 
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
@@ -52,7 +53,7 @@ function IssueStatusForm({
     hideForm();
   };
 
-  return (
+  return ReactDOM.createPortal(
     <>
       <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
@@ -74,7 +75,8 @@ function IssueStatusForm({
           </Form>
         </Card>
       </PositionCenter>
-    </>
+    </>,
+    document.getElementById("modal-root")!
   );
 }
 

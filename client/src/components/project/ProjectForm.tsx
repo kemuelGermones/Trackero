@@ -1,4 +1,5 @@
 import { Fragment, useEffect } from "react";
+import ReactDOM from "react-dom";
 
 import useValidation from "../../hooks/useValidation";
 import { useAppDispatch } from "../../store";
@@ -116,7 +117,7 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
     }
   };
 
-  return (
+  return ReactDOM.createPortal(
     <>
       <Backdrop onClick={hideForm} $hasBackground={true} />
       <PositionCenter>
@@ -177,7 +178,8 @@ function ProjectForm({ hideForm, initialValues }: IProjectForm) {
           </Form>
         </Card>
       </PositionCenter>
-    </>
+    </>,
+    document.getElementById("modal-root")!
   );
 }
 

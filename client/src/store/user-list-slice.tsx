@@ -1,22 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { IUser, IUserId } from "../types/interface";
+import { IUser } from "../types/interface";
 
-interface IUserListSliceState {
-  usersData: IUser[] | null;
-}
-
-export interface IUpdateUsername extends IUserId {
-  username: string;
-}
-
-interface IUpdateRole extends IUserId {
-  role: string;
-}
-
-const initialState: IUserListSliceState = {
+const initialState = {
   usersData: null,
-};
+} as { usersData: IUser[] | null };
 
 const userListSlice = createSlice({
   name: "userList",
@@ -36,7 +24,10 @@ const userListSlice = createSlice({
 
     // Update User's Username
 
-    updateUsername(state, action: PayloadAction<IUpdateUsername>) {
+    updateUsername(
+      state,
+      action: PayloadAction<{ userId: string; username: string }>
+    ) {
       const userIndex = state.usersData!.findIndex(
         (user) => user._id === action.payload.userId
       );
@@ -45,7 +36,7 @@ const userListSlice = createSlice({
 
     // Update User's Role
 
-    updateRole(state, action: PayloadAction<IUpdateRole>) {
+    updateRole(state, action: PayloadAction<{ userId: string; role: string }>) {
       const userIndex = state.usersData!.findIndex(
         (user) => user._id === action.payload.userId
       );

@@ -1,36 +1,21 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import updateDataUsername from "../lib/updateDataUsername";
-import {
-  ICommentId,
-  IIssueFormData,
-  IIssueId,
-  IProject,
-  IProjectFormData,
-  IProjectId,
-} from "../types/interface";
-import { IUpdateUsername } from "./user-list-slice";
+import { IIssueFormData, IProject, IProjectFormData } from "../types/interface";
 
-interface IProjectSliceState {
-  projectsData: IProject[] | null;
+interface IEditProject extends IProjectFormData {
+  projectId: string;
 }
 
-interface IEditProject extends IProjectId, IProjectFormData {}
-
-interface IDeleteProjectComment extends IProjectId, ICommentId {}
-
-interface IEditIssue extends IProjectId, IIssueId, IIssueFormData {}
-
-interface IDeleteIssue extends IProjectId, IIssueId {}
-
-interface IUpdateIssueStatus extends IProjectId, IIssueId {
-  status: string;
+interface IEditIssue extends IIssueFormData {
+  projectId: string;
+  issueId: string;
 }
 
-interface IDeleteIssueComment extends IProjectId, IIssueId, ICommentId {}
-
-const initialState: IProjectSliceState = {
+const initialState = {
   projectsData: null,
+} as {
+  projectsData: IProject[] | null;
 };
 
 const projectSlice = createSlice({
@@ -70,7 +55,10 @@ const projectSlice = createSlice({
 
     // Delete Project Comment
 
-    deleteProjectComment(state, action: PayloadAction<IDeleteProjectComment>) {
+    deleteProjectComment(
+      state,
+      action: PayloadAction<{ projectId: string; commentId: string }>
+    ) {
       const index = state.projectsData!.findIndex(
         (project) => project._id === action.payload.projectId
       );
@@ -102,7 +90,10 @@ const projectSlice = createSlice({
 
     // Delete Project Issue
 
-    deleteIssue(state, action: PayloadAction<IDeleteIssue>) {
+    deleteIssue(
+      state,
+      action: PayloadAction<{ projectId: string; issueId: string }>
+    ) {
       const projectIndex = state.projectsData!.findIndex(
         (project) => project._id === action.payload.projectId
       );
@@ -113,7 +104,14 @@ const projectSlice = createSlice({
 
     // Update Project Issue Status
 
-    updateIssueStatus(state, action: PayloadAction<IUpdateIssueStatus>) {
+    updateIssueStatus(
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        issueId: string;
+        status: string;
+      }>
+    ) {
       const projectIndex = state.projectsData!.findIndex(
         (project) => project._id === action.payload.projectId
       );
@@ -126,7 +124,14 @@ const projectSlice = createSlice({
 
     // Delete Project Issue Comment
 
-    deleteIssueComment(state, action: PayloadAction<IDeleteIssueComment>) {
+    deleteIssueComment(
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        issueId: string;
+        commentId: string;
+      }>
+    ) {
       const projectIndex = state.projectsData!.findIndex(
         (project) => project._id === action.payload.projectId
       );
@@ -141,7 +146,10 @@ const projectSlice = createSlice({
 
     // Update Projects Data Username
 
-    updateProjectsUsername(state, action: PayloadAction<IUpdateUsername>) {
+    updateProjectsUsername(
+      state,
+      action: PayloadAction<{ userId: string; username: string }>
+    ) {
       updateDataUsername(
         state.projectsData!,
         action.payload.userId,

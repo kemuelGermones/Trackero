@@ -1,9 +1,14 @@
 import { AnyAction } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 import { RootState, ThunkAction } from ".";
-import { IIssueFormData, IProjectResponseData } from "../types/interface";
+import {
+  IIssueFormData,
+  IPayloadResponseData,
+  IProject,
+  IResponseData,
+} from "../types/interface";
 import {
   deleteIssue,
   deleteIssueComment,
@@ -22,11 +27,8 @@ export const addIssueRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const postResponse = await axios<IProjectResponseData>({
+      const postResponse = await axios<IPayloadResponseData<IProject[]>>({
         method: "post",
         url: `${URL}/projects/${projectId}/issues`,
         data: { ...data, assignedTo: data.assignedTo._id },
@@ -35,18 +37,8 @@ export const addIssueRequest = (
         },
       });
       dispatch(updateProjects(postResponse.data.payload));
-      toast.dismiss(loadingToast);
-      toast.success(postResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(postResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };
 
@@ -59,11 +51,8 @@ export const editIssueRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const putResponse = await axios<IProjectResponseData>({
+      const putResponse = await axios<IResponseData>({
         method: "put",
         url: `${URL}/projects/${projectId}/issues/${issueId}`,
         data: { ...data, assignedTo: data.assignedTo._id },
@@ -72,18 +61,8 @@ export const editIssueRequest = (
         },
       });
       dispatch(editIssue({ ...data, projectId, issueId }));
-      toast.dismiss(loadingToast);
-      toast.success(putResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(putResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };
 
@@ -95,11 +74,8 @@ export const deleteIssueRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const deleteResponse = await axios<IProjectResponseData>({
+      const deleteResponse = await axios<IResponseData>({
         method: "delete",
         url: `${URL}/projects/${projectId}/issues/${issueId}`,
         headers: {
@@ -107,18 +83,8 @@ export const deleteIssueRequest = (
         },
       });
       dispatch(deleteIssue({ projectId, issueId }));
-      toast.dismiss(loadingToast);
-      toast.success(deleteResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(deleteResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };
 
@@ -131,11 +97,8 @@ export const updateIssueStatusRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const patchResponse = await axios<IProjectResponseData>({
+      const patchResponse = await axios<IResponseData>({
         method: "patch",
         url: `${URL}/projects/${projectId}/issues/${issueId}/status`,
         data: { status },
@@ -144,18 +107,8 @@ export const updateIssueStatusRequest = (
         },
       });
       dispatch(updateIssueStatus({ status, projectId, issueId }));
-      toast.dismiss(loadingToast);
-      toast.success(patchResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(patchResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };
 
@@ -167,11 +120,8 @@ export const addIssueCommentRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const postResponse = await axios<IProjectResponseData>({
+      const postResponse = await axios<IPayloadResponseData<IProject[]>>({
         method: "post",
         url: `${URL}/issues/${issueId}/comments`,
         data: { comment },
@@ -180,18 +130,8 @@ export const addIssueCommentRequest = (
         },
       });
       dispatch(updateProjects(postResponse.data.payload));
-      toast.dismiss(loadingToast);
-      toast.success(postResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(postResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };
 
@@ -204,11 +144,8 @@ export const deleteIssueCommentRequest = (
 ): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch, getState) => {
     const state = getState();
-    const loadingToast = toast.loading("Loading...", {
-      containerId: "loading",
-    });
     try {
-      const deleteResponse = await axios<IProjectResponseData>({
+      const deleteResponse = await axios<IResponseData>({
         method: "delete",
         url: `${URL}/issues/${issueId}/comments/${commentId}`,
         headers: {
@@ -216,17 +153,7 @@ export const deleteIssueCommentRequest = (
         },
       });
       dispatch(deleteIssueComment({ projectId, issueId, commentId }));
-      toast.dismiss(loadingToast);
-      toast.success(deleteResponse.data.message, {
-        containerId: "notification",
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.dismiss(loadingToast);
-        toast.error(error.response?.data.message || error.message, {
-          containerId: "notification",
-        });
-      }
-    }
+      toast.success(deleteResponse.data.message, { containerId: "bottom" });
+    } catch (e) {}
   };
 };

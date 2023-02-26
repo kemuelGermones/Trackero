@@ -11,7 +11,6 @@ import { Button, TrashButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
-  CardDescription,
   CardDivider,
   CardFooter,
   CardHeader,
@@ -36,10 +35,6 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
     validateValue: validateComment,
   } = useValidation((str) => str.trim().length > 0, "");
 
-  const deleteProjectCommentRequestHandler = (commentId: string) => {
-    dispatch(deleteProjectCommentRequest(projectId, commentId));
-  };
-
   const onChangeCommentHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -53,6 +48,10 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
       dispatch(addProjectCommentRequest(comment, projectId));
       commentReset("");
     }
+  };
+
+  const deleteProjectCommentRequestHandler = (commentId: string) => {
+    dispatch(deleteProjectCommentRequest(projectId, commentId));
   };
 
   return (
@@ -73,16 +72,12 @@ function ProjectComment({ projectId, projectComments }: IProjectComment) {
       <Label>{projectComments.length === 0 ? "No Comments" : "Comments"}</Label>
       {projectComments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardBody>
-            <CardDescription $hasLimit={false}>
-              {comment.comment}
-            </CardDescription>
-          </CardBody>
+          <CardBody>{comment.comment}</CardBody>
           <CardHeader>
-            <CardDescription $hasLimit={false}>
+            <div>
               <TextLight>Posted by: </TextLight>
               {comment.author.username}
-            </CardDescription>
+            </div>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
                 onClick={deleteProjectCommentRequestHandler.bind(

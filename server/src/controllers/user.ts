@@ -9,7 +9,9 @@ const secret: string = process.env.SECRET || "mySecret";
 
 export const showUsers = async (req: Request, res: Response) => {
   const users = await User.find();
-  res.status(200).send(users);
+  res
+    .status(200)
+    .send({ status: 200, message: "Fetched users", payload: users });
 };
 
 // Registers the User
@@ -31,12 +33,16 @@ export const registerUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          _id: findUser._id,
-          email: findUser.email,
-          username: findUser.username,
-          role: findUser.role,
-          expiresIn: 3600,
-          token: "Bearer " + token,
+          status: 200,
+          message: "Successfully created an account",
+          payload: {
+            _id: findUser._id,
+            email: findUser.email,
+            username: findUser.username,
+            role: findUser.role,
+            expiresIn: 3600,
+            token: "Bearer " + token,
+          },
         });
       });
     }
@@ -58,12 +64,16 @@ export const loginUser = async (req: Request, res: Response) => {
       const payload = { id: findUser._id, username: findUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
-          _id: findUser._id,
-          email: findUser.email,
-          username: findUser.username,
-          role: findUser.role,
-          expiresIn: 3600,
-          token: "Bearer " + token,
+          status: 200,
+          message: "Welcome back",
+          payload: {
+            _id: findUser._id,
+            email: findUser.email,
+            username: findUser.username,
+            role: findUser.role,
+            expiresIn: 3600,
+            token: "Bearer " + token,
+          },
         });
       });
     }

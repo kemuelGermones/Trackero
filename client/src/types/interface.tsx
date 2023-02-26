@@ -13,10 +13,6 @@ export interface IProject extends IProjectFormData {
   issues: IIssue[];
 }
 
-export interface IProjectId {
-  projectId: string;
-}
-
 // Comment Interface
 
 export interface IComment {
@@ -24,10 +20,6 @@ export interface IComment {
   __v: number;
   comment: string;
   author: IUser;
-}
-
-export interface ICommentId {
-  commentId: string;
 }
 
 // Issue Interface
@@ -46,10 +38,6 @@ export interface IIssue extends IIssueFormData {
   comments: IComment[];
   author: IUser;
   status: string;
-}
-
-export interface IIssueId {
-  issueId: string;
 }
 
 // User interface
@@ -73,10 +61,6 @@ export interface IUserCredentials extends IUser {
   expiresIn: number;
 }
 
-export interface IUserId {
-  userId: string;
-}
-
 // Response Data
 
 export interface IResponseData {
@@ -84,6 +68,6 @@ export interface IResponseData {
   message: string;
 }
 
-export interface IProjectResponseData extends IResponseData {
-  payload: IProject[];
+export interface IPayloadResponseData<T> extends IResponseData {
+  payload: T;
 }

@@ -1,15 +1,8 @@
 import styled from "styled-components";
 
-
-interface ITableContainerCustomProps {
-  $width?: string;
-}
-
-export const TableContainer = styled.div<ITableContainerCustomProps>`
+export const TableContainer = styled.div`
   box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
-  margin-bottom: 1rem;
   font-size: 0.75rem;
-  width: ${(state) => (state.$width ? state.$width : "")};
 `;
 
 export const Table = styled.table`
@@ -34,8 +27,12 @@ export const TableHeader = styled.thead`
 
 export const TableBody = styled.tbody`
   & tr td {
-    padding: 1rem 0;
+    padding: 1rem;
     border-bottom: 1px solid lightgray;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 8rem;
   }
 
   & tr {

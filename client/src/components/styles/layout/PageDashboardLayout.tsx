@@ -7,6 +7,6 @@ interface IPageDashboardLayoutCustomProps {
 export const PageDashboardLayout = styled.section<IPageDashboardLayoutCustomProps>`
   padding: 1rem;
   display: grid;
-  grid-template-columns: ${(props) => props.$templateColumns};
   gap: 1rem;
+  grid-template-columns: ${(props) => props.$templateColumns};
 `;

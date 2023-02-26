@@ -13,7 +13,6 @@ import { Button } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
-  CardDescription,
   CardDivider,
   CardFooter,
   CardHeader,
@@ -97,22 +96,16 @@ function UserInfo({ userData }: IUserInfo) {
         <CardTitle>Profile</CardTitle>
       </CardHeader>
       <CardBody>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Email: </TextLight>
-          {userData.email}
-        </CardDescription>
+        <TextLight>Email: </TextLight>
+        {userData.email}
       </CardBody>
       <CardBody>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Username: </TextLight>
-          {userData.username}
-        </CardDescription>
+        <TextLight>Username: </TextLight>
+        {userData.username}
       </CardBody>
       <CardBody>
-        <CardDescription $hasLimit={false}>
-          <TextLight>Role: </TextLight>
-          {userData.role}
-        </CardDescription>
+        <TextLight>Role: </TextLight>
+        {userData.role}
       </CardBody>
       <CardDivider />
       <Form onSubmit={onSubmitUsernameHandler}>

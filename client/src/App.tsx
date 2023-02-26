@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import ReactDOM from "react-dom";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,18 +23,22 @@ const Profile = React.lazy(() => import("./pages/Profile"));
 function App() {
   return (
     <>
+      {ReactDOM.createPortal(
+        <>
+          <ToastContainer
+            enableMultiContainer
+            containerId={"top"}
+            position="top-center"
+          />
+          <ToastContainer
+            enableMultiContainer
+            containerId={"bottom"}
+            position="bottom-left"
+          />
+        </>,
+        document.getElementById("notif-root")!
+      )}
       <GlobalStyle />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"loading"}
-        position="top-center"
-      />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"notification"}
-        position="bottom-left"
-        autoClose={3000}
-      />
       <Routes>
         <Route element={<NotProtectedRoutes />}>
           <Route element={<WithoutNav />}>

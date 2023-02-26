@@ -49,7 +49,7 @@ function Projects() {
               <CardTitle>{project.title}</CardTitle>
             </CardHeader>
             <CardBody>
-              <CardDescription $hasLimit={true}>
+              <CardDescription>
                 {project.description}
               </CardDescription>
             </CardBody>

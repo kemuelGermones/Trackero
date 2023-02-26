@@ -7,7 +7,6 @@ import { Button, SmallButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -72,7 +71,7 @@ function IssueInfo({
           issueStatus={issueData.status}
         />
       ) : null}
-      <Card style={{ marginBottom: "1rem" }}>
+      <Card $margin={projectTitle ? "0 0 1rem 0" : "1rem 0"}>
         <CardHeader>
           <CardTitle>{issueData.title}</CardTitle>
           {issueData.author._id === userId ||
@@ -83,48 +82,32 @@ function IssueInfo({
             </SmallButton>
           ) : null}
         </CardHeader>
-        <CardBody>
-          <CardDescription $hasLimit={false}>
-            {issueData.description}
-          </CardDescription>
-        </CardBody>
+        <CardBody>{issueData.description}</CardBody>
         {projectTitle ? (
           <CardBody>
-            <CardDescription $hasLimit={false}>
-              <TextLight>Project: </TextLight>
-              {projectTitle}
-            </CardDescription>
+            <TextLight>Project: </TextLight>
+            {projectTitle}
           </CardBody>
         ) : null}
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Author: </TextLight>
-            {issueData.author.username}
-          </CardDescription>
+          <TextLight>Author: </TextLight>
+          {issueData.author.username}
         </CardBody>
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Assigned to: </TextLight>
-            {issueData.assignedTo.username}
-          </CardDescription>
+          <TextLight>Assigned to: </TextLight>
+          {issueData.assignedTo.username}
         </CardBody>
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Status: </TextLight>
-            {issueData.status}
-          </CardDescription>
+          <TextLight>Status: </TextLight>
+          {issueData.status}
         </CardBody>
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Importance: </TextLight>
-            {issueData.importance}
-          </CardDescription>
+          <TextLight>Importance: </TextLight>
+          {issueData.importance}
         </CardBody>
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Due Date: </TextLight>
-            {new Date(issueData.dueDate).toDateString()}
-          </CardDescription>
+          <TextLight>Due Date: </TextLight>
+          {new Date(issueData.dueDate).toDateString()}
         </CardBody>
         {issueData.author._id === userId || userRole === "Administrator" ? (
           <CardFooter $templateColumns="1fr 1fr">

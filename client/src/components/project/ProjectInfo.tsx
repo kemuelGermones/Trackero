@@ -9,7 +9,6 @@ import { Button, SmallButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -66,7 +65,7 @@ function ProjectInfo({ projectData }: IProjectInfo) {
           projectAssignees={projectData.assignees}
         />
       ) : null}
-      <Card $marginBottom={true}>
+      <Card $margin="0 0 1rem 0">
         <CardHeader>
           <CardTitle>{projectData.title}</CardTitle>
           {userRole === "Administrator" ||
@@ -74,18 +73,12 @@ function ProjectInfo({ projectData }: IProjectInfo) {
             <SmallButton onClick={showIssueFormHandler}>Add Issue</SmallButton>
           ) : null}
         </CardHeader>
+        <CardBody>{projectData.description}</CardBody>
         <CardBody>
-          <CardDescription $hasLimit={false}>
-            {projectData.description}
-          </CardDescription>
-        </CardBody>
-        <CardBody>
-          <CardDescription $hasLimit={false}>
-            <TextLight>Assignees: </TextLight>
-            {projectData.assignees
-              .map((assignee) => assignee.username)
-              .join(", ")}
-          </CardDescription>
+          <TextLight>Assignees: </TextLight>
+          {projectData.assignees
+            .map((assignee) => assignee.username)
+            .join(", ")}
         </CardBody>
         {userRole === "Administrator" ? (
           <CardFooter $templateColumns="1fr 1fr">

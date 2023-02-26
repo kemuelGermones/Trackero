@@ -11,7 +11,6 @@ import { Button, TrashButton } from "../styles/UI/Button";
 import {
   Card,
   CardBody,
-  CardDescription,
   CardDivider,
   CardFooter,
   CardHeader,
@@ -73,15 +72,12 @@ function IssueComment({ projectId, issueId, issueComments }: IIssueComment) {
       <Label>{issueComments.length === 0 ? "No Comments" : "Comments"}</Label>
       {issueComments.map((comment) => (
         <Fragment key={comment._id}>
-          <CardBody>
-            <CardDescription $hasLimit={false}>
-              {comment.comment}
-            </CardDescription>
-          </CardBody>
+          <CardBody>{comment.comment}</CardBody>
           <CardHeader>
-            <CardDescription $hasLimit={false}>
-              <TextLight>Posted by: </TextLight> {comment.author.username}
-            </CardDescription>
+            <div>
+              <TextLight>Posted by: </TextLight>
+              {comment.author.username}
+            </div>
             {comment.author._id === userId || userRole === "Administrator" ? (
               <TrashButton
                 onClick={deleteIssueCommentRequestHandler.bind(

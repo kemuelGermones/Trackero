@@ -6,8 +6,6 @@ interface IBackdropCustomProp {
 
 const Backdrop = styled.div<IBackdropCustomProp>`
   backdrop-filter: blur(5px);
-  background: ${(state) =>
-    state.$hasBackground ? "rgba(0, 0, 0, 0.3)" : "transparent"};
   cursor: pointer;
   height: 100vh;
   display: flex;
@@ -18,6 +16,8 @@ const Backdrop = styled.div<IBackdropCustomProp>`
   top: 0;
   width: 100%;
   z-index: 10;
+  background: ${(state) =>
+    state.$hasBackground ? "rgba(0, 0, 0, 0.3)" : "transparent"};
 `;
 
 export default Backdrop;

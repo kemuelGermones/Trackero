@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 interface IInputCustomProps {
   $isInvalid?: boolean;
 }
@@ -21,10 +22,10 @@ export const Input = styled.input<IInputCustomProps>`
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid
-    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
   font-family: var(--main-font);
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
 
   &:focus {
     outline: none;
@@ -37,7 +38,6 @@ export const Select = styled.select<IInputCustomProps>`
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
   font-size: 1rem;
   font-family: var(--main-font);
   -webkit-appearance: none;
@@ -48,6 +48,7 @@ export const Select = styled.select<IInputCustomProps>`
   background-size: 1rem;
   background-position: 96% center;
   background-color: white;
+  border: 1px solid ${(props) => (props.$isInvalid ? "red" : "var(--tertiary)")};
 
   &:focus {
     outline: none;
@@ -61,10 +62,10 @@ export const TextArea = styled.textarea<IInputCustomProps>`
   margin-bottom: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid
-    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   font-size: 1rem;
   font-family: var(--main-font);
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
 
   &:focus {
     outline: none;
@@ -72,8 +73,6 @@ export const TextArea = styled.textarea<IInputCustomProps>`
 `;
 
 export const Checkbox = styled.div<IInputCustomProps>`
-  border: 1px solid
-    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   width: 100%;
@@ -82,4 +81,6 @@ export const Checkbox = styled.div<IInputCustomProps>`
   overflow-y: scroll;
   background-color: white;
   margin-bottom: 0.5rem;
+  border: 1px solid
+    ${(props) => (props.$isInvalid ? "var(--danger)" : "var(--tertiary)")};
 `;

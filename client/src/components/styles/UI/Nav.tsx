@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+
 interface ICustomNavItemProp {
   $isActive: boolean;
 }
@@ -33,8 +34,8 @@ export const NavMenu = styled.div`
 
 export const NavItem = styled(NavLink)<ICustomNavItemProp>`
   text-decoration: none;
-  color: ${(props) => (props.$isActive ? "var(--quaternary)" : "black")};
   margin: 1rem 0;
+  color: ${(props) => (props.$isActive ? "var(--quaternary)" : "black")};
 
   &:hover {
     color: var(--quaternary);
