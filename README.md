@@ -4,8 +4,6 @@ The ultimate issue tracking app for all your project management needs. With Trac
 
 ### [Live Site](https://trackero-client.vercel.app/)
 
-In Progress
-
 ![Issue Tracker Application](https://res.cloudinary.com/de9dxfdav/image/upload/v1677069643/Project%20Promotion/Screenshot_2023-02-22_203738_eyqjyh.jpg)
 
 ### Description
