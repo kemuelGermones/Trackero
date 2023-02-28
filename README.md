@@ -2,7 +2,7 @@
 
 The ultimate issue tracking app for all your project management needs. With Trackero, you can easily track, prioritize and resolve issues, bugs and tasks in one central location.
 
-### [Demo](https://trackero-client.vercel.app/)
+### [Live Site](https://trackero-client.vercel.app/)
 
 In Progress
 
