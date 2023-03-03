@@ -8,7 +8,7 @@ This is a project management tool that is intended to use as an internal tool wi
 
 ### Description
 
-Trackerp is a web project management tool built with TypeScript, React, Express, Node and MongoDB that is intended to use as an internal tool within an organization that allows users to easily track, prioritize and resolve issues, bugs and tasks in a specific project.
+Trackero is a web project management tool built with TypeScript, React, Express, Node and MongoDB that is intended to use as an internal tool within an organization that allows users to easily track, prioritize and resolve issues, bugs and tasks in a specific project.
 
 ### Requirements
 
