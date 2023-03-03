@@ -8,10 +8,8 @@ This is a project management tool that is intended to use as an internal tool wi
 
 ### Description
 
-Is a project management tool that is intended to use as an
-internal tool within an organization that allows users to easily
-track, prioritize and resolve issues, bugs and tasks in a one
-central location.
+Trackero is a project management tool that is intended to use as an internal tool within an organization that allows users to easily
+track, prioritize and resolve issues, bugs and tasks in a one central location.
 
 ### Requirements
 
