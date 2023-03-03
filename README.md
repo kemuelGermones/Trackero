@@ -8,9 +8,10 @@ The ultimate issue tracking app for all your project management needs. With Trac
 
 ### Description
 
-This is a project management tool built with TypeScript, React.js, Express.js, Node.js and MongoDB.
-It is intended to use as a internal tool within a organization that allows users to easily track,
-prioritize and resolve issues, bugs and tasks in a specific project.
+Is a project management tool that is intended to use as an
+internal tool within an organization that allows users to easily
+track, prioritize and resolve issues, bugs and tasks in a one
+central location.
 
 ### Requirements
 
