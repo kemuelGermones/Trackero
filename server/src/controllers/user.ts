@@ -18,8 +18,8 @@ export const showUsers = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
   const { email, username, password, role } = req.body;
-  const findUser = await User.findOne({ email });
-  if (findUser) {
+  const foundUser = await User.findOne({ email });
+  if (foundUser) {
     res.status(400).json({ status: 400, message: "User exists already" });
   } else {
     const newUser = new User({ email, username, role });
@@ -27,25 +27,21 @@ export const registerUser = async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(password, salt);
     newUser.password = hash;
     await newUser.save();
-
-    const findUser = await User.findOne({ email });
-    if (findUser) {
-      const payload = { id: findUser._id, username: findUser.username };
-      jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
-        res.status(200).json({
-          status: 200,
-          message: "Successfully created an account",
-          payload: {
-            _id: findUser._id,
-            email: findUser.email,
-            username: findUser.username,
-            role: findUser.role,
-            expiresIn: 3600,
-            token: "Bearer " + token,
-          },
-        });
+    const payload = { id: newUser._id, username: newUser.username };
+    jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
+      res.status(200).json({
+        status: 200,
+        message: "Successfully created an account",
+        payload: {
+          _id: newUser._id,
+          email: newUser.email,
+          username: newUser.username,
+          role: newUser.role,
+          expiresIn: 3600,
+          token: "Bearer " + token,
+        },
       });
-    }
+    });
   }
 };
 
@@ -53,24 +49,24 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const findUser = await User.findOne({ email });
-  if (!findUser) {
+  const foundUser = await User.findOne({ email });
+  if (!foundUser) {
     res.status(400).json({ status: 400, message: "User doesn't exists" });
   } else {
-    const result = await bcrypt.compare(password, findUser.password);
+    const result = await bcrypt.compare(password, foundUser.password);
     if (!result) {
       res.status(400).json({ status: 400, message: "Incorrect password" });
     } else {
-      const payload = { id: findUser._id, username: findUser.username };
+      const payload = { id: foundUser._id, username: foundUser.username };
       jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
         res.status(200).json({
           status: 200,
           message: "Welcome back",
           payload: {
-            _id: findUser._id,
-            email: findUser.email,
-            username: findUser.username,
-            role: findUser.role,
+            _id: foundUser._id,
+            email: foundUser.email,
+            username: foundUser.username,
+            role: foundUser.role,
             expiresIn: 3600,
             token: "Bearer " + token,
           },
@@ -97,10 +93,9 @@ export const updateUserUsername = async (req: Request, res: Response) => {
 
 export const updateUserPassword = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const { password } = req.body;
   const user = await User.findById(userId);
   const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
+  const hash = await bcrypt.hash(req.body.password, salt);
   user!.password = hash;
   await user!.save();
   res.status(200).json({ status: 200, message: "Updated user's password" });

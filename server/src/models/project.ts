@@ -46,7 +46,7 @@ projectSchema.post("findOneAndDelete", async function (doc) {
 
 // Extends the find method to auto populate certain fields
 
-projectSchema.pre("find", function (next) {
+projectSchema.pre("find", async function (next) {
   this.populate({
     path: "assignees",
     select: "username _id role email",

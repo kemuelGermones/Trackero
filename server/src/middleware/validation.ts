@@ -2,16 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import Project from "../models/project";
 import Issue from "../models/issue";
 import User from "../models/user";
-import { ValidationError } from "joi";
+import { Schema, ValidationError } from "joi";
 import AppError from "../utils/AppError";
 import {
   projectSchema,
   issueSchema,
   commentSchema,
-  issueStatusSchema,
-  userPasswordSchema,
-  userRoleSchema,
-  userUsernameSchema,
+  userSchema,
 } from "../schema";
 
 interface IValidationError {
@@ -41,7 +38,12 @@ export const validateIssue = (
   res: Response,
   next: NextFunction
 ) => {
-  const { error }: IValidationError = issueSchema.validate(req.body);
+  const { error }: IValidationError = issueSchema
+    .fork(
+      ["title", "description", "importance", "assignedTo", "dueDate"],
+      (field: Schema) => field.required()
+    )
+    .validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -52,12 +54,14 @@ export const validateIssue = (
 
 // Validates Issue Status Request
 
-export const validateStatus = (
+export const validateIssueStatus = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error }: IValidationError = issueStatusSchema.validate(req.body);
+  const { error }: IValidationError = issueSchema
+    .fork(["status"], (field: Schema) => field.required())
+    .validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -82,14 +86,54 @@ export const validateComment = (
   }
 };
 
-// Validates User Username Request
+// Validate Register
 
-export const validateUsername = (
+export const validateUserRegister = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error }: IValidationError = userUsernameSchema.validate(req.body);
+  const { error }: IValidationError = userSchema
+    .fork(["email", "password", "username", "role"], (field: Schema) =>
+      field.required()
+    )
+    .validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validate login
+
+export const validateUserLogin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error }: IValidationError = userSchema
+    .fork(["email", "password"], (field: Schema) => field.required())
+    .validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new AppError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+// Validates User Username Request
+
+export const validateUserUsername = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error }: IValidationError = userSchema
+    .fork(["username"], (field: Schema) => field.required())
+    .validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -100,12 +144,14 @@ export const validateUsername = (
 
 // Validates User Password Request
 
-export const validatePassword = (
+export const validateUserPassword = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error }: IValidationError = userPasswordSchema.validate(req.body);
+  const { error }: IValidationError = userSchema
+    .fork(["password"], (field: Schema) => field.required())
+    .validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -116,12 +162,14 @@ export const validatePassword = (
 
 // Validate User Role Request
 
-export const validateRole = (
+export const validateUserRole = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error }: IValidationError = userRoleSchema.validate(req.body);
+  const { error }: IValidationError = userSchema
+    .fork(["role"], (field: Schema) => field.required())
+    .validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new AppError(msg, 400);
@@ -130,9 +178,9 @@ export const validateRole = (
   }
 };
 
-// Validates Assignees
+// Validates if assignees are valid users
 
-export const validateAssignees = async (
+export const validateProjectAssignees = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -146,9 +194,9 @@ export const validateAssignees = async (
   next();
 };
 
-// Validates if the user is a project assignee
+// Validates if the user is a valid issue assignedTo
 
-export const validateProjectAssignee = async (
+export const validateIssueAssignedTo = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -163,7 +211,7 @@ export const validateProjectAssignee = async (
   next();
 };
 
-// Validate if the users has assigned issue
+// Validates if the assignees has a assigned issue
 
 export const validateAssigneesHasIssues = async (
   req: Request,
@@ -177,10 +225,7 @@ export const validateAssigneesHasIssues = async (
       issue!.assignedTo.equals(userId)
     );
     if (!foundUser) {
-      throw new AppError(
-        "Cannot remove a user that has a assigned issue",
-        400
-      );
+      throw new AppError("Cannot remove a user that has a assigned issue", 400);
     }
   }
   next();

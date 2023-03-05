@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Project from "../models/project";
 import Comment from "../models/comment";
-import Issue from "../models/issue";
 
 // Show Projects
 
@@ -12,7 +11,7 @@ export const showProjects = async (req: Request, res: Response) => {
     .send({ status: 200, message: "Fetched projects", payload: projects });
 };
 
-// Create New Project
+// Create Project
 
 export const createProject = async (req: Request, res: Response) => {
   const project = new Project(req.body);
@@ -39,7 +38,7 @@ export const deleteProject = async (req: Request, res: Response) => {
   res.status(200).json({ status: 200, message: "Deleted a project" });
 };
 
-// Create Comment
+// Create Project Comment
 
 export const createProjectComment = async (req: Request, res: Response) => {
   const { projectId } = req.params;
@@ -55,7 +54,7 @@ export const createProjectComment = async (req: Request, res: Response) => {
     .json({ status: 200, message: "Posted a comment", payload: projects });
 };
 
-// Delete Comment
+// Delete Project Comment
 
 export const deleteProjectComment = async (req: Request, res: Response) => {
   const { projectId, commentId } = req.params;
@@ -64,51 +63,4 @@ export const deleteProjectComment = async (req: Request, res: Response) => {
   });
   await Comment.findByIdAndDelete(commentId);
   res.status(200).json({ status: 200, message: "Deleted a comment" });
-};
-
-// Create Issue
-
-export const createIssue = async (req: Request, res: Response) => {
-  const { projectId } = req.params;
-  const project = await Project.findById(projectId);
-  const issue = new Issue(req.body);
-  issue.author = req.user!._id;
-  project!.issues.push(issue._id);
-  await issue.save();
-  await project!.save();
-  const projects = await Project.find();
-  res
-    .status(200)
-    .json({ status: 200, message: "Created an issue", payload: projects });
-};
-
-// Edit Issue
-
-export const editIssue = async (req: Request, res: Response) => {
-  const { issueId } = req.params;
-  await Issue.findByIdAndUpdate(issueId, req.body);
-  res.status(200).json({ status: 200, message: "Edited an issue" });
-};
-
-// Delete Issue
-
-export const deleteIssue = async (req: Request, res: Response) => {
-  const { projectId, issueId } = req.params;
-  await Project.findByIdAndUpdate(projectId, { $pull: { issues: issueId } });
-  await Issue.findByIdAndDelete(issueId);
-  res.status(200).json({ status: 200, message: "Deleted an issue" });
-};
-
-// Update Issue Status
-
-export const updateIssueStatus = async (req: Request, res: Response) => {
-  const { issueId } = req.params;
-  const { status }: { status: "Pending" | "In Progress" | "Done" } = req.body;
-  const issue = await Issue.findById(issueId);
-  issue!.status = status;
-  await issue!.save();
-  res.status(200).json({
-    status: 200,
-    message: "Updated the issue status",
-  });
 };

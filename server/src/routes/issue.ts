@@ -1,8 +1,8 @@
 import { Router } from "express";
 import wrapAsync from "../utils/wrapAsync";
 import { createIssueComment, deleteIssueComment } from "../controllers/issue";
-import { validateComment } from "../middleware/validate";
-import { isAdminOrCommentAuthor } from "../middleware/role";
+import { validateComment } from "../middleware/validation";
+import { isAdminOrCommentAuthor } from "../middleware/authorization";
 import passport from "passport";
 
 const router = Router({ mergeParams: true });

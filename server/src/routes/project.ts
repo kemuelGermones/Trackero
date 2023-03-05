@@ -5,18 +5,18 @@ import {
   validateProject,
   validateComment,
   validateIssue,
-  validateStatus,
-  validateAssignees,
-  validateProjectAssignee,
+  validateIssueStatus,
+  validateProjectAssignees,
+  validateIssueAssignedTo,
   validateAssigneesHasIssues,
-} from "../middleware/validate";
+} from "../middleware/validation";
 import {
   isAdmin,
   isAdminOrCommentAuthor,
   isAdminOrIssueAuthor,
   isAdminOrIssueAuthorOrAssignedUser,
   isAdminOrProjectAssignee,
-} from "../middleware/role";
+} from "../middleware/authorization";
 import {
   showProjects,
   createProject,
@@ -24,11 +24,13 @@ import {
   deleteProject,
   createProjectComment,
   deleteProjectComment,
+} from "../controllers/project";
+import {
   createIssue,
   editIssue,
   deleteIssue,
   updateIssueStatus,
-} from "../controllers/project";
+} from "../controllers/issue";
 
 const router = Router({ mergeParams: true });
 
@@ -47,7 +49,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   validateProject,
-  wrapAsync(validateAssignees),
+  wrapAsync(validateProjectAssignees),
   wrapAsync(createProject)
 );
 
@@ -58,7 +60,7 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   validateProject,
-  wrapAsync(validateAssignees),
+  wrapAsync(validateProjectAssignees),
   wrapAsync(validateAssigneesHasIssues),
   wrapAsync(editProject)
 );
@@ -97,7 +99,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrProjectAssignee),
   validateIssue,
-  wrapAsync(validateProjectAssignee),
+  wrapAsync(validateIssueAssignedTo),
   wrapAsync(createIssue)
 );
 
@@ -108,7 +110,7 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrIssueAuthor),
   validateIssue,
-  wrapAsync(validateProjectAssignee),
+  wrapAsync(validateIssueAssignedTo),
   wrapAsync(editIssue)
 );
 
@@ -127,7 +129,7 @@ router.patch(
   "/:projectId/issues/:issueId/status",
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrIssueAuthorOrAssignedUser),
-  validateStatus,
+  validateIssueStatus,
   wrapAsync(updateIssueStatus)
 );
 

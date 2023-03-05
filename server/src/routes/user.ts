@@ -9,15 +9,17 @@ import {
   updateUserRole,
 } from "../controllers/user";
 import {
-  validatePassword,
-  validateUsername,
-  validateRole,
-} from "../middleware/validate";
+  validateUserRegister,
+  validateUserLogin,
+  validateUserPassword,
+  validateUserUsername,
+  validateUserRole,
+} from "../middleware/validation";
 import {
   isAdmin,
   isAdminOrActualUser,
   isNotActualUser,
-} from "../middleware/role";
+} from "../middleware/authorization";
 import passport from "passport";
 
 const router = Router({ mergeParams: true });
@@ -33,11 +35,11 @@ router.get(
 
 // Registers the User
 
-router.post("/register", wrapAsync(registerUser));
+router.post("/register", validateUserRegister, wrapAsync(registerUser));
 
 // Login the User
 
-router.post("/login", wrapAsync(loginUser));
+router.post("/login", validateUserLogin, wrapAsync(loginUser));
 
 // Update User's Username
 
@@ -45,7 +47,7 @@ router.patch(
   "/:userId/username",
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrActualUser),
-  validateUsername,
+  validateUserUsername,
   wrapAsync(updateUserUsername)
 );
 
@@ -55,7 +57,7 @@ router.patch(
   "/:userId/password",
   passport.authenticate("jwt", { session: false }),
   wrapAsync(isAdminOrActualUser),
-  validatePassword,
+  validateUserPassword,
   wrapAsync(updateUserPassword)
 );
 
@@ -66,7 +68,7 @@ router.patch(
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   wrapAsync(isNotActualUser),
-  validateRole,
+  validateUserRole,
   wrapAsync(updateUserRole)
 );
 

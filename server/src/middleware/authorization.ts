@@ -33,6 +33,24 @@ export const isAdminOrCommentAuthor = async (
   }
 };
 
+// Validates if the user is a admin or project assignee
+
+export const isAdminOrProjectAssignee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const project = await Project.findById(req.params.projectId);
+  const foundUser = project!.assignees.find((userId) =>
+    userId.equals(req.user!._id)
+  );
+  if (foundUser || req.user!.role === "Administrator") {
+    next();
+  } else {
+    throw new AppError("You are not a project assignee", 403);
+  }
+};
+
 // Validates if the user is admin or issue author
 
 export const isAdminOrIssueAuthor = async (
@@ -97,23 +115,5 @@ export const isNotActualUser = async (
     next();
   } else {
     throw new AppError("You are not allowed to update this user", 403);
-  }
-};
-
-// Validates if the user is a admin or project assignee
-
-export const isAdminOrProjectAssignee = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const project = await Project.findById(req.params.projectId);
-  const foundUser = project!.assignees.find((userId) =>
-    userId.equals(req.user!._id)
-  );
-  if (foundUser || req.user!.role === "Administrator") {
-    next();
-  } else {
-    throw new AppError("You are not a project assignee", 403);
   }
 };

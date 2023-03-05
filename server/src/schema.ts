@@ -42,11 +42,12 @@ export const projectSchema = Joi.object({
 // Issue Schema
 
 export const issueSchema = Joi.object({
-  title: Joi.string().escapeHTML().required(),
-  description: Joi.string().escapeHTML().required(),
-  importance: Joi.string().valid("High", "Mid", "Low").required(),
-  assignedTo: Joi.string().escapeHTML().required(),
-  dueDate: Joi.date().greater("now").required(),
+  title: Joi.string().escapeHTML(),
+  description: Joi.string().escapeHTML(),
+  importance: Joi.string().valid("High", "Mid", "Low"),
+  status: Joi.string().valid("Pending", "In Progress", "Done"),
+  assignedTo: Joi.string().escapeHTML(),
+  dueDate: Joi.date().greater("now"),
 });
 
 // Comment Schema
@@ -55,26 +56,11 @@ export const commentSchema = Joi.object({
   comment: Joi.string().escapeHTML().required(),
 });
 
-// Issue status Schema
+// User Schema
 
-export const issueStatusSchema = Joi.object({
-  status: Joi.string().valid("Pending", "In Progress", "Done").required(),
-});
-
-// User username Schema
-
-export const userUsernameSchema = Joi.object({
-  username: Joi.string().escapeHTML().required(),
-});
-
-// User password Schema
-
-export const userPasswordSchema = Joi.object({
-  password: Joi.string().escapeHTML().required(),
-});
-
-// User role Schema
-
-export const userRoleSchema = Joi.object({
-  role: Joi.string().valid("Administrator", "Developer").required(),
+export const userSchema = Joi.object({
+  email: Joi.string().email().escapeHTML(),
+  username: Joi.string().escapeHTML(),
+  password: Joi.string().escapeHTML(),
+  role: Joi.string().valid("Administrator", "Developer"),
 });
