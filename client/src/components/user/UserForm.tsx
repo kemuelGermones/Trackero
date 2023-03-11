@@ -106,15 +106,6 @@ function UserForm() {
           onChange={onChangeEmailHandler}
           $isInvalid={emailError}
         />
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={onChangePasswordHandler}
-          $isInvalid={passwordError}
-        />
         {!isLogin ? (
           <>
             <Label htmlFor="username">Username</Label>
@@ -133,6 +124,16 @@ function UserForm() {
             </Select>
           </>
         ) : null}
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={onChangePasswordHandler}
+          $isInvalid={passwordError}
+        />
+
         <CardFooter $templateColumns="1fr">
           <Button>{isLogin ? "Login" : "Sign Up"}</Button>
         </CardFooter>

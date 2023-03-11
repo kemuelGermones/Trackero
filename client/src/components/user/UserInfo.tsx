@@ -122,6 +122,21 @@ function UserInfo({ userData }: IUserInfo) {
         </CardFooter>
       </Form>
       <CardDivider />
+      {location.pathname === "/users" ? (
+        <>
+          <Form onSubmit={onSubmitRoleHandler}>
+            <Label htmlFor="role">Role</Label>
+            <Select id="role" onChange={onChangeRoleHandler} value={role}>
+              <option value="Developer">Developer</option>
+              <option value="Administrator">Administrator</option>
+            </Select>
+            <CardFooter $templateColumns="1fr">
+              <Button>Change Role</Button>
+            </CardFooter>
+          </Form>
+          <CardDivider />
+        </>
+      ) : null}
       <Form onSubmit={onSubmitPasswordHandler}>
         <Label htmlFor="password">Password</Label>
         <Input
@@ -136,21 +151,6 @@ function UserInfo({ userData }: IUserInfo) {
           <Button>Change Password</Button>
         </CardFooter>
       </Form>
-      {location.pathname === "/users" ? (
-        <>
-          <CardDivider />
-          <Form onSubmit={onSubmitRoleHandler}>
-            <Label htmlFor="role">Role</Label>
-            <Select id="role" onChange={onChangeRoleHandler} value={role}>
-              <option value="Developer">Developer</option>
-              <option value="Administrator">Administrator</option>
-            </Select>
-            <CardFooter $templateColumns="1fr">
-              <Button>Change Role</Button>
-            </CardFooter>
-          </Form>
-        </>
-      ) : null}
     </Card>
   );
 }
