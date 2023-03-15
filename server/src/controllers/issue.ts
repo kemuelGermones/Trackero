@@ -7,12 +7,10 @@ import Project from "../models/project";
 
 export const createIssue = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const project = await Project.findById(projectId);
   const issue = new Issue(req.body);
   issue.author = req.user!._id;
-  project!.issues.push(issue._id);
   await issue.save();
-  await project!.save();
+  await Project.findByIdAndUpdate(projectId, { $push: { issues: issue._id } });
   const projects = await Project.find();
   res
     .status(200)
@@ -40,10 +38,7 @@ export const deleteIssue = async (req: Request, res: Response) => {
 
 export const updateIssueStatus = async (req: Request, res: Response) => {
   const { issueId } = req.params;
-  const { status }: { status: "Pending" | "In Progress" | "Done" } = req.body;
-  const issue = await Issue.findById(issueId);
-  issue!.status = status;
-  await issue!.save();
+  await Issue.findByIdAndUpdate(issueId, { $set: { status: req.body.status } });
   res.status(200).json({
     status: 200,
     message: "Updated the issue status",
@@ -54,12 +49,10 @@ export const updateIssueStatus = async (req: Request, res: Response) => {
 
 export const createIssueComment = async (req: Request, res: Response) => {
   const { issueId } = req.params;
-  const issue = await Issue.findById(issueId);
   const comment = new Comment(req.body);
   comment.author = req.user!._id;
-  issue!.comments.push(comment._id);
   await comment.save();
-  await issue!.save();
+  await Issue.findByIdAndUpdate(issueId, { $push: { comments: comment._id } });
   const projects = await Project.find();
   res
     .status(200)

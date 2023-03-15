@@ -80,9 +80,9 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const updateUserUsername = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user = await User.findById(userId);
-  user!.username = req.body.username;
-  await user!.save();
+  await User.findByIdAndUpdate(userId, {
+    $set: { username: req.body.username },
+  });
   res.status(200).json({
     status: 200,
     message: "Updated user's username",
@@ -93,11 +93,9 @@ export const updateUserUsername = async (req: Request, res: Response) => {
 
 export const updateUserPassword = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user = await User.findById(userId);
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(req.body.password, salt);
-  user!.password = hash;
-  await user!.save();
+  await User.findByIdAndUpdate(userId, { $set: { password: hash } });
   res.status(200).json({ status: 200, message: "Updated user's password" });
 };
 
@@ -105,8 +103,6 @@ export const updateUserPassword = async (req: Request, res: Response) => {
 
 export const updateUserRole = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user = await User.findById(userId);
-  user!.role = req.body.role;
-  await user!.save();
+  await User.findByIdAndUpdate(userId, { $set: { role: req.body.role } });
   res.status(200).json({ status: 200, message: "Updated user's role" });
 };

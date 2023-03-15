@@ -42,12 +42,12 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 export const createProjectComment = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const project = await Project.findById(projectId);
   const comment = new Comment(req.body);
   comment.author = req.user!._id;
-  project!.comments.push(comment._id);
   await comment.save();
-  await project!.save();
+  await Project.findByIdAndUpdate(projectId, {
+    $push: { comments: comment._id },
+  });
   const projects = await Project.find();
   res
     .status(200)
