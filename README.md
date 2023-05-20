@@ -1,6 +1,6 @@
 # Trackero
 
-This is a project management tool that is intended to use as an internal tool within an organization that allows users to easily track, prioritize and resolve issues, bugs and tasks in a one central location.
+This project management tool has been designed for internal use within organizations, enabling users to efficiently track, prioritize, and address issues, bugs, and tasks from a centralized platform.
 
 ### [Live Site](https://trackero-client.vercel.app/)
 
@@ -8,7 +8,7 @@ This is a project management tool that is intended to use as an internal tool wi
 
 ### Description
 
-Trackero is a web project management tool built with TypeScript, React, Express, Node.js and MongoDB that is intended to use as an internal tool within an organization that allows users to easily track, prioritize and resolve issues, bugs and tasks in a specific project.
+This is a web-based project management tool, developed utilizing TypeScript, React, Express, Node.js, and MongoDB. It has been specifically designed as an internal organizational tool to facilitate efficient issue tracking, prioritization, and resolution within a given project. With its user-friendly interface, users can effortlessly manage and address various issues, bugs, and tasks.
 
 ### Requirements
 
@@ -19,7 +19,7 @@ Trackero is a web project management tool built with TypeScript, React, Express,
 
 ### Usage
 
-Navigate to the URL provided above to visit the live demo. Alternatively, if you want to host the web app locally on your computer, make sure TypeScript is installed and follow the instructions below.
+To access the live demo, please proceed to the provided URL. Alternatively, if you prefer to host the web application locally on your computer, ensure that TypeScript is installed and follow the instructions outlined below.
 
 Clone it
 
@@ -55,4 +55,4 @@ Open the url provided by the terminal and enjoy!
 
 ### Future Plans
 
-- Make it responsive 
+- Re-design it 
